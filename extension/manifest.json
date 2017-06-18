@@ -1,0 +1,43 @@
+{
+  "manifest_version": 2,
+  "name": "Clarity",
+  "description": "Replay and share your web sessions.",
+  "version": "0.1.7",
+  "browser_action": {
+    "default_icon": "icon.png",
+    "default_title": "Clarity",
+    "default_popup": "popup.html"
+  },
+  "icons": {
+    "64": "icon.png"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "http://*/*",
+        "https://*/*"
+      ],
+      "js": [
+        "content.js"
+      ],
+      "run_at": "document_start"
+    }
+  ],
+  "background": {
+    "scripts": [
+      "background.js"
+    ],
+    "persistent": false
+  },
+  "permissions": [
+    "http://*/*",
+    "https://*/*",
+    "tabs",
+    "storage"
+  ],
+  "web_accessible_resources": [
+    "clarity.js",
+    "clarity.png",
+    "clarity-black.png"
+  ]
+}
