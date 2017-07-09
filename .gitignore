@@ -1,6 +1,19 @@
-data.json
+# Visual Studio Code temporary files
+.vscode/
+
+# Build results
+build/
+
+# npm packages
 node_modules
-build
+
+# npm logs
+npm-debug.log*
+
+#
+data.json
+
+#
 env.bat
 /visualization
 extension

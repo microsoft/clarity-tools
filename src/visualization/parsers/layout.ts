@@ -78,7 +78,7 @@ export default class Layout implements IParser {
             element.style.display = "none";
             element.setAttribute("data-ignore", "true");
         } else {
-            element = document.createElement(state.tag)
+            element = document.createElement(state.tag);
         }
         return element;
     }
