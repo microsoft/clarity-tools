@@ -7,6 +7,7 @@ export default class Layout implements IParser {
     private document: Document;
     private svgns: string = "http://www.w3.org/2000/svg";
     private placeholderImage = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAMSURBVBhXY2BgYAAAAAQAAVzN/2kAAAAASUVORK5CYII=";
+    private ignoreTag = "*IGNORE*";
 
     private attributes(node: HTMLElement, attributes: IAttributes) {
         if (attributes) {
@@ -72,6 +73,14 @@ export default class Layout implements IParser {
         }
 
         return this.document.createElement(state.tag);
+        if (state.tag === this.ignoreTag) {
+            element = document.createElement("div");
+            element.style.display = "none";
+            element.setAttribute("data-ignore", "true");
+        } else {
+            element = document.createElement(state.tag)
+        }
+        return element;
     }
 
     private insert(state: IElementLayoutState) {
