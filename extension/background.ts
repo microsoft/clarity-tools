@@ -26,7 +26,6 @@ chrome.runtime.onMessage.addListener(
   }
 );
 
-
 chrome.runtime.onMessage.addListener(
   function (request, sender, sendResponse) {
     if (request.fetch && sender && sender.tab) {
@@ -35,6 +34,16 @@ chrome.runtime.onMessage.addListener(
   }
 );
 
+// Save the current payload to chrome storage
+chrome.runtime.onMessage.addListener(
+  function (request, sender, sendResponse) {
+    if (request.save) {
+      chrome.storage.sync.set({ lastNickname: request.nickname });
+      chrome.storage.sync.set({ lastPayload: payloads });
+      console.log("ATTEMPTING TO SAVE");
+      sendResponse({ msg: "saved" });
+    }
+  });
 
 chrome.tabs.onActivated.addListener(function (info) {
   chrome.tabs.get(info.tabId, function (change) {
