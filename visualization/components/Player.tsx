@@ -4,8 +4,10 @@ import { connect } from "react-redux";
 import IconButton from 'material-ui/IconButton';
 import PlayIcon from 'material-ui/svg-icons/av/play-arrow';
 import PauseIcon from 'material-ui/svg-icons/av/pause';
-import SkipIcon from 'material-ui/svg-icons/av/av-timer';
-import { selectSnapshot, togglePlayback, toggleSpeed } from "../actions";
+import SkipIcon from 'material-ui/svg-icons/av/fast-forward';
+import NextIcon from 'material-ui/svg-icons/av/skip-next';
+import PrevIcon from 'material-ui/svg-icons/av/skip-previous';
+import { selectSnapshot, togglePlayback, toggleSpeed, selectImpression } from "../actions";
 import Slider from "./Slider";
 import Timer from "./Timer";
 
@@ -78,20 +80,34 @@ class Player extends React.Component<any, any> {
             }
         }
     }
+
+    playImpression(index) {
+        this.props.selectImpression(this.props.session[index]);
+    }
+
     render() {
         if (!this.props.impression) {
             return (<div></div>);
         }
 
         this.extractFrames();
+        var index = this.props.session.indexOf(this.props.impression);
         var Icon = this.props.playback ? <PauseIcon /> : <PlayIcon />;
         var speedIconColor = this.props.speed ? "white" : "#333";
+        var prevIconColor = index > 0 ? "white" : "#333";
+        var nextIconColor = index < (this.props.session.length - 1) ? "white" : "#333";
         
         return (
             <div className="clarity-player">
                 <div className="clarity-controls">
                     <IconButton iconStyle={{ color: "white" }} onClick={this.togglePlayback.bind(this)} >
                         {Icon}
+                    </IconButton>
+                    <IconButton iconStyle={{ color: prevIconColor }} onClick={this.playImpression.bind(this, index - 1)} >
+                        <PrevIcon />
+                    </IconButton>
+                    <IconButton iconStyle={{ color: nextIconColor }} onClick={this.playImpression.bind(this, index + 1)} >
+                        <NextIcon />
                     </IconButton>
                     <IconButton iconStyle={{ color: speedIconColor }} onClick={this.toggleSpeed.bind(this)} >
                         <SkipIcon />
@@ -116,11 +132,12 @@ class Player extends React.Component<any, any> {
 export default connect(
     state => {
         return {
+            session: state.session,
             impression: state.impression,
             snapshot: state.snapshot,
             playback: state.playback,
             speed: state.speed
         }
     },
-    dispatch => { return bindActionCreators({ selectSnapshot: selectSnapshot, togglePlayback: togglePlayback, toggleSpeed: toggleSpeed }, dispatch) }
+    dispatch => { return bindActionCreators({ selectSnapshot: selectSnapshot, togglePlayback: togglePlayback, toggleSpeed: toggleSpeed, selectImpression: selectImpression }, dispatch) }
 )(Player);
