@@ -1,9 +1,7 @@
 
 import * as clarity from "clarity-js";
-
 let payloads = [];
 
-// Activate clarity instrumentation if the domain is included in the whitelist
 chrome.runtime.sendMessage({ status: true }, function (response) {
   if (response.active) {
     payloads = [];
@@ -21,13 +19,10 @@ chrome.runtime.sendMessage({ status: true }, function (response) {
   }
 });
 
-chrome.runtime.onMessage.addListener(
-  function (request, sender, sendResponse) {
-    if (request.clarity) {
-      sendResponse({ payloads: payloads });
+function upload(payload) {
+  chrome.runtime.sendMessage({ payload: payload }, function (response) {
+    if (!response.success) {
+      console.warn("Clarity failed to receive the payload.");
     }
   });
-
-function upload(payload) {
-  payloads.push(payload);
 }

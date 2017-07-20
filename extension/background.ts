@@ -13,6 +13,28 @@ chrome.runtime.onMessage.addListener(
   }
 );
 
+chrome.runtime.onMessage.addListener(
+  function (request, sender, sendResponse) {
+    if (request.payload && sender && sender.tab) {
+      // If we exceed more than 100 payloads, start removing items from the front of the queue
+      if (payloads.length > 100) {
+        payloads.shift();
+      }
+      payloads.push({tabId: sender.tab.id, payload: request.payload});
+      sendResponse({ success: true });
+    }
+  }
+);
+
+
+chrome.runtime.onMessage.addListener(
+  function (request, sender, sendResponse) {
+    if (request.fetch && sender && sender.tab) {
+      sendResponse({ payloads: payloads });
+    }
+  }
+);
+
 
 chrome.tabs.onActivated.addListener(function (info) {
   chrome.tabs.get(info.tabId, function (change) {

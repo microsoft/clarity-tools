@@ -1,9 +1,17 @@
 export declare const enum Types {
+    SelectSession,
     SelectImpression,
     SelectSnapshot,
     TogglePlayback,
     ToggleSpeed
 }
+
+export const selectSession = (session) => {
+    return {
+        type: Types.SelectSession,
+        payload: session
+    }
+};
 
 export const selectImpression = (impression) => {
     return {

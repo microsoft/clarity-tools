@@ -4,7 +4,7 @@
     var showText = (<HTMLInputElement>document.getElementById("showText"));
     var showImages = (<HTMLInputElement>document.getElementById("showImages"));
     var enabled = (<HTMLInputElement>document.getElementById("enabled"));
-    var replayPage = (<HTMLAnchorElement>document.getElementById("replayPage"));
+    var replaySession = (<HTMLAnchorElement>document.getElementById("replaySession"));
     var menu = (<HTMLElement>document.getElementById("menu"));
 
     // Read from default storage
@@ -17,7 +17,7 @@
     showText.addEventListener("click", toggle);
     showImages.addEventListener("click", toggle);
     enabled.addEventListener("click", toggle);
-    replayPage.addEventListener("click", replay);
+    replaySession.addEventListener("click", replay);
 
     function replay() {
         chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {

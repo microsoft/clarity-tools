@@ -25,24 +25,50 @@ ReactDOM.render(
     document.getElementById("preview")
 );
 
-let tabId = parseInt(location.href.match(/\?tab=([0-9]*$)/)[1]);
-chrome.tabs.sendMessage(tabId, {clarity: true}, function(response) {
-    let payloads = response.payloads;
-    let size = 0;
-    let count = 0;
+let activeTabId = parseInt(location.href.match(/\?tab=([0-9]*$)/)[1]);
+chrome.runtime.sendMessage({ fetch: true }, function (response) {
+    if (response.payloads) {
+        let payloads = response.payloads;
+        let size = 0;
+        let count = 0;
+        let structured = {};
+        let session = [];
+        let activeId;
+        let activeIndex = 0;
 
-    // Reconstruct uncompressed clarity payload
-    let impression : any = { envelope: {}, events: [] };
-    for (let payload of payloads) {
-        size += payload.length;
-        let json = JSON.parse(uncompress(payload));
-        impression.envelope = json.envelope;
-        impression.events = impression.events.concat(json.events);
-        count++;
+        // Reconstruct uncompressed clarity payload
+        for (let entry of payloads) {
+            size += entry.length;
+            let json = JSON.parse(uncompress(entry.payload));
+            let tabId = entry.tabId;
+            let id = json.envelope.impressionId;
+            if (!(id in structured)) {
+                structured[id] = { envelope: json.envelope, events: [] };
+                if (tabId === activeTabId) {
+                    activeId = id;
+                }
+            }
+            structured[id].events = structured[id].events.concat(json.events);
+            count++;
+        }
+
+        for (let id in structured) {
+            if (structured[id].envelope.sequenceNumber === 0) {
+                if (activeId === id) {
+                    activeIndex = session.length;
+                }
+                session.push(structured[id]);
+            }
+        }
+            
+        store.dispatch({
+            type: Types.SelectSession,
+            payload: session
+        });
+
+        store.dispatch({
+            type: Types.SelectImpression,
+            payload: session[activeIndex]
+        });
     }
-        
-    store.dispatch({
-        type: Types.SelectImpression,
-        payload: impression
-    });
 });
