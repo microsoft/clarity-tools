@@ -33,8 +33,8 @@
   "scripts": {
     "compile": "node_modules/.bin/tsc -p ./",
     "bundle:content": "node_modules/.bin/browserify ./build/extension/instrument.js > ./build/extension/content.js",
+    "bundle:visualization": "node_modules/.bin/browserify ./build/extension/app.js > ./build/extension/clarity.js",
     "binplace:extension": "node_modules/.bin/copyfiles -f ./extension/*.html ./extension/manifest.json ./extension/*.png ./build/extension/",
-    "bundle:visualization": "node_modules/.bin/browserify ./build/visualization/clarity.js > ./build/extension/clarity.js",
     "build": "npm run compile && npm run bundle:content && npm run binplace:extension && npm run bundle:visualization"
   }
 }
