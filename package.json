@@ -1,9 +1,27 @@
 {
   "name": "clarity-tools",
   "version": "0.0.1",
-  "description": "Clarity Tools",
-  "author": "Clarity Team",
+  "description": "A collection of tools to help visualize the data collected from clarity-js package",
+  "author": "Microsoft Corp.",
   "license": "MIT",
+  "keywords": [
+    "clarity",
+    "Microsoft",
+    "interactions",
+    "cursor",
+    "pointer",
+    "instrumentation",
+    "analytics",
+    "visualization",
+    "extension"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Microsoft/clarity-tools.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Microsoft/clarity-tools/issues"
+  },
   "dependencies": {
     "clarity-js": "^0.1.8",
     "material-ui": "^0.17.0",
