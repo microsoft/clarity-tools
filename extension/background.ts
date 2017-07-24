@@ -34,15 +34,25 @@ chrome.runtime.onMessage.addListener(
   }
 );
 
+chrome.runtime.onMessage.addListener(
+  function (request, sender, sendResponse) {
+    if (request.sendPayload) {
+      console.log("SENDING PAYLOAD to ");
+      console.log("request.message");
+      sendResponse({ payload: payloads });
+    }
+  });
+
 // Save the current payload to chrome storage
 chrome.runtime.onMessage.addListener(
   function (request, sender, sendResponse) {
     if (request.save) {
       chrome.storage.sync.set({ lastNickname: request.nickname });
       chrome.storage.sync.set({ lastPayload: payloads });
-      console.log("ATTEMPTING TO SAVE");
+      console.log("SAVING ON BACKGROUND");
       sendResponse({ msg: "saved" });
     }
+    sendResponse({msg: "saved"});
   });
 
 chrome.tabs.onActivated.addListener(function (info) {

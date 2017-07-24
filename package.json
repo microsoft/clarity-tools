@@ -5,7 +5,9 @@
   "author": "Clarity Team",
   "license": "MIT",
   "dependencies": {
+    "azure-storage": "^2.2.1",
     "clarity-js": "^0.1.8",
+    "g": "^2.0.1",
     "material-ui": "^0.17.0",
     "react": "^15.4.2",
     "react-dom": "^15.4.2",

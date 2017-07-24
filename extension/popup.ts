@@ -5,6 +5,7 @@
     var stopRecording = (<HTMLElement>document.getElementById("stop"));
     var replayLastSession = (<HTMLAnchorElement>document.getElementById("replayLastSession"));
     var replayMenu = (<HTMLElement>document.getElementById("replayMenu"));
+    var date = (<HTMLElement>document.getElementById("date"));
     var saveSession = (<HTMLAnchorElement>document.getElementById("save"));
     var discardSession = (<HTMLAnchorElement>document.getElementById("discard"));
     var inputName = (<HTMLElement>document.getElementById("nickname"));
@@ -17,7 +18,12 @@
     chrome.storage.local.get({clarity: state}, function(items) {
         state = items.clarity;
         redraw(state);
-    }); 
+    });
+
+    function setDate() {
+        var now = new Date();
+        (<HTMLElement>date).innerHTML=now.getFullYear().toString();
+    }
 
     // Listen for changes
     startRecording.addEventListener("click", toggleRecording);
@@ -41,10 +47,18 @@
 
         if (cb.target.id == "save") {
             console.log("sending save message");
-            /*chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-                chrome.runtime.sendMessage(tabs[0].id, {save: true, nickname: (<HTMLInputElement>inputName).value});
-            });*/
+            //chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+            //chrome.runtime.sendMessage(tabs[0].id, {save: true, nickname: (<HTMLInputElement>inputName).value});
             chrome.runtime.sendMessage({ save: true, nickname: (<HTMLInputElement>inputName).value });
+            // });
+            //chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+                //chrome.tabs.sendMessage(tabs[0].id, { save: true, nickname: (<HTMLInputElement>inputName).value });
+            //});
+            chrome.runtime.sendMessage({ save: true, message: "HELLO4" });
+            chrome.runtime.sendMessage({ sendPayload: true, message: "HELLO4" }, function (resp) {
+                console.log(resp);
+            });
+
         }
         else if (cb.target.id == "discard") {
             //discard session
