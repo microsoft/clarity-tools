@@ -13,6 +13,47 @@ chrome.runtime.onMessage.addListener(
   }
 );
 
+chrome.runtime.onMessage.addListener(
+  function (request, sender, sendResponse) {
+    if (request.payload && sender && sender.tab) {
+      // If we exceed more than 100 payloads, start removing items from the front of the queue
+      if (payloads.length > 100) {
+        payloads.shift();
+      }
+      payloads.push({tabId: sender.tab.id, payload: request.payload});
+      sendResponse({ success: true });
+    }
+  }
+);
+
+chrome.runtime.onMessage.addListener(
+  function (request, sender, sendResponse) {
+    if (request.fetch && sender && sender.tab) {
+      sendResponse({ payloads: payloads });
+    }
+  }
+);
+
+chrome.runtime.onMessage.addListener(
+  function (request, sender, sendResponse) {
+    if (request.sendPayload) {
+      console.log("SENDING PAYLOAD to ");
+      console.log("request.message");
+      sendResponse({ payload: payloads });
+    }
+  });
+
+// Save the current payload to chrome storage
+chrome.runtime.onMessage.addListener(
+  function (request, sender, sendResponse) {
+    if (request.save) {
+      chrome.storage.sync.set({ lastNickname: request.nickname });
+      chrome.storage.sync.set({ lastPayload: payloads });
+      console.log("SAVING ON BACKGROUND");
+      sendResponse({ msg: "saved" });
+    }
+    sendResponse({msg: "saved"});
+  });
 
 chrome.tabs.onActivated.addListener(function (info) {
   chrome.tabs.get(info.tabId, function (change) {
