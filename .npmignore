@@ -1,0 +1,14 @@
+# Visual Studio Code temporary files
+.vscode/
+
+# npm packages
+node_modules
+
+# npm logs
+npm-debug.log*
+
+# src files
+src
+
+# rollup-plugins-typescript2
+.rpt2_cache

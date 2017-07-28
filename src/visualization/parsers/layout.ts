@@ -1,4 +1,4 @@
-/// <reference path="../clarity.d.ts" />
+/// <reference path="../../../node_modules/clarity-js/clarity.d.ts" />
 import { IParser } from "../components/Snapshot";
 
 export default class Layout implements IParser {
