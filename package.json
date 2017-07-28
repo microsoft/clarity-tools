@@ -4,7 +4,7 @@
   "description": "A collection of tools to help visualize the data collected from clarity-js package",
   "author": "Microsoft Corp.",
   "license": "MIT",
-  "main": "build/visualization/uncompress.js",
+  "main": "visualization/uncompress.js",
   "keywords": [
     "clarity",
     "Microsoft",
