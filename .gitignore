@@ -4,3 +4,4 @@ build
 env.bat
 visualization
 extension
+npm-debug.log
