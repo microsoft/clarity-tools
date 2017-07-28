@@ -4,6 +4,7 @@
   "description": "A collection of tools to help visualize the data collected from clarity-js package",
   "author": "Microsoft Corp.",
   "license": "MIT",
+  "main": "build/visualization/uncompress.js",
   "keywords": [
     "clarity",
     "Microsoft",
@@ -50,9 +51,9 @@
   },
   "scripts": {
     "compile": "node_modules/.bin/tsc -p ./",
-    "bundle:content": "node_modules/.bin/browserify ./build/extension/instrument.js > ./build/extension/content.js",
-    "bundle:visualization": "node_modules/.bin/browserify ./build/extension/app.js > ./build/extension/clarity.js",
-    "binplace:extension": "node_modules/.bin/copyfiles -f ./extension/*.html ./extension/manifest.json ./extension/*.png ./build/extension/",
+    "bundle:content": "node_modules/.bin/browserify ./extension/instrument.js > ./extension/content.js",
+    "bundle:visualization": "node_modules/.bin/browserify ./extension/app.js > ./extension/clarity.js",
+    "binplace:extension": "node_modules/.bin/copyfiles -f ./src/extension/*.html ./src/extension/manifest.json ./src/extension/*.png ./extension/",
     "build": "npm run compile && npm run bundle:content && npm run binplace:extension && npm run bundle:visualization"
   }
 }
