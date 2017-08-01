@@ -1,4 +1,4 @@
-export declare const enum Types {
+export const enum Types {
     SelectSession,
     SelectImpression,
     SelectSnapshot,
