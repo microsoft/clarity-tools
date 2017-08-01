@@ -26,6 +26,14 @@ chrome.runtime.onMessage.addListener(
   }
 );
 
+chrome.runtime.onMessage.addListener(
+  function (request, sender, sendResponse) {
+    if (request.clear) {
+      payloads = [];
+      sendResponse({ success: true });
+    }
+  }
+);
 
 chrome.runtime.onMessage.addListener(
   function (request, sender, sendResponse) {
@@ -34,7 +42,6 @@ chrome.runtime.onMessage.addListener(
     }
   }
 );
-
 
 chrome.tabs.onActivated.addListener(function (info) {
   chrome.tabs.get(info.tabId, function (change) {
