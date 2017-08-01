@@ -67,12 +67,37 @@
 			margin: 0;
 		}
 		
+		.upload {
+			color: white;
+			float: none;
+		}
+		.share-logo {
+			width: 37px;
+			height: 37px;
+			margin-left: 24px;
+			position: relative;
+			top: 5px;
+		}
+		.share-logo:hover {
+			cursor: pointer;
+		}
+		.share {
+			font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+			position: relative;
+			top: -8px;
+		}
+		.share:hover {
+			cursor: pointer;
+		}
+		
 	</style>
 </head>
 
 <body>
 	<div id="preview"></div>
 	<script src="clarity.js"></script>
+	<script src="storage/azure-storage.common.js"></script/>
+	<script src="storage/azure-storage.table.js"></script/>
 </body>
 
 </html>

@@ -116,6 +116,8 @@ class Player extends React.Component<any, any> {
                 <Slider />
                 <Timer />
                 <img className="clarity-logo" src="/clarity.png" alt="Clarity"></img>
+                <img className="share-logo" src="/icon.png" alt="Replay"></img>
+                <a className="share">Upload and share</a>
             </div>
         );
     }
