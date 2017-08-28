@@ -7,20 +7,31 @@ import NextIcon from 'material-ui/svg-icons/navigation/chevron-right';
 
 class Session extends React.Component<any, any> {
     getHostname(url) {
-        var a = document.createElement("a");
+        let a = document.createElement("a");
         a.href = url;
         return a.hostname;
     } 
 
     renderSession() {
         return this.props.session.map((impression) => {
-            var active = impression.envelope.impressionId === this.props.impression.envelope.impressionId;
-            var dateTime = new Date(impression.envelope.time);
-            var title = (impression.envelope.title ? impression.envelope.title : this.getHostname(impression.envelope.url));
+            let active = impression.envelope.impressionId === this.props.impression.envelope.impressionId;
+            let dateTime = new Date(impression.envelope.dateTime);
+            let url = impression.envelope.url;
+            let vertical = impression.envelope.vertical ? impression.envelope.vertical : null;
+            let time = dateTime.toLocaleString('en-US', { hour: 'numeric', minute:'numeric', second:'numeric', hour12: false });
+            let title = (impression.envelope.title ? impression.envelope.title : this.getHostname(impression.envelope.url));
+            let header = vertical ? `${time} // ${vertical}` : time;
+            let disabled = !!impression.envelope.disabled;
             return (
                 <Step key={impression.envelope.impressionId} active={active}>
-                    <StepButton onClick={() => this.props.selectImpression(impression)}>
-                    {title}
+                    <StepButton onClick={() => this.props.selectImpression(impression)} disabled={disabled}>
+                        <div className="clarity-steptitle">
+                            <span title={url}>{title}</span>
+                            <br/>
+                            <span className="clarity-steptime">
+                                {header}
+                            </span>
+                        </div>
                     </StepButton>
                 </Step>
             );
