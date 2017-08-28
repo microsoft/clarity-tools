@@ -2,6 +2,6 @@ data.json
 node_modules
 build
 env.bat
-visualization
+/visualization
 extension
 npm-debug.log
