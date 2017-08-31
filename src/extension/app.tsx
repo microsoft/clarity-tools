@@ -44,6 +44,7 @@ chrome.runtime.sendMessage({ fetch: true }, function (response) {
             let id = json.envelope.impressionId;
             if (!(id in structured)) {
                 structured[id] = { envelope: json.envelope, events: [] };
+                structured[id]["envelope"].dateTime = entry.dateTime;
                 if (tabId === activeTabId) {
                     activeId = id;
                 }

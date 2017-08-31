@@ -3,7 +3,8 @@ export const enum Types {
     SelectImpression,
     SelectSnapshot,
     TogglePlayback,
-    ToggleSpeed
+    ToggleSpeed,
+    NotFound
 }
 
 export const selectSession = (session) => {
@@ -40,3 +41,11 @@ export const toggleSpeed = (isFast) => {
         payload: isFast
     }
 };
+
+export const notFound = (flag) => {
+    return {
+        type: Types.NotFound,
+        payload: flag
+    }
+};
+

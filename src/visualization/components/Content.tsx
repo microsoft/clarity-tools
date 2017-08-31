@@ -6,7 +6,20 @@ import LinearProgress from 'material-ui/LinearProgress';
 class Content extends React.Component<any, any> {
 
     render() {
-        if (!this.props.impression) {
+        let path = top.location.pathname;
+        let parts = path ? path.split("/") : [];
+        let notfound = parts.length == 5 ? 
+            `No match found for ${parts[3]} (user) or ${parts[4]} (impression) on ${parts[2]}.` : 
+            `Invalid url format.`;
+
+        if (this.props.notfound) {
+            return (
+                <div className={'clarity-notfound'}>
+                    <h2>{notfound}</h2>
+                </div>
+            );
+        }
+        else if (!this.props.impression) {
             return (<LinearProgress mode="indeterminate" />);
         }
         return (
@@ -19,5 +32,5 @@ class Content extends React.Component<any, any> {
 
 // Connnecting Header container with the redux store
 // mapStateToProps and matchDispatchToProps using fat arrow function
-export default connect(state => { return { impression: state.impression } } )(Content);
+export default connect(state => { return { impression: state.impression, notfound: state.notfound } } )(Content);
 
