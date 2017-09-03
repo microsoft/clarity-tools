@@ -1,4 +1,5 @@
 import * as React from "react";
+import * as $ from "jquery";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import IconButton from 'material-ui/IconButton';
@@ -85,6 +86,22 @@ class Player extends React.Component<any, any> {
         this.props.selectImpression(this.props.session[index]);
     }
 
+    uploadAndShare() {
+        chrome.runtime.sendMessage({ fetch: true }, function (response) {
+            console.log(response);
+            $.ajax({
+                type: 'POST',
+                url: "http://clarity.ms/api/upload",
+                username: "4DgdtYTcHPkX",
+                password: "ujq2JkHKMrHM",
+                data: response,
+                error: function (req, status, error) {
+                    alert(error);
+                }
+            });
+        });
+    }
+
     render() {
         if (!this.props.impression) {
             return (<div></div>);
@@ -116,6 +133,8 @@ class Player extends React.Component<any, any> {
                 <Slider />
                 <Timer />
                 <img className="clarity-logo" src="/clarity.png" alt="Clarity"></img>
+                <img className="share-logo" src="/icon.png" alt="Replay" onClick={this.uploadAndShare}></img>
+                <a className="share" onClick={this.uploadAndShare}>Upload and share</a>
             </div>
         );
     }

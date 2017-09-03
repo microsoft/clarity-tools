@@ -1,5 +1,6 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
+import * as $ from "jquery"; 
 import Snapshot from "./Snapshot";
 import Session from "./Session";
 import Player from "./Player";
