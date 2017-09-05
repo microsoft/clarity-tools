@@ -2,22 +2,24 @@
 import { IParser } from "../components/Snapshot";
 
 export default class Viewport implements IParser {
+    private document: Document;
     private frame: HTMLIFrameElement;
     private state: IViewportState;
     private fullscreen: Boolean;
 
-    setup(frame: HTMLIFrameElement, base: string) {
+    setup(document: Document, frame: HTMLIFrameElement, base: string, thumbnail? : boolean) {
+        this.document = document;
         this.frame = frame;
         this.fullscreen = frame.parentElement.style.height === "initial";
     }
 
     shield(width, height, visibility) {
         var px = "px";
-        var doc = this.frame.contentDocument;
+        var doc = this.document;
         var shield = doc.getElementById("clarity-shield");
         if (doc.body) {
             if (shield === null) {
-                shield = document.createElement("div");
+                shield = doc.createElement("div");
                 shield.id = "clarity-shield";
                 shield.style.zIndex = "1001";
                 shield.style.position = "absolute";

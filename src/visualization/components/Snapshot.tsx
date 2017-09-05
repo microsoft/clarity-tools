@@ -7,7 +7,7 @@ import Viewport from "../parsers/viewport";
 import Pointer from "../parsers/pointer";
 
 export interface IParser {
-  setup(frame, base): void;
+  setup(document, frame, base, thumbnail? : boolean): void;
   render(state): void;
 }
 
@@ -30,7 +30,7 @@ class Snapshot extends React.Component<any, any> {
       // Reset all parsers if this is the first time an impression is rendered
       if (this.activeImpressionId != this.props.impression.envelope.impressionId) {
         for (var type in this.parsers) {
-          this.parsers[type].setup(this.frame, this.props.base);
+          this.parsers[type].setup(this.frame.contentDocument, this.frame, this.props.base);
         }
         this.activeImpressionId = this.props.impression.envelope.impressionId;
 

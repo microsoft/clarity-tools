@@ -3,8 +3,8 @@ import { IParser } from "../components/Snapshot";
 
 export default class Layout implements IParser {
     private layouts: { [index: number]: Node } = {};
-    private frame: HTMLIFrameElement;
     private base: string;
+    private document: Document;
     private svgns: string = "http://www.w3.org/2000/svg";
     private placeholderImage = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAMSURBVBhXY2BgYAAAAAQAAVzN/2kAAAAASUVORK5CYII=";
 
@@ -24,9 +24,9 @@ export default class Layout implements IParser {
         }
     }
 
-    setup(frame: HTMLIFrameElement, base: string) {
+    setup(document: Document, frame: HTMLIFrameElement, base: string, thumbnail? : boolean) {
         this.layouts = {};
-        this.frame = frame;
+        this.document = document;
         this.base = base;
     }
 
@@ -60,39 +60,41 @@ export default class Layout implements IParser {
 
     private createElement(state: ILayoutState, parent): HTMLElement {
         if (state.tag === "svg") {
-            return <HTMLElement>document.createElementNS(this.svgns, state.tag);
+            return <HTMLElement>this.document.createElementNS(this.svgns, state.tag);
         }
         else {
             while (parent && parent.tagName !== "BODY") {
                 if (parent.tagName === "svg") {
-                    return <HTMLElement>document.createElementNS(this.svgns, state.tag);
+                    return <HTMLElement>this.document.createElementNS(this.svgns, state.tag);
                 }
                 parent = parent.parentNode;
             }
         }
 
-        return document.createElement(state.tag);
+        return this.document.createElement(state.tag);
     }
 
     private insert(state: IElementLayoutState) {
-        var doc = this.frame.contentDocument;
+        var doc = this.document;
         var parent = this.layouts[state.parent];
         var next = state.next in this.layouts ? this.layouts[state.next] : null;
         switch (state.tag) {
             case "*DOC*":
-                doc.open();
-                doc.write(new XMLSerializer().serializeToString(
-                    document.implementation.createDocumentType(
-                        state.attributes["name"],
-                        state.attributes["publicId"],
-                        state.attributes["systemId"]
-                    )
-                ));
-                doc.close();
+                if (typeof XMLSerializer !== "undefined") {
+                    doc.open();
+                    doc.write(new XMLSerializer().serializeToString(
+                        this.document.implementation.createDocumentType(
+                            state.attributes["name"],
+                            state.attributes["publicId"],
+                            state.attributes["systemId"]
+                        )
+                    ));
+                    doc.close();
+                }
                 this.layouts[state.index] = doc;
                 break;
             case "HTML":
-                var newDoc = document.implementation.createHTMLDocument('');
+                var newDoc = this.document.implementation.createHTMLDocument('');
                 var html = newDoc.documentElement;
                 this.attributes(html, state.attributes);
                 var pointer = doc.importNode(html, true);
@@ -102,18 +104,19 @@ export default class Layout implements IParser {
                 this.layouts[state.index] = doc.documentElement;
                 break;
             case "HEAD":
-                var node = document.createElement(state.tag);
+                var node = this.document.createElement(state.tag);
                 this.attributes(node, state.attributes);
-                var baseTag = document.createElement("base");
+                var baseTag = this.document.createElement("base");
                 baseTag.href = this.base;
                 node.appendChild(baseTag);
                 parent.appendChild(node);
                 this.layouts[state.index] = node;
                 break;
             case "*TXT*":
-                var txt = document.createTextNode((<ITextLayoutState>(state as ILayoutState)).content);
+                var txt = this.document.createTextNode((<ITextLayoutState>(state as ILayoutState)).content);
                 this.layouts[state.index] = this.domInsert(txt, parent, next);
                 break;
+            case "*IGNORE*":
             case "OBJECT":
                 break;
             case "IFRAME":

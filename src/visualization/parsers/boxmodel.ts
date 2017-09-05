@@ -4,12 +4,12 @@ import { IParser } from "../components/Snapshot";
 export default class BoxModel implements IParser {
     private layouts: { [index: number]: Node } = {};
     private states: { [index: number]: IElementLayoutState } = {};
-    private frame: HTMLIFrameElement;
+    private document: Document;
     private base: string;
    
-    setup(frame: HTMLIFrameElement, base: string) {
+    setup(document: Document, frame: HTMLIFrameElement, base: string, thumbnail? : boolean) {
         this.layouts = {};
-        this.frame = frame;
+        this.document = document;
         this.base = base;
     }
 
@@ -42,12 +42,7 @@ export default class BoxModel implements IParser {
     }
 
     private getColor(color) {
-        var m = color.match(/^rgb\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)$/i);
-        if( m) {
-            return `rgba(${m[1]}, ${m[2]}, ${m[3]}, 0.4)`;
-        }
-        
-        m = color.match(/^rgba\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*((0.)?\d+)\s*\)$/i);
+        var m = color.match(/^rgb[a]?\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*/i);
         if( m) {
             return `rgba(${m[1]}, ${m[2]}, ${m[3]}, 0.4)`;
         }
@@ -92,21 +87,23 @@ export default class BoxModel implements IParser {
     }
 
     private insert(state: ILayoutState) {
-        var doc = this.frame.contentDocument;
+        var doc = this.document;
         var parent = this.layouts[state.parent];
         var next = state.next in this.layouts ? this.layouts[state.next] : null;
         switch (state.tag) {
             case "*DOC*":
                 let docState = state as IDoctypeLayoutState;
-                doc.open();
-                doc.write(new XMLSerializer().serializeToString(
-                    document.implementation.createDocumentType(
-                        docState.attributes["name"],
-                        docState.attributes["publicId"],
-                        docState.attributes["systemId"]
-                    )
-                ));
-                doc.close();
+                if (typeof XMLSerializer !== "undefined") {
+                    doc.open();
+                    doc.write(new XMLSerializer().serializeToString(
+                        this.document.implementation.createDocumentType(
+                            docState.attributes["name"],
+                            docState.attributes["publicId"],
+                            docState.attributes["systemId"]
+                        )
+                    ));
+                    doc.close();
+                }
                 this.layouts[state.index] = doc;
                 break;
             case "HTML":

@@ -2,12 +2,12 @@
 import { IParser } from "../components/Snapshot";
 
 export default class Pointer implements IParser {
-    private frame: HTMLIFrameElement;
+    private document: Document;
     private thumbnail: boolean;
 
-    setup(frame: HTMLIFrameElement, base: string) {
-        this.frame = frame;
-        this.thumbnail = frame.getAttribute("data-clarity") === "thumbnail";
+    setup(document: Document, frame: HTMLIFrameElement, base: string, thumbnail? : boolean) {
+        this.document = document;
+        this.thumbnail = !!thumbnail;
     }
 
     private colors = {
@@ -22,10 +22,10 @@ export default class Pointer implements IParser {
 
     private pointer(x: number, y: number, color: string) {
         var px = "px";
-        var doc = this.frame.contentDocument;
+        var doc = this.document;
         var pointer = doc.getElementById("clarity-pointer");
         if (pointer === null && doc.body) {
-            pointer = document.createElement("div");
+            pointer = doc.createElement("div");
             if (!this.thumbnail) {
                 pointer.id = "clarity-pointer";
             }
