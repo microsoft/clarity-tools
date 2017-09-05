@@ -4,10 +4,11 @@ import { connect } from "react-redux";
 import IconButton from 'material-ui/IconButton';
 import PlayIcon from 'material-ui/svg-icons/av/play-arrow';
 import PauseIcon from 'material-ui/svg-icons/av/pause';
-import SkipIcon from 'material-ui/svg-icons/av/fast-forward';
+import TimelapseIcon from 'material-ui/svg-icons/image/timelapse';
+import BoxModelIcon from 'material-ui/svg-icons/image/view-compact';
 import NextIcon from 'material-ui/svg-icons/av/skip-next';
 import PrevIcon from 'material-ui/svg-icons/av/skip-previous';
-import { selectSnapshot, togglePlayback, toggleSpeed, selectImpression } from "../actions";
+import { selectSnapshot, togglePlayback, toggleSpeed, selectImpression, toggleBoxModel } from "../actions";
 import Slider from "./Slider";
 import Timer from "./Timer";
 
@@ -64,6 +65,10 @@ class Player extends React.Component<any, any> {
         this.props.toggleSpeed(!this.props.speed);
     }
 
+    toggleBoxModel() {
+        this.props.toggleBoxModel(!this.props.boxmodel);
+    }
+
     playback() {
         if (this.props.playback) {
             var endTime = this.props.impression.events[this.props.impression.events.length - 1].time;
@@ -94,6 +99,7 @@ class Player extends React.Component<any, any> {
         var index = this.props.session.indexOf(this.props.impression);
         var Icon = this.props.playback ? <PauseIcon /> : <PlayIcon />;
         var speedIconColor = this.props.speed ? "white" : "#333";
+        var boxmodelIconColor = this.props.boxmodel ? "white" : "#333";
         var prevIconColor = index > 0 ? "white" : "#333";
         var nextIconColor = index < (this.props.session.length - 1) ? "white" : "#333";
         
@@ -110,7 +116,10 @@ class Player extends React.Component<any, any> {
                         <NextIcon />
                     </IconButton>
                     <IconButton iconStyle={{ color: speedIconColor }} onClick={this.toggleSpeed.bind(this)} >
-                        <SkipIcon />
+                        <TimelapseIcon />
+                    </IconButton>
+                    <IconButton iconStyle={{ color: boxmodelIconColor }} onClick={this.toggleBoxModel.bind(this)} >
+                        <BoxModelIcon />
                     </IconButton>
                 </div>
                 <Slider />
@@ -136,8 +145,15 @@ export default connect(
             impression: state.impression,
             snapshot: state.snapshot,
             playback: state.playback,
-            speed: state.speed
+            speed: state.speed,
+            boxmodel: state.boxmodel
         }
     },
-    dispatch => { return bindActionCreators({ selectSnapshot: selectSnapshot, togglePlayback: togglePlayback, toggleSpeed: toggleSpeed, selectImpression: selectImpression }, dispatch) }
+    dispatch => { return bindActionCreators({ 
+        selectSnapshot: selectSnapshot, 
+        togglePlayback: togglePlayback, 
+        toggleSpeed: toggleSpeed, 
+        toggleBoxModel: toggleBoxModel, 
+        selectImpression: selectImpression 
+    }, dispatch) }
 )(Player);

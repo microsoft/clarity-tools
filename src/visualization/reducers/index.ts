@@ -4,6 +4,7 @@ import ImpressionReducer from './impression';
 import SnapshotReducer from './snapshot';
 import PlaybackReducer from './playback';
 import SpeedReducer from './speed';
+import BoxModelReducer from './boxmodel';
 import NotFoundReducer from './notfound';
 
 const reducers = combineReducers({
@@ -12,7 +13,8 @@ const reducers = combineReducers({
     snapshot: SnapshotReducer,
     playback: PlaybackReducer,
     speed: SpeedReducer,
-    notfound: NotFoundReducer    
+    boxmodel: BoxModelReducer,
+    notfound: NotFoundReducer
 });
 
 export default reducers;
