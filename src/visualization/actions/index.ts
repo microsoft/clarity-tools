@@ -5,6 +5,7 @@ export const enum Types {
     TogglePlayback,
     ToggleSpeed,
     ToggleBoxModel,
+    ShowMenu,
     NotFound
 }
 
@@ -50,10 +51,16 @@ export const toggleBoxModel = (showBoxModel) => {
     }
 };
 
+export const showMenu = (menu) => {
+    return {
+        type: Types.ShowMenu,
+        payload: menu
+    }
+};
+
 export const notFound = (flag) => {
     return {
         type: Types.NotFound,
         payload: flag
     }
 };
-

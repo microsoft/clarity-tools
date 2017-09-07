@@ -5,6 +5,7 @@ import SnapshotReducer from './snapshot';
 import PlaybackReducer from './playback';
 import SpeedReducer from './speed';
 import BoxModelReducer from './boxmodel';
+import MenuReducer from './menu';
 import NotFoundReducer from './notfound';
 
 const reducers = combineReducers({
@@ -14,6 +15,7 @@ const reducers = combineReducers({
     playback: PlaybackReducer,
     speed: SpeedReducer,
     boxmodel: BoxModelReducer,
+    menu: MenuReducer,
     notfound: NotFoundReducer
 });
 

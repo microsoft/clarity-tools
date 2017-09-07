@@ -98,10 +98,10 @@ class Player extends React.Component<any, any> {
         this.extractFrames();
         var index = this.props.session.indexOf(this.props.impression);
         var Icon = this.props.playback ? <PauseIcon /> : <PlayIcon />;
-        var speedIconColor = this.props.speed ? "white" : "#333";
-        var boxmodelIconColor = this.props.boxmodel ? "white" : "#333";
-        var prevIconColor = index > 0 ? "white" : "#333";
-        var nextIconColor = index < (this.props.session.length - 1) ? "white" : "#333";
+        var speedIconColor = this.props.speed ? "white" : "#666";
+        var boxmodelIconColor = this.props.boxmodel ? "white" : "#666";
+        var prevIconColor = index > 0 ? "white" : "#666";
+        var nextIconColor = index < (this.props.session.length - 1) ? "white" : "#666";
         
         return (
             <div className="clarity-player">
@@ -124,7 +124,6 @@ class Player extends React.Component<any, any> {
                 </div>
                 <Slider />
                 <Timer />
-                <img className="clarity-logo" src="/clarity.png" alt="Clarity"></img>
             </div>
         );
     }
