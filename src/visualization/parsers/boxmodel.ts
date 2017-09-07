@@ -13,18 +13,18 @@ export default class BoxModel implements IParser {
         this.base = base;
     }
 
-    private domInsert(node: Node, parent?: Node, nextSibling?: Node) {
+    private domInsert(node: Node, parent: Node, nextSibling?: Node) {
         if (parent) {
-            if (nextSibling && nextSibling.parentNode === parent) {
-                nextSibling.parentNode.insertBefore(node, nextSibling);
-            }
-            else {
-                try {
+            try {
+                if (nextSibling && nextSibling.parentNode === parent) {
+                    nextSibling.parentNode.insertBefore(node, nextSibling);
+                }
+                else {
                     parent.appendChild(node);
                 }
-                catch (ex) {
-                    console.warn("Error while inserting a node: " + ex);
-                }
+            }
+            catch (ex) {
+                console.warn("Error while inserting a node: " + ex);
             }
             return node;
         }
@@ -36,7 +36,7 @@ export default class BoxModel implements IParser {
             node.parentNode.removeChild(node);
         }
         else {
-            console.warn(`Remove: Cannot remove ${node}`);
+            console.warn("Remove: Cannot remove: " + node);
         }
         return null;
     }
