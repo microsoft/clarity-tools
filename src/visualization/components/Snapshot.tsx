@@ -2,11 +2,12 @@ import * as React from "react";
 import * as ReactDOM from "react-dom";
 import { connect } from "react-redux";
 import Layout from "../parsers/layout";
+import BoxModel from "../parsers/boxmodel";
 import Viewport from "../parsers/viewport";
 import Pointer from "../parsers/pointer";
 
 export interface IParser {
-  setup(frame, base): void;
+  setup(document, frame, base, thumbnail? : boolean): void;
   render(state): void;
 }
 
@@ -29,7 +30,7 @@ class Snapshot extends React.Component<any, any> {
       // Reset all parsers if this is the first time an impression is rendered
       if (this.activeImpressionId != this.props.impression.envelope.impressionId) {
         for (var type in this.parsers) {
-          this.parsers[type].setup(this.frame, this.props.base);
+          this.parsers[type].setup(this.frame.contentDocument, this.frame, this.props.base);
         }
         this.activeImpressionId = this.props.impression.envelope.impressionId;
 
@@ -43,8 +44,9 @@ class Snapshot extends React.Component<any, any> {
       for (var i = startPointer; i < events.length; i++) {
         var event = events[i];
         if (event.time <= time) {
-          if (event.type in this.parsers) {
-            this.parsers[event.type].render(event.state);
+          let parser = event.type === "Layout" && this.props.boxmodel ? "BoxModel" : event.type; 
+          if (parser in this.parsers) {
+            this.parsers[parser].render(event.state);
           }
           this.currentPointer = i;
         }
@@ -58,6 +60,7 @@ class Snapshot extends React.Component<any, any> {
   componentWillMount() {
     this.parsers = {
       Layout: new Layout(),
+      BoxModel: new BoxModel(),
       Viewport: new Viewport(),
       Pointer: new Pointer()
     }
@@ -97,6 +100,7 @@ export default connect(
     return {
       snapshot: state.snapshot,
       impression: state.impression,
+      boxmodel: state.boxmodel,
       base: state.impression ? state.impression.envelope.url.match(/^(.*\/)[^\/]*$/)[1] : ""
     }
   })(Snapshot);

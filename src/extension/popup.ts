@@ -1,8 +1,9 @@
 (function() {
     // Initialize
-    var state = { "showText" : false, "showImages" : true, "enabled" : true }; 
+    var state = { "showText" : false, "showImages" : true, "showLines": true, "enabled" : true }; 
     var showText = (<HTMLInputElement>document.getElementById("showText"));
     var showImages = (<HTMLInputElement>document.getElementById("showImages"));
+    var showLines = (<HTMLInputElement>document.getElementById("showLines"));
     var enabled = (<HTMLInputElement>document.getElementById("enabled"));
     var replaySession = (<HTMLAnchorElement>document.getElementById("replaySession"));
     var menu = (<HTMLElement>document.getElementById("menu"));
@@ -16,6 +17,7 @@
     // Listen for changes
     showText.addEventListener("click", toggle);
     showImages.addEventListener("click", toggle);
+    showLines.addEventListener("click", toggle);
     enabled.addEventListener("click", toggle);
     replaySession.addEventListener("click", replay);
 
@@ -34,6 +36,9 @@
             case "showImages":
                 state.showImages = !state.showImages;
                 break;
+            case "showLines":
+                state.showLines = !state.showLines;
+                break;
             case "enabled":
                 state.enabled = !state.enabled;
                 break;
@@ -48,6 +53,7 @@
     function redraw(state) {
         showText.checked = state.showText;
         showImages.checked = state.showImages;
+        showLines.checked = state.showLines;
         enabled.checked = state.enabled;
         menu.style.display = state.enabled ? "block" : "none";
     }

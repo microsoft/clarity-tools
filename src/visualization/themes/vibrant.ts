@@ -11,14 +11,14 @@ export default {
     spacing: spacing,
     fontFamily: 'Roboto, sans-serif',
     palette: {
-        primary1Color: orange700,
+        primary1Color: darkBlack,
         primary2Color: orange600,
         primary3Color: grey600,
         accent1Color: darkBlack,
         accent2Color: grey100,
         accent3Color: grey500,
         textColor: darkBlack,
-        alternateTextColor: darkBlack,
+        alternateTextColor: white,
         canvasColor: white,
         borderColor: grey300,
         disabledColor: fade(darkBlack, 0.3),
@@ -26,4 +26,8 @@ export default {
         clockCircleColor: fade(darkBlack, 0.07),
         shadowColor: fullBlack,
     },
+    slider: {
+        selectionColor: white,
+        rippleColor: white,
+    }
 };

@@ -4,6 +4,8 @@ export const enum Types {
     SelectSnapshot,
     TogglePlayback,
     ToggleSpeed,
+    ToggleBoxModel,
+    ShowMenu,
     NotFound
 }
 
@@ -42,10 +44,23 @@ export const toggleSpeed = (isFast) => {
     }
 };
 
+export const toggleBoxModel = (showBoxModel) => {
+    return {
+        type: Types.ToggleBoxModel,
+        payload: showBoxModel
+    }
+};
+
+export const showMenu = (menu) => {
+    return {
+        type: Types.ShowMenu,
+        payload: menu
+    }
+};
+
 export const notFound = (flag) => {
     return {
         type: Types.NotFound,
         payload: flag
     }
 };
-

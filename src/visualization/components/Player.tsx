@@ -4,10 +4,11 @@ import { connect } from "react-redux";
 import IconButton from 'material-ui/IconButton';
 import PlayIcon from 'material-ui/svg-icons/av/play-arrow';
 import PauseIcon from 'material-ui/svg-icons/av/pause';
-import SkipIcon from 'material-ui/svg-icons/av/fast-forward';
+import TimelapseIcon from 'material-ui/svg-icons/image/timelapse';
+import BoxModelIcon from 'material-ui/svg-icons/image/view-compact';
 import NextIcon from 'material-ui/svg-icons/av/skip-next';
 import PrevIcon from 'material-ui/svg-icons/av/skip-previous';
-import { selectSnapshot, togglePlayback, toggleSpeed, selectImpression } from "../actions";
+import { selectSnapshot, togglePlayback, toggleSpeed, selectImpression, toggleBoxModel } from "../actions";
 import Slider from "./Slider";
 import Timer from "./Timer";
 
@@ -64,6 +65,10 @@ class Player extends React.Component<any, any> {
         this.props.toggleSpeed(!this.props.speed);
     }
 
+    toggleBoxModel() {
+        this.props.toggleBoxModel(!this.props.boxmodel);
+    }
+
     playback() {
         if (this.props.playback) {
             var endTime = this.props.impression.events[this.props.impression.events.length - 1].time;
@@ -82,7 +87,7 @@ class Player extends React.Component<any, any> {
     }
 
     playImpression(index) {
-        this.props.selectImpression(this.props.session[index]);
+        this.props.selectImpression(this.props.playlist[index]);
     }
 
     render() {
@@ -91,11 +96,12 @@ class Player extends React.Component<any, any> {
         }
 
         this.extractFrames();
-        var index = this.props.session.indexOf(this.props.impression);
+        var index = this.props.playlist.indexOf(this.props.impression);
         var Icon = this.props.playback ? <PauseIcon /> : <PlayIcon />;
-        var speedIconColor = this.props.speed ? "white" : "#333";
-        var prevIconColor = index > 0 ? "white" : "#333";
-        var nextIconColor = index < (this.props.session.length - 1) ? "white" : "#333";
+        var speedIconColor = this.props.speed ? "white" : "#666";
+        var boxmodelIconColor = this.props.boxmodel ? "white" : "#666";
+        var prevIconColor = index > 0 ? "white" : "#666";
+        var nextIconColor = index < (this.props.playlist.length - 1) ? "white" : "#666";
         
         return (
             <div className="clarity-player">
@@ -110,12 +116,14 @@ class Player extends React.Component<any, any> {
                         <NextIcon />
                     </IconButton>
                     <IconButton iconStyle={{ color: speedIconColor }} onClick={this.toggleSpeed.bind(this)} >
-                        <SkipIcon />
+                        <TimelapseIcon />
+                    </IconButton>
+                    <IconButton iconStyle={{ color: boxmodelIconColor }} onClick={this.toggleBoxModel.bind(this)} >
+                        <BoxModelIcon />
                     </IconButton>
                 </div>
                 <Slider />
                 <Timer />
-                <img className="clarity-logo" src="/clarity.png" alt="Clarity"></img>
             </div>
         );
     }
@@ -123,6 +131,14 @@ class Player extends React.Component<any, any> {
     componentWillUnmount() {
         if (this.setTimeoutId > 0) {
             clearTimeout(this.setTimeoutId);
+        }
+    }
+
+    componentDidUpdate() {
+        let drawer = document.querySelector(".clarity-drawer > div");
+        let active = document.querySelector(".active-step");
+        if (drawer && active && active.parentElement && active.parentElement.parentElement && active.parentElement.parentElement.parentElement) {
+            drawer.scrollTop = active.parentElement.parentElement.parentElement.offsetTop;    
         }
     }
 }
@@ -133,11 +149,19 @@ export default connect(
     state => {
         return {
             session: state.session,
+            playlist: state.playlist,
             impression: state.impression,
             snapshot: state.snapshot,
             playback: state.playback,
-            speed: state.speed
+            speed: state.speed,
+            boxmodel: state.boxmodel
         }
     },
-    dispatch => { return bindActionCreators({ selectSnapshot: selectSnapshot, togglePlayback: togglePlayback, toggleSpeed: toggleSpeed, selectImpression: selectImpression }, dispatch) }
+    dispatch => { return bindActionCreators({ 
+        selectSnapshot: selectSnapshot, 
+        togglePlayback: togglePlayback, 
+        toggleSpeed: toggleSpeed, 
+        toggleBoxModel: toggleBoxModel, 
+        selectImpression: selectImpression 
+    }, dispatch) }
 )(Player);

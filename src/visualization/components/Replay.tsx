@@ -1,8 +1,6 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 import Snapshot from "./Snapshot";
-import Session from "./Session";
-import Player from "./Player";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 
@@ -16,10 +14,6 @@ class Replay extends React.Component<any, any> {
 
         return (
             <div className="clarity-replay">
-                <Player />
-                <div className="clarity-session">
-                    <Session />
-                </div>
                 <div className="clarity-snapshot">
                     <Snapshot />
                 </div>

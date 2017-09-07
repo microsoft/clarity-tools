@@ -31,10 +31,21 @@
 			-webkit-transition: padding-left 218ms cubic-bezier(0.4, 0, 0.2, 1);
 			transition: padding-left 218ms cubic-bezier(0.4, 0, 0.2, 1);
 		}
+
+		
+		.clarity-bar.expanded {
+			left: 255px;
+		}
+
+		.clarity-content.expanded {
+			padding-left: 255px;
+		}
 		
 		.clarity-player {
-			background: #000;
 			color: white;
+			display: inline-block;
+			position: absolute;
+			margin-top: 5px;
 		}
 		
 		.clarity-controls {
@@ -54,13 +65,13 @@
 			position: relative;
 			top: -8px;
 			margin-left: 24px;
+			font-size: 14px;
 		}
 		
 		.clarity-logo {
 			width: 117px;
 			height: 37px;
-			margin: 6px;
-			float:right;
+			margin: 15px;
 		}
 		
 		.clarity-snapshot {
