@@ -7,10 +7,16 @@ import Header from "./Header";
 class Content extends React.Component<any, any> {
 
     render() {
+        let path = top.location.pathname;
+        let parts = path ? path.split("/") : [];
+        let notfound = parts.length == 5 ? 
+            `No match found for ${parts[3]} (user) or ${parts[4]} (impression) on ${parts[2]}.` : 
+            `Invalid url format.`;
+
         if (this.props.notfound) {
             return (
                 <div className={'clarity-notfound'}>
-                    No match found.
+                    <h2>{notfound}</h2>
                 </div>
             );
         }

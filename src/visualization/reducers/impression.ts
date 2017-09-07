@@ -3,9 +3,9 @@ import { Types } from "../actions";
 export default function (state = null, action) {
     switch (action.type) {
         case Types.SelectSession:
-            for (var payload of action.payload) {
-                if (payload.events && payload.events.length > 0) {
-                    return payload;
+            for (let impression of action.payload) {
+                if (impression.events && impression.events.length > 0) {
+                    return impression;
                 }
             }
             return action.payload[0];
