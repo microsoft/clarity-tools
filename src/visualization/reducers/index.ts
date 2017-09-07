@@ -1,5 +1,6 @@
 import { combineReducers } from 'redux';
 import SessionReducer from './session';
+import PlaylistReducer from './playlist';
 import ImpressionReducer from './impression';
 import SnapshotReducer from './snapshot';
 import PlaybackReducer from './playback';
@@ -12,6 +13,7 @@ const reducers = combineReducers({
     session: SessionReducer,
     impression: ImpressionReducer,
     snapshot: SnapshotReducer,
+    playlist: PlaylistReducer,
     playback: PlaybackReducer,
     speed: SpeedReducer,
     boxmodel: BoxModelReducer,

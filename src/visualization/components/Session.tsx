@@ -19,10 +19,11 @@ class Session extends React.Component<any, any> {
 
     getListItems(infoItems) {
         let iconStyles = { left: 0, width: 20, height: 20, margin: 6 };
-        let listStyles = { fontSize: "10px", padding: "8px 16px 8px 35px" };
+        let listStyles = { fontSize: "10px", padding: "8px 16px 8px 28px" };
+        let count = 0;
         return infoItems.map((item) => {
             return (
-                <ListItem leftIcon={<item.icon style={iconStyles} />} disabled={true} innerDivStyle={listStyles}>
+                <ListItem key={count++} leftIcon={<item.icon style={iconStyles} />} disabled={true} innerDivStyle={listStyles}>
                     {item.title}
                 </ListItem>
             );
@@ -47,14 +48,15 @@ class Session extends React.Component<any, any> {
                 infoItems.push({title: impression.envelope.clientId || impression.envelope.clarityId.toUpperCase(), icon: UserIcon});
                 infoItems.push({title: <a href={impression.envelope.url} target="_blank">Link</a>, icon: LinkIcon});
             }
-            
+            let stepClassName = active ? "clarity-steptitle active-step" : "clarity-steptitle";
+
             return (
                 <Step key={impression.envelope.impressionId} active={active}>
                     <StepButton onClick={() => this.props.selectImpression(impression)} disabled={disabled}>
-                        <div className="clarity-steptitle">
+                        <div className={stepClassName}>
                             <span title={url}>{title}</span>
                             <br/>
-                            <span className="clarity-steptime">
+                            <span className={"clarity-steptime"}>
                                 {header}
                             </span>
                         </div>

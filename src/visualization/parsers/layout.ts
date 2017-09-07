@@ -116,7 +116,6 @@ export default class Layout implements IParser {
                 var txt = this.document.createTextNode((<ITextLayoutState>(state as ILayoutState)).content);
                 this.layouts[state.index] = this.domInsert(txt, parent, next);
                 break;
-            case "*IGNORE*":
             case "OBJECT":
                 break;
             case "IFRAME":

@@ -41,14 +41,7 @@ export default class BoxModel implements IParser {
         return null;
     }
 
-    private getColor(color) {
-        var m = color.match(/^rgb[a]?\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*/i);
-        if( m) {
-            return `rgba(${m[1]}, ${m[2]}, ${m[3]}, 0.4)`;
-        }
-    }
-
-    private draw(node: HTMLElement, layout: IBoxModel, tag: string, parent: number) : void
+    private draw(node: HTMLElement, layout: ILayoutRectangle, tag: string, parent: number) : void
     {
         let px = "px";
         let parentX = 0;
@@ -74,9 +67,7 @@ export default class BoxModel implements IParser {
             node.style.marginBottom = -1 + px;
             node.style.borderBottom = "1px solid black";
         }
-        if (layout.overflow) node.style.overflow = layout.overflow;
-        if (layout.visibility) node.style.visibility = layout.visibility;
-        node.style.backgroundColor = layout.color ? this.getColor(layout.color) : "rgba(0,0,0,0.4)";
+        node.style.backgroundColor = "rgba(0,0,0,0.2)";
     }
 
     private selector(tag, attributes) {
@@ -117,13 +108,6 @@ export default class BoxModel implements IParser {
                 break;
             case "*TXT*":
                 let textState = state as ITextLayoutState;
-                if (textState.lines) {
-                    for (var line of textState.lines) {
-                        var node = doc.createElement("SPAN");
-                        this.draw(node, line, state.tag, state.parent);
-                        this.layouts[state.index] = this.domInsert(node, parent, next);
-                    }
-                }
                 break;
             default:
                 let elementState = state as IElementLayoutState;

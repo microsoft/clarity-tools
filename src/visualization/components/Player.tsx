@@ -87,7 +87,7 @@ class Player extends React.Component<any, any> {
     }
 
     playImpression(index) {
-        this.props.selectImpression(this.props.session[index]);
+        this.props.selectImpression(this.props.playlist[index]);
     }
 
     render() {
@@ -96,12 +96,12 @@ class Player extends React.Component<any, any> {
         }
 
         this.extractFrames();
-        var index = this.props.session.indexOf(this.props.impression);
+        var index = this.props.playlist.indexOf(this.props.impression);
         var Icon = this.props.playback ? <PauseIcon /> : <PlayIcon />;
         var speedIconColor = this.props.speed ? "white" : "#666";
         var boxmodelIconColor = this.props.boxmodel ? "white" : "#666";
         var prevIconColor = index > 0 ? "white" : "#666";
-        var nextIconColor = index < (this.props.session.length - 1) ? "white" : "#666";
+        var nextIconColor = index < (this.props.playlist.length - 1) ? "white" : "#666";
         
         return (
             <div className="clarity-player">
@@ -133,6 +133,14 @@ class Player extends React.Component<any, any> {
             clearTimeout(this.setTimeoutId);
         }
     }
+
+    componentDidUpdate() {
+        let drawer = document.querySelector(".clarity-drawer > div");
+        let active = document.querySelector(".active-step");
+        if (drawer && active && active.parentElement && active.parentElement.parentElement && active.parentElement.parentElement.parentElement) {
+            drawer.scrollTop = active.parentElement.parentElement.parentElement.offsetTop;    
+        }
+    }
 }
 
 // Connnecting Slider container with the redux store
@@ -141,6 +149,7 @@ export default connect(
     state => {
         return {
             session: state.session,
+            playlist: state.playlist,
             impression: state.impression,
             snapshot: state.snapshot,
             playback: state.playback,

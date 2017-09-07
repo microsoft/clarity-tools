@@ -11,19 +11,23 @@ import { showMenu } from "../actions";
 
 class Header extends React.Component<any, any> {
 
+    toggle() {
+        this.props.showMenu(!this.props.menu);
+    }
+
     render() {
         return (
             <div className="clarity-header">
                 <AppBar
                     className={'clarity-bar' + (this.props.menu ? ' expanded' : '')}
-                    onLeftIconButtonTouchTap={() => this.props.showMenu(!this.props.menu)}
+                    onLeftIconButtonTouchTap={this.toggle.bind(this)}
                     title={
                         <div>
                             <img className="clarity-logo" src="/clarity.png" alt="Clarity"></img>
                             <Player />
                         </div>
                     } />
-                <Drawer docked={true} open={this.props.menu}>
+                <Drawer className="clarity-drawer" docked={true} open={this.props.menu}>
                     <AppBar showMenuIconButton={false} />
                     <div className="clarity-session">
                         <Session />
@@ -31,6 +35,14 @@ class Header extends React.Component<any, any> {
                 </Drawer>
             </div>
         );
+    }
+
+    componentDidUpdate() {
+        let drawer = document.querySelector(".clarity-drawer > div");
+        let active = document.querySelector(".active-step");
+        if (drawer && active && active.parentElement && active.parentElement.parentElement && active.parentElement.parentElement.parentElement) {
+            drawer.scrollTop = active.parentElement.parentElement.parentElement.offsetTop;    
+        }
     }
 }
 
