@@ -1,20 +1,16 @@
-# Visual Studio Code temporary files
-.vscode/
-
-# Build results
-build/
+#
+data.json
 
 # npm packages
 node_modules
 
-# npm logs
-npm-debug.log*
-
-#
-data.json
+# Build results
+build
 
 #
 env.bat
 /visualization
 extension
-npm-debug.log
+
+# npm logs
+npm-debug.log*

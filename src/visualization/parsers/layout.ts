@@ -7,7 +7,6 @@ export default class Layout implements IParser {
     private document: Document;
     private svgns: string = "http://www.w3.org/2000/svg";
     private placeholderImage = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAMSURBVBhXY2BgYAAAAAQAAVzN/2kAAAAASUVORK5CYII=";
-    private ignoreTag = "*IGNORE*";
 
     private attributes(node: HTMLElement, attributes: IAttributes) {
         if (attributes) {
@@ -73,22 +72,16 @@ export default class Layout implements IParser {
         }
 
         return this.document.createElement(state.tag);
-        if (state.tag === this.ignoreTag) {
-            element = document.createElement("div");
-            element.style.display = "none";
-            element.setAttribute("data-ignore", "true");
-        } else {
-            element = document.createElement(state.tag);
-        }
-        return element;
     }
 
-    private insert(state: IElementLayoutState) {
+    private insert(layoutState: ILayoutState) {
         var doc = this.document;
+        var state: any = layoutState as IElementLayoutState;
         var parent = this.layouts[state.parent];
         var next = state.next in this.layouts ? this.layouts[state.next] : null;
         switch (state.tag) {
             case "*DOC*":
+                state = layoutState as IDoctypeLayoutState;
                 if (typeof XMLSerializer !== "undefined") {
                     doc.open();
                     doc.write(new XMLSerializer().serializeToString(
@@ -113,16 +106,17 @@ export default class Layout implements IParser {
                 this.layouts[state.index] = doc.documentElement;
                 break;
             case "HEAD":
-                var node = this.document.createElement(state.tag);
-                this.attributes(node, state.attributes);
+                let headNode = this.document.createElement(state.tag);
+                this.attributes(headNode, state.attributes);
                 var baseTag = this.document.createElement("base");
                 baseTag.href = this.base;
-                node.appendChild(baseTag);
-                parent.appendChild(node);
-                this.layouts[state.index] = node;
+                headNode.appendChild(baseTag);
+                parent.appendChild(headNode);
+                this.layouts[state.index] = headNode;
                 break;
             case "*TXT*":
-                var txt = this.document.createTextNode((<ITextLayoutState>(state as ILayoutState)).content);
+                state = layoutState as ITextLayoutState;
+                var txt = this.document.createTextNode(state.content);
                 this.layouts[state.index] = this.domInsert(txt, parent, next);
                 break;
             case "OBJECT":
@@ -140,8 +134,18 @@ export default class Layout implements IParser {
                 }
                 this.layouts[state.index] = this.domInsert(img, parent, next);
                 break;
+            case "*IGNORE*":
+                state = layoutState as IIgnoreLayoutState;
+                var ignoredNode = document.createElement("div");
+                ignoredNode.setAttribute("data-index", state.index.toString());
+                ignoredNode.setAttribute("data-nodeType", this.getNodeTypeString(state.nodeType));
+                if (state.nodeType === Node.ELEMENT_NODE) {
+                    ignoredNode.setAttribute("data-tagName", state.elementTag);
+                }
+                this.domInsert(ignoredNode, parent, next);
+                break;
             default:
-                var node = this.createElement(state, parent);
+                let node = this.createElement(state, parent);
                 this.attributes(node, state.attributes);
                 // Check if this element can be scrolled
                 if (state.layout && (state.layout.scrollX || state.layout.scrollY)) {
@@ -185,9 +189,11 @@ export default class Layout implements IParser {
             console.warn(`Move: ${node} doesn't exist`);
         }
     }
+
     private remove(state: ILayoutState) {
         this.layouts[state.index] = this.domRemove(this.layouts[state.index]);
     }
+
     private move(state: ILayoutState) {
         var node = this.layouts[state.index];
         var parent = this.layouts[state.parent];
@@ -200,9 +206,38 @@ export default class Layout implements IParser {
         }
     }
 
-    reset() {
-
+    private getNodeTypeString(nodeType: number) {
+        var nodeTypeStr = null;
+        switch (nodeType) {
+            case Node.ELEMENT_NODE:
+                nodeTypeStr = "ELEMENT_NODE";
+                break;
+            case Node.TEXT_NODE:
+                nodeTypeStr = "TEXT_NODE";
+                break;
+            case Node.PROCESSING_INSTRUCTION_NODE:
+                nodeTypeStr = "PROCESSING_INSTRUCTION_NODE";
+                break;
+            case Node.COMMENT_NODE:
+                nodeTypeStr = "COMMENT_NODE";
+                break;
+            case Node.DOCUMENT_NODE:
+                nodeTypeStr = "DOCUMENT_NODE";
+                break;
+            case Node.DOCUMENT_TYPE_NODE:
+                nodeTypeStr = "DOCUMENT_TYPE_NODE";
+                break;
+            case Node.DOCUMENT_FRAGMENT_NODE:
+                nodeTypeStr = "DOCUMENT_FRAGMENT_NODE";
+                break;
+            default:
+                nodeTypeStr = `Unknown node type (${nodeType})`;
+                break;
+        }
+        return nodeTypeStr;
     }
+
+    reset() {}
 
     render(state: IElementLayoutState) {
         switch (state.action) {
