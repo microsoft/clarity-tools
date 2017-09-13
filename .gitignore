@@ -1,7 +1,16 @@
+#
 data.json
+
+# npm packages
 node_modules
+
+# Build results
 build
+
+#
 env.bat
 /visualization
 extension
-npm-debug.log
+
+# npm logs
+npm-debug.log*
