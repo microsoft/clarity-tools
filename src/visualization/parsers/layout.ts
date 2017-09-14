@@ -161,7 +161,13 @@ export default class Layout implements IParser {
         var node = <HTMLElement>this.layouts[state.index];
         if (node) {
             // First remove all its existing attributes
-            while (node.attributes && node.attributes.length > 0) node.removeAttribute(node.attributes[0].name);
+            if (node.attributes) {
+                var len = node.attributes.length;
+                while (node.attributes && len > 0) {
+                    node.removeAttribute(node.attributes[0].name);
+                    len--;
+                }
+            }
             // Then, update attributes from the new received event state
             this.attributes(node, state.attributes);
             // Special handling for image nodes

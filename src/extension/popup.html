@@ -1,35 +1,154 @@
 <!doctype html>
 <html>
-  <head>
+
+<head>
     <title>Clarity</title>
     <style type="text/css">
         body {
             width: 250px;
-            margin:0;
+            margin: 0;
             background: #F3F3F3;
+            font-family: 'Segoe UI Light', Tahoma, Geneva, Verdana, sans-serif;
         }
+
         .clarity-logo-wrapper {
             margin: 0 auto;
         }
+
         .clarity-logo {
             margin: 10px auto;
             display: block;
         }
 
+        /* Recording */
+
+        .recordingToggle {
+            height: 100px;
+        }
+
+        .recordingToggle:hover {
+            cursor: pointer;
+        }
+
+        .recordButton {
+            margin-left: 15px;
+            width: 40px;
+            height: 40px;
+            float: left;
+            border-radius: 50%;
+            background-color: #FF5050;
+            background-clip: content-box;
+            padding: 5px;
+            border: 20px solid #FF5050;
+        }
+
+        .recordButton:hover {
+            background-color: #F63B3B;
+            border-color: #F63B3B;
+        }
+
+        .stopButton {
+            margin-left: 15px;
+            border-radius: 25px;
+            border: 10px solid #FF5050;
+            background: #FF5050;
+            float: left;
+            padding: 10px;
+            width: 50px;
+            height: 50px;
+            background-clip: content-box;
+        }
+
+        .stopButton:hover {
+            background-color: #F63B3B;
+            border-color: #F63B3B;
+        }
+
+        .recordText {
+            padding-top: 33px;
+            padding-left: 115px;
+            font-size: 18px;
+        }
+        
+        /* Previous Sessions */
+        #replayMenu {
+            width: 100%;
+        }
+
+        #replayMenu:hover {
+            cursor: pointer;
+        }
+
+        .sessions {
+            display: inline-block;
+        }
+
+        .replayLogo {
+            float: left;
+            margin-left: 45px;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            width: 40px;
+        }
+
+        #replayText {
+            padding-top: 20px;
+            padding-left: 95px;
+            font-size: 14px;
+        }
+
+        /* save menu */
+        #saveMenu {
+            display: none;
+            font-family: 'Segoe UI';
+            text-align: center;
+        }
+
+        #nicknameDiv {
+            display: none;
+            margin-left: 5px;
+            margin-top: 10px;
+            height: 23px;
+        }
+
+        #nickname {
+            background-color: #F3F3F3;
+            border: none;
+            width: 240px;
+            font-family: 'Segoe UI Light';
+            font-style: italic;
+            font-size: 16px;
+        }
+
+        #sessionInfo {
+            text-align: left;
+        }
+
+        /* Help Menu */
+        #footer {
+            font-size: 15px;
+            height: 25px;
+            vertical-align: middle; 
+            text-align: right;
+        }
+
         /* Toggle Styles */
         .white {
             background: white;
-
         }
+
         .white a {
             text-decoration: none;
         }
+
         .topborder {
             border-top: 1px solid #CCC;
         }
+
         .bottomborder {
             border-bottom: 1px solid #CCC;
         }
+
         .option {
             padding-left: 10px;
             font-family: Segoe UI, Arial, sans-serif;
@@ -37,56 +156,102 @@
             height: 40px;
             padding-top: 15px;
         }
-       .toggleswitch {
-            position: relative; width: 45px;
-            -webkit-user-select:none; -moz-user-select:none; -ms-user-select: none;
+
+        .toggleswitch {
+            position: relative;
+            width: 45px;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
             float: right;
             margin-right: 10px;
             margin-top: 5px;
         }
+
         .toggleswitch-checkbox {
             display: none;
         }
+
         .toggleswitch-label {
-            display: block; overflow: hidden; cursor: pointer;
-            height: 18px; padding: 0; line-height: 18px;
-            border: 0px solid #FFFFFF; border-radius: 25px;
+            display: block;
+            overflow: hidden;
+            cursor: pointer;
+            height: 18px;
+            padding: 0;
+            line-height: 18px;
+            border: 0px solid #FFFFFF;
+            border-radius: 25px;
             background-color: #9E9E9E;
         }
+
         .toggleswitch-label:before {
             content: "";
-            display: block; width: 25px; margin: -3.5px;
+            display: block;
+            width: 25px;
+            margin: -3.5px;
             background: #F3F3F3;
-            position: absolute; top: 0; bottom: 0;
+            position: absolute;
+            top: 0;
+            bottom: 0;
             right: 23px;
             border-radius: 25px;
             box-shadow: 0 6px 12px 0px #757575;
         }
-        .toggleswitch-checkbox:checked + .toggleswitch-label {
+
+        .toggleswitch-checkbox:checked+.toggleswitch-label {
             background-color: #9E9E9E;
         }
-        .toggleswitch-checkbox:checked + .toggleswitch-label, .toggleswitch-checkbox:checked + .toggleswitch-label:before {
-        border-color: #CCC;
+
+        .toggleswitch-checkbox:checked+.toggleswitch-label,
+        .toggleswitch-checkbox:checked+.toggleswitch-label:before {
+            border-color: #CCC;
         }
-        .toggleswitch-checkbox:checked + .toggleswitch-label .toggleswitch-inner {
+
+        .toggleswitch-checkbox:checked+.toggleswitch-label .toggleswitch-inner {
             margin-left: 0;
         }
-        .toggleswitch-checkbox:checked + .toggleswitch-label:before {
-            right: 0px; 
-            background-color: #DF4931; 
+
+        .toggleswitch-checkbox:checked+.toggleswitch-label:before {
+            right: 0px;
+            background-color: #DF4931;
             box-shadow: 3px 6px 18px 0px rgba(0, 0, 0, 0.2);
         }
     </style>
-  </head>
-  
+</head>
+
 <body onload="init">
-	<div class="clarity-logo-wrapper">
-        <img class="clarity-logo" src="data:image/png;base64,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" alt="Clarity"></img>
-    </div>
-    <div id="menu">
-        <div class="option white topborder bottomborder">
-            <a id="replaySession" href='#'>Replay this session</a>
+    <div class="clarity-logo-wrapper">
+        <img class="clarity-logo" src="data:image/png;base64,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"
+            alt="Clarity"></img>
+        <div id="start" class="recordingToggle">       
+            <div id="start" class="recordButton"></div>
+            <div id="start"class="recordText"><b>Start</b> Recording</div>
         </div>
+        <div id="stop" class="recordingToggle">
+            <div id="stop" class="stopButton"></div>
+            <div id="stop" class="recordText"><b>Stop</b> Recording</div>
+        </div>
+    </div>
+    <div  id="saveMenu" class="white topborder bottomborder">
+        <form>
+            <div id="nicknameDiv">
+                <input type="text" id="nickname" value="session nickname"><br><br>
+            </div>
+            <div id="sessionInfo">
+                <p>Date:</p>
+                <p>Duration:</p>
+            </div>
+            <a id="save" href='#'>Save session</a>
+            <a id="discard" href='#'>Discard session</a>
+        </form>
+    </div>
+    <div id="replayMenu" class="sessions topborder bottomborder">
+        <div id="replayLastSession">
+            <img class="replayLogo" src="./icon.png" onmouseover="this.src='./replay-hover.png';"></img>
+            <div id="replayText"><b>Replay</b> last session</div>
+        </div>
+    </div>
+    <div id="menu" class="bottomborder">
         <div class="option">
             Show Text
             <div class="toggleswitch">
@@ -101,21 +266,18 @@
                 <label class="toggleswitch-label" for="showImages"></label>
             </div>
         </div>
-        <div class="option">
+        <!--<div class="option">
             Show Lines
             <div class="toggleswitch">
                 <input type="checkbox" name="toggleswitch" class="toggleswitch-checkbox" id="showLines">
                 <label class="toggleswitch-label" for="showLines"></label>
             </div>
-        </div>
+        </div>-->
     </div>
-    <div class="option topborder">
-        Enabled
-        <div class="toggleswitch">
-            <input type="checkbox" name="toggleswitch" class="toggleswitch-checkbox" id="enabled">
-            <label class="toggleswitch-label" for="enabled"></label>
-        </div>
+    <div id="footer">
+        <a href='https://github.com/Microsoft/clarity-tools/' target="_blank">Get help</a>
     </div>
     <script src="popup.js"></script>
 </body>
+
 </html>

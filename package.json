@@ -25,8 +25,10 @@
   },
   "dependencies": {
     "clarity-js": "^0.1.10",
-    "material-ui": "0.17.4",
-    "react": "^15.4.2",
+    "jquery": "^3.2.1",
+    "material-ui": "^0.19.1",
+    "react": "^15.6.1",
+    "react-copy-to-clipboard": "^5.0.0",
     "react-dom": "^15.4.2",
     "react-redux": "^5.0.3",
     "react-router": "^3.0.2",
@@ -37,6 +39,7 @@
   "devDependencies": {
     "@types/chrome": "0.0.35",
     "@types/cors": "0.0.33",
+    "@types/jquery": "^3.2.10",
     "@types/material-ui": "0.17.10",
     "@types/react": "0.14.57",
     "@types/react-dom": "0.14.19",
@@ -45,15 +48,20 @@
     "@types/react-swipeable-views": "0.0.27",
     "@types/react-tap-event-plugin": "0.0.30",
     "@types/redux": "3.6.0",
-    "browserify": "^13.0.1",
+    "browserify": "^13.3.0",
     "copyfiles": "^1.0.0",
+    "del-cli": "^1.1.0",
     "typescript": "2.3.2"
   },
   "scripts": {
     "compile": "node_modules/.bin/tsc -p ./",
     "bundle:content": "node_modules/.bin/browserify ./extension/instrument.js > ./extension/content.js",
     "bundle:visualization": "node_modules/.bin/browserify ./extension/app.js > ./extension/clarity.js",
-    "binplace:extension": "node_modules/.bin/copyfiles -f ./src/extension/*.html ./src/extension/manifest.json ./src/extension/*.png ./extension/",
-    "build": "npm run compile && npm run bundle:content && npm run binplace:extension && npm run bundle:visualization"
+    "binplace:extensionChrome": "node_modules/.bin/copyfiles -f ./src/extension/*.html ./src/extension/manifest.json ./src/extension/*.png ./extension/",
+    "binplace:extensionEdge": "node_modules/.bin/copyfiles -f extension/* extension-edge",
+    "convertEdge": "node_modules/.bin/copyfiles -f src/extension/edge/* extension-edge/",
+    "reorg": "node_modules/.bin/copyfiles -f extension/* extension-chrome/",
+    "cleanExtension": "node_modules/.bin/del-cli extension/",
+    "build": "npm run compile && npm run bundle:content && npm run binplace:extensionChrome && npm run bundle:visualization && npm run binplace:extensionEdge && npm run convertEdge && npm run reorg && npm run cleanExtension"
   }
 }
