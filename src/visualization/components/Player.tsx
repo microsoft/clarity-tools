@@ -24,9 +24,9 @@ import uncompress from '../uncompress'
 
 class Player extends React.Component<any, any> {
 
-    private extensionCreateBlobAPIEndpoint = 'http://localhost:3000/extensionCreateBlob/?id=extensionlogs';
-    private extensionUploadBlobAPIEndpoint = 'http://localhost:3000/extensionUpload/';
-    private extensionShareURL = 'localhost:3000/share/?id=';
+    private extensionCreateBlobAPIEndpoint = '';
+    private extensionUploadBlobAPIEndpoint = '';
+    private extensionShareURL = '';
 
     private interval = 33;
     private setTimeoutId = -1;
@@ -252,7 +252,6 @@ class Player extends React.Component<any, any> {
             message: 'Link: ',
             url: uploadedUrl
         });
-        $('#copy-button').addClass('link-ready');
     };
 
     openShareWindow = () => {
@@ -313,8 +312,7 @@ class Player extends React.Component<any, any> {
             return (
                 <div className="clarity-player">
                     {baseControls}
-                    
-                    <IconButton id="share-icon" touch={true} tooltip="Upload and share" tooltipPosition="top-center" iconStyle={{ color: "white" }} onClick={this.uploadAndShare.bind(this)}>
+                    <IconButton id="share-icon" touch={true} iconStyle={{ color: "white" }} onClick={this.uploadAndShare.bind(this)}>
                         <ShareIcon />
                     </IconButton>
                     <a className="share" onClick={this.uploadAndShare.bind(this)}>Upload and share</a>
@@ -328,7 +326,7 @@ class Player extends React.Component<any, any> {
                                 target="_blank" 
                                 href={"https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F" + "www.bing.com" + "%2F&amp;src=sdkpreparse"}
                             />,
-                            <CopyToClipboard id="copy-button" text={this.state.url}>
+                            <CopyToClipboard className="copy-button" text={this.state.url}>
                                 <FlatButton
                                     className="share-popup"
                                     label="Copy link to clipboard"
@@ -351,7 +349,7 @@ class Player extends React.Component<any, any> {
                         open={open}
                         onRequestClose={this.closeShareWindow}>
                         <div className="share-popup">
-                            {this.state.url != "" ? 'Share: ' : 'Uploading... '}
+                            {this.state.url != "" ? 'Upload Finished! Share: ' : 'Uploading... '}
                             <br />
                             <br />
                             <LinearProgress mode="determinate" value={this.state.completed} />
