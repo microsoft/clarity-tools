@@ -20,7 +20,7 @@ chrome.runtime.onMessage.addListener(
       if (payloads.length > 100) {
         payloads.shift();
       }
-      payloads.push({tabId: sender.tab.id, payload: request.payload});
+      payloads.push({tabId: sender.tab.id, dateTime: Date.now(), payload: request.payload});
       sendResponse({ success: true });
     }
   }
