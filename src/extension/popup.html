@@ -19,6 +19,7 @@
             margin: 10px auto;
             display: block;
         }
+
         /* Recording */
 
         .recordingToggle {
@@ -83,16 +84,11 @@
         }
 
         .replayLogo {
-            content: url('./icon.png');
             float: left;
             margin-left: 45px;
             margin-top: 10px;
             margin-bottom: 10px;
             width: 40px;
-        }
-
-        .replayLogo:hover {
-            content: url('./replay-hover.png');
         }
 
         #replayText {
@@ -251,7 +247,7 @@
     </div>
     <div id="replayMenu" class="sessions topborder bottomborder">
         <div id="replayLastSession">
-            <div class="replayLogo"></div>
+            <img class="replayLogo" src="./icon.png" onmouseover="this.src='./replay-hover.png';"></img>
             <div id="replayText"><b>Replay</b> last session</div>
         </div>
     </div>

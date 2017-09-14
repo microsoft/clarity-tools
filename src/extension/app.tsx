@@ -20,7 +20,7 @@ const store = createStore(ClarityReducer);
 ReactDOM.render(
     <Provider store={store}>
         <Theme muiTheme={getMuiTheme(vibrantTheme)}>
-            <Content />
+            <Content/>
         </Theme>
     </Provider>,
     document.getElementById("preview")
@@ -29,7 +29,7 @@ ReactDOM.render(
 let activeTabId = parseInt(location.href.match(/\?tab=([0-9]*$)/)[1]);
 let sharingId = null;
 chrome.runtime.sendMessage({ fetch: true }, function (response) {
-    if (response.payloads) {
+    if (response && response.payloads) {
         let payloads = response.payloads;
         processData(payloads);
     }
