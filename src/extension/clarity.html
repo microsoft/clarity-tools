@@ -85,12 +85,47 @@
 		}
 		.clarity-steptime {
 			font-size:10px;
+			display: none;
 		}
 		
+		.upload {
+			color: white;
+			float: none;
+		}
+
+		.share {
+			font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+			position: relative;
+			top: -8px;
+		}
+		.share:hover {
+			cursor: pointer;
+		}
+
+		.share-popup {
+			font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+			color: #000;
+		}
+
+		.share-link {
+			width: 100%;
+		}
+
+		.link-ready {
+			display: default;
+		}
+
+		.not-active {
+   			pointer-events: none;
+   			cursor: default;
+			opacity: 0.5;
+		}
+
 	</style>
 </head>
 
 <body>
+	
 	<div id="preview"></div>
 	<script src="clarity.js"></script>
 </body>

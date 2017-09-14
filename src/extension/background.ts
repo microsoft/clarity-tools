@@ -20,12 +20,20 @@ chrome.runtime.onMessage.addListener(
       if (payloads.length > 100) {
         payloads.shift();
       }
-      payloads.push({tabId: sender.tab.id, dateTime: Date.now(), payload: request.payload});
+      payloads.push({tabId: sender.tab.id, payload: request.payload});
       sendResponse({ success: true });
     }
   }
 );
 
+chrome.runtime.onMessage.addListener(
+  function (request, sender, sendResponse) {
+    if (request.clear) {
+      payloads = [];
+      sendResponse({ success: true });
+    }
+  }
+);
 
 chrome.runtime.onMessage.addListener(
   function (request, sender, sendResponse) {
@@ -34,7 +42,6 @@ chrome.runtime.onMessage.addListener(
     }
   }
 );
-
 
 chrome.tabs.onActivated.addListener(function (info) {
   chrome.tabs.get(info.tabId, function (change) {
