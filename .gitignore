@@ -10,9 +10,9 @@ build
 #
 env.bat
 /visualization
-extension
-extension-edge
-extension-chrome
+/extension
+/extension-edge
+/extension-chrome
 
 # npm logs
 npm-debug.log*

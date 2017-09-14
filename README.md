@@ -6,8 +6,9 @@ The goal of this project is to share tools that build on top of the data collect
 
 ## Building Extension
  - Build everything: `npm run build`
- - Extension will now be built under: `build\extension`
-
+ - Chrome Extension will now be built under: `build\extension-chrome`
+ - Edge Extension will now be built under: `build\extension-edge`
+ 
 ## Privacy Notice
 Clarity handles sensitive data with care. By default content on the page is masked before upload, so no actual text from the page is sent to the server.
 All data collection is performed solely with the purpose of providing better insights into customers' pages interactions and improving their users' experiences.
