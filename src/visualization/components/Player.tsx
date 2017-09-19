@@ -9,7 +9,7 @@ import BoxModelIcon from 'material-ui/svg-icons/image/view-compact';
 import NextIcon from 'material-ui/svg-icons/av/skip-next';
 import PrevIcon from 'material-ui/svg-icons/av/skip-previous';
 import FullPageIcon from 'material-ui/svg-icons/action/aspect-ratio';
-import { selectSnapshot, togglePlayback, toggleSpeed, selectImpression, toggleBoxModel, showFullPage } from "../actions";
+import { selectSnapshot, togglePlayback, toggleSpeed, selectImpression, toggleBoxModel, toggleFullPage } from "../actions";
 import Slider from "./Slider";
 import Timer from "./Timer";
 
@@ -172,7 +172,7 @@ export default connect(
         togglePlayback: togglePlayback, 
         toggleSpeed: toggleSpeed, 
         toggleBoxModel: toggleBoxModel, 
-        showFullPage: showFullPage,
+        showFullPage: toggleFullPage,
         selectImpression: selectImpression 
     }, dispatch) }
 )(Player);

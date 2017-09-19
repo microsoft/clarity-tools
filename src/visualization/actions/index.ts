@@ -6,7 +6,7 @@ export const enum Types {
     ToggleSpeed,
     ToggleBoxModel,
     ShowMenu,
-    ShowFullPage,
+    ToggleFullPage,
     NotFound
 }
 
@@ -59,9 +59,9 @@ export const showMenu = (menu) => {
     }
 };
 
-export const showFullPage = (fullpage) => {
+export const toggleFullPage = (fullpage) => {
     return {
-        type: Types.ShowFullPage,
+        type: Types.ToggleFullPage,
         payload: fullpage
     }
 };
