@@ -8,7 +8,8 @@ import TimelapseIcon from 'material-ui/svg-icons/image/timelapse';
 import BoxModelIcon from 'material-ui/svg-icons/image/view-compact';
 import NextIcon from 'material-ui/svg-icons/av/skip-next';
 import PrevIcon from 'material-ui/svg-icons/av/skip-previous';
-import { selectSnapshot, togglePlayback, toggleSpeed, selectImpression, toggleBoxModel } from "../actions";
+import FullPageIcon from 'material-ui/svg-icons/action/aspect-ratio';
+import { selectSnapshot, togglePlayback, toggleSpeed, selectImpression, toggleBoxModel, showFullPage } from "../actions";
 import Slider from "./Slider";
 import Timer from "./Timer";
 
@@ -69,6 +70,10 @@ class Player extends React.Component<any, any> {
         this.props.toggleBoxModel(!this.props.boxmodel);
     }
 
+    showFullPage() {
+        this.props.showFullPage(!this.props.fullpage);
+    }
+
     playback() {
         if (this.props.playback) {
             var endTime = this.props.impression.events[this.props.impression.events.length - 1].time;
@@ -100,6 +105,7 @@ class Player extends React.Component<any, any> {
         var Icon = this.props.playback ? <PauseIcon /> : <PlayIcon />;
         var speedIconColor = this.props.speed ? "white" : "#666";
         var boxmodelIconColor = this.props.boxmodel ? "white" : "#666";
+        var fullPageIconColor = this.props.fullpage ? "white" : "#666";
         var prevIconColor = index > 0 ? "white" : "#666";
         var nextIconColor = index < (this.props.playlist.length - 1) ? "white" : "#666";
         
@@ -120,6 +126,9 @@ class Player extends React.Component<any, any> {
                     </IconButton>
                     <IconButton iconStyle={{ color: boxmodelIconColor }} onClick={this.toggleBoxModel.bind(this)} >
                         <BoxModelIcon />
+                    </IconButton>
+                    <IconButton iconStyle={{ color: fullPageIconColor }} onClick={this.showFullPage.bind(this)} >
+                        <FullPageIcon />
                     </IconButton>
                 </div>
                 <Slider />
@@ -154,6 +163,7 @@ export default connect(
             snapshot: state.snapshot,
             playback: state.playback,
             speed: state.speed,
+            fullpage: state.fullpage,
             boxmodel: state.boxmodel
         }
     },
@@ -162,6 +172,7 @@ export default connect(
         togglePlayback: togglePlayback, 
         toggleSpeed: toggleSpeed, 
         toggleBoxModel: toggleBoxModel, 
+        showFullPage: showFullPage,
         selectImpression: selectImpression 
     }, dispatch) }
 )(Player);
