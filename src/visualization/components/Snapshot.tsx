@@ -16,6 +16,7 @@ class Snapshot extends React.Component<any, any> {
   private frame: HTMLIFrameElement;
   private parsers: { [type: string]: IParser } = {};
   private activeImpressionId = "";
+  private activeFullPageSetting = false;
   private currentTime = 0;
   private currentPointer = -1;
 
@@ -39,7 +40,11 @@ class Snapshot extends React.Component<any, any> {
         this.currentTime = 0;
         this.currentPointer = -1;
       }
-
+      else {
+        // Even if it's not a different impression, refresh the viewport regardless
+        this.parsers["Viewport"].setup(this.frame.contentDocument, this.frame, this.props.base);
+      }
+      
       var startPointer = time < this.currentTime ? 0 : this.currentPointer + 1;
       for (var i = startPointer; i < events.length; i++) {
         var event = events[i];
@@ -73,7 +78,7 @@ class Snapshot extends React.Component<any, any> {
     else {
       var width = window.innerWidth - 50;
       return (
-        <iframe scrolling="no" width={width} />
+        <iframe scrolling="no" width={width} data-fullpage={this.props.fullpage} />
       );
     }
   }
@@ -101,6 +106,7 @@ export default connect(
       snapshot: state.snapshot,
       impression: state.impression,
       boxmodel: state.boxmodel,
+      fullpage: state.fullpage,
       base: state.impression ? state.impression.envelope.url.match(/^(.*\/)[^\/]*$/)[1] : ""
     }
   })(Snapshot);

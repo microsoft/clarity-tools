@@ -8,6 +8,7 @@ import SpeedReducer from './speed';
 import BoxModelReducer from './boxmodel';
 import MenuReducer from './menu';
 import NotFoundReducer from './notfound';
+import FullPageReducer from './fullpage';
 
 const reducers = combineReducers({
     session: SessionReducer,
@@ -18,6 +19,7 @@ const reducers = combineReducers({
     speed: SpeedReducer,
     boxmodel: BoxModelReducer,
     menu: MenuReducer,
+    fullpage: FullPageReducer,
     notfound: NotFoundReducer
 });
 
