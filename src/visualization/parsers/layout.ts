@@ -83,6 +83,7 @@ export default class Layout implements IParser {
             case "*DOC*":
                 state = layoutState as IDoctypeLayoutState;
                 if (typeof XMLSerializer !== "undefined") {
+                    this.layouts = {};
                     doc.open();
                     doc.write(new XMLSerializer().serializeToString(
                         this.document.implementation.createDocumentType(

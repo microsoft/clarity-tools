@@ -85,6 +85,7 @@ export default class BoxModel implements IParser {
             case "*DOC*":
                 let docState = state as IDoctypeLayoutState;
                 if (typeof XMLSerializer !== "undefined") {
+                    this.layouts = {};
                     doc.open();
                     doc.write(new XMLSerializer().serializeToString(
                         this.document.implementation.createDocumentType(
