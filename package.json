@@ -1,6 +1,6 @@
 {
   "name": "clarity-tools",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "A collection of tools to help visualize the data collected from clarity-js package",
   "author": "Microsoft Corp.",
   "license": "MIT",

@@ -1,7 +1,6 @@
 import * as React from "react";
 import Replay from "./Replay";
 import { connect } from "react-redux";
-import LinearProgress from 'material-ui/LinearProgress';
 import Header from "./Header";
 
 class Content extends React.Component<any, any> {
@@ -13,22 +12,14 @@ class Content extends React.Component<any, any> {
             `No match found for ${parts[3]} (user) or ${parts[4]} (impression) on ${parts[2]}.` : 
             `Invalid url format.`;
 
-        if (this.props.notfound) {
-            return (
-                <div className={'clarity-notfound'}>
-                    <h2>{notfound}</h2>
-                </div>
-            );
-        }
-        else if (!this.props.impression) {
-            return (<LinearProgress mode="indeterminate" />);
-        }
+        let Content = this.props.notfound ? <div className={'clarity-notfound'}>{notfound}</div> : <Replay />;
+
         return (
             <div className={'clarity-app'}>
                 <div>
                     <Header />
-                     <div className={'clarity-content' + (this.props.menu ? ' expanded' : '')}>
-                        <Replay />
+                    <div className={'clarity-content' + (this.props.menu ? ' expanded' : '')}>
+                        {Content}
                     </div>
                 </div >
             </div>
