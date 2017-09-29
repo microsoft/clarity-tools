@@ -1,0 +1,48 @@
+{
+    "author": "Microsoft",
+    "background": {
+        "page": "background.html",
+        "persistent": true
+    },
+    "browser_action": {
+        "default_icon": {
+            "40": "icon.png"
+        },
+        "default_title": "Clarity",
+        "default_popup": "popup.html"
+    },
+    "content_scripts": [
+        {
+            "matches": [
+                "http://*/*",
+                "https://*/*"
+            ],
+            "js": [
+                "content.js"
+            ],
+            "run_at": "document_start"
+        }
+    ],
+    "description": "Replay and share your web sessions.",
+    "icons": {
+        "64": "icon.png"
+    },
+    "manifest_version": 2,
+    "name": "Clarity",
+    "permissions": [
+        "http://*/*",
+        "https://*/*",
+        "tabs",
+        "storage"
+    ],
+    "version": "0.1.8",
+    "web_accessible_resources": [
+        "clarity.js",
+        "clarity.png",
+        "clarity-black.png"
+    ],
+    "-ms-preload": {
+        "backgroundScript": "backgroundScriptsAPIBridge.js",
+        "contentScript": "contentScriptsAPIBridge.js"
+    }
+}

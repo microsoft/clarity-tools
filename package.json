@@ -51,9 +51,12 @@
   },
   "scripts": {
     "compile": "node_modules/.bin/tsc -p ./",
-    "bundle:content": "node_modules/.bin/browserify ./extension/instrument.js > ./extension/content.js",
-    "bundle:visualization": "node_modules/.bin/browserify ./extension/app.js > ./extension/clarity.js",
-    "binplace:extension": "node_modules/.bin/copyfiles -f ./src/extension/*.html ./src/extension/manifest.json ./src/extension/*.png ./extension/",
-    "build": "npm run compile && npm run bundle:content && npm run binplace:extension && npm run bundle:visualization"
+    "bundle:content": "node_modules/.bin/browserify ./extensions/chrome/instrument.js > ./extensions/chrome/content.js",
+    "bundle:visualization": "node_modules/.bin/browserify ./extensions/chrome/app.js > ./extensions/chrome/clarity.js",
+    "binplace:extensionChrome": "node_modules/.bin/copyfiles -f ./src/extensions/chrome/*.html ./src/extensions/chrome/manifest.json ./src/extensions/chrome/*.png ./extensions/chrome/",
+    "binplace:extensionEdge": "node_modules/.bin/copyfiles -f extensions/chrome/* extensions/edge/",
+    "convertEdge": "node_modules/.bin/copyfiles -f src/extensions/edge/* extensions/edge/",
+    "buildChromeExtension": "npm run compile && npm run bundle:content && npm run binplace:extensionChrome && npm run bundle:visualization",
+    "build": "npm run compile && npm run bundle:content && npm run binplace:extensionChrome && npm run bundle:visualization && npm run binplace:extensionEdge && npm run convertEdge"
   }
 }
