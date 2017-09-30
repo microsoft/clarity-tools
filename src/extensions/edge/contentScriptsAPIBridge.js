@@ -475,4 +475,4 @@ class EdgeContentBridge {
     }
 }
 var myBrowser = browser;
-var chrome = new EdgeContentBridge();   
+var chrome = new EdgeContentBridge();

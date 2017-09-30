@@ -35,7 +35,7 @@
         "tabs",
         "storage"
     ],
-    "version": "0.1.8",
+    "version": "0.1.14",
     "web_accessible_resources": [
         "clarity.js",
         "clarity.png",
@@ -45,4 +45,4 @@
         "backgroundScript": "backgroundScriptsAPIBridge.js",
         "contentScript": "contentScriptsAPIBridge.js"
     }
-}
+  }
