@@ -11,6 +11,7 @@ build
 env.bat
 /visualization
 /extensions
+/extension
 
 # npm logs
 npm-debug.log*
