@@ -36,7 +36,9 @@ class Session extends React.Component<any, any> {
     }
 
     renderSession() {
-        return this.props.session.map((impression) => {
+        let count = 0;
+        let sessionMarkup = [];
+        this.props.session.map((impression) => {
             let active = impression.envelope.impressionId === this.props.impression.envelope.impressionId;
             let dateTime = new Date(impression.envelope.dateTime);
             let url = impression.envelope.url;
@@ -55,27 +57,29 @@ class Session extends React.Component<any, any> {
                 infoItems.push({title: <a href={impression.envelope.url} target="_blank">Link</a>, icon: LinkIcon});
             }
             let stepClassName = active ? "clarity-steptitle active-step" : "clarity-steptitle";
-            let style = this.props.inactive && disabled ? { display: "none" } : { display: "block" };
-
-            return (
-                <Step key={impression.envelope.impressionId} active={active} style={style}>
-                    <StepButton onClick={() => this.props.selectImpression(impression)} disabled={disabled}>
-                        <div className={stepClassName}>
-                            <span title={url}>{title}</span>
-                            <br/>
-                            <span className={"clarity-steptime"}>
-                                {header}
-                            </span>
-                        </div>
-                    </StepButton>
-                    <StepContent style={contentStyles}>
-                        <List>
-                            {this.getListItems(infoItems)}
-                        </List>
-                    </StepContent>
-                </Step>
-            );
+            count++;
+            if (!(this.props.inactive && disabled)) {
+                sessionMarkup.push(
+                    <Step key={impression.envelope.impressionId} active={active}>
+                        <StepButton onClick={() => this.props.selectImpression(impression)} icon={count} disabled={disabled}>
+                            <div className={stepClassName}>
+                                <span title={url}>{title}</span>
+                                <br/>
+                                <span className={"clarity-steptime"}>
+                                    {header}
+                                </span>
+                            </div>
+                        </StepButton>
+                        <StepContent style={contentStyles}>
+                            <List>
+                                {this.getListItems(infoItems)}
+                            </List>
+                        </StepContent>
+                    </Step>
+                );
+            }
         });
+        return sessionMarkup;
     }
 
     render() {
@@ -104,7 +108,7 @@ class Session extends React.Component<any, any> {
                 <CustomStepper linear={false} activeStep={0} orientation="vertical">
                     {this.renderSession()}
                     <Step>
-                        <StepButton disabled={true}>
+                        <StepButton icon={this.props.session.length + 1} disabled={true}>
                             End of session
                         </StepButton>
                     </Step>
