@@ -17,8 +17,7 @@ class Header extends React.Component<any, any> {
     }
 
     render() {
-        let ProgressBar = this.props.playlist ? <div /> : (this.props.notfound ? <div>Not found.</div> : <LinearProgress mode="indeterminate" color="#DF4931" />);
-
+        let ProgressBar = this.props.playlist ? <div /> : (this.props.error ? <div className="error">{this.props.error}</div> : <LinearProgress mode="indeterminate" color="#DF4931" />);
         return (
             <div className="clarity-header">
                 <AppBar
@@ -53,6 +52,6 @@ class Header extends React.Component<any, any> {
 // Connnecting Header container with the redux store
 // mapStateToProps and matchDispatchToProps using fat arrow function
 export default connect(
-    state => { return { menu: state.menu, playlist: state.playlist, notfound: state.notfound } },
+    state => { return { menu: state.menu, playlist: state.playlist, notfound: state.notfound, error: state.error } },
     dispatch => { return bindActionCreators({ showMenu: showMenu }, dispatch) }
 )(Header);

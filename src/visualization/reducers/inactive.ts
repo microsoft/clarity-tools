@@ -2,9 +2,7 @@ import { Types } from "../actions";
 
 export default function (state = false, action) {
     switch (action.type) {
-        case Types.SelectSession:
-            return false;
-        case Types.NotFound:
+        case Types.ToggleInactiveSession:
             return action.payload;
     }
     return state;

@@ -13,7 +13,7 @@ class Content extends React.Component<any, any> {
             `Invalid url format.`;
 
         let Content = this.props.notfound ? <div className={'clarity-notfound'}>{notfound}</div> : <Replay />;
-
+        
         return (
             <div className={'clarity-app'}>
                 <div>

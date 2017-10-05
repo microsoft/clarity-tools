@@ -7,7 +7,9 @@ export const enum Types {
     ToggleBoxModel,
     ShowMenu,
     ToggleFullPage,
-    NotFound
+    NotFound,
+    ToggleInactiveSession,
+    Error
 }
 
 export const selectSession = (session) => {
@@ -69,6 +71,20 @@ export const toggleFullPage = (fullpage) => {
 export const notFound = (flag) => {
     return {
         type: Types.NotFound,
+        payload: flag
+    }
+};
+
+export const error = (msg) => {
+    return {
+        type: Types.Error,
+        payload: msg
+    }
+};
+
+export const toggleInactiveSession = (flag) => {
+    return {
+        type: Types.ToggleInactiveSession,
         payload: flag
     }
 };
