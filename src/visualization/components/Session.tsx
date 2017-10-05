@@ -4,11 +4,12 @@ import { connect } from "react-redux";
 import { List, ListItem } from 'material-ui/List';
 import Subheader from 'material-ui/Subheader';
 import { Step, Stepper, StepButton, StepContent } from "material-ui/Stepper";
-import { selectImpression } from "../actions";
+import { selectImpression, toggleInactiveSession } from "../actions";
 import ImpressionIcon from 'material-ui/svg-icons/action/description';
 import UserIcon from 'material-ui/svg-icons/social/person';
 import LinkIcon from 'material-ui/svg-icons/social/public';
 import DateIcon from 'material-ui/svg-icons/action/today';
+import Toggle from 'material-ui/Toggle';
 
 class Session extends React.Component<any, any> {
     getHostname(url) {
@@ -16,6 +17,10 @@ class Session extends React.Component<any, any> {
         a.href = url;
         return a.hostname;
     } 
+
+    toggleInactiveSession() {
+        this.props.toggleInactiveSession(!this.props.inactive);
+    }
 
     getListItems(infoItems) {
         let iconStyles = { left: 0, width: 20, height: 20, margin: 6 };
@@ -29,8 +34,11 @@ class Session extends React.Component<any, any> {
             );
         });
     }
+
     renderSession() {
-        return this.props.session.map((impression) => {
+        let count = 0;
+        let sessionMarkup = [];
+        this.props.session.map((impression) => {
             let active = impression.envelope.impressionId === this.props.impression.envelope.impressionId;
             let dateTime = new Date(impression.envelope.dateTime);
             let url = impression.envelope.url;
@@ -49,26 +57,29 @@ class Session extends React.Component<any, any> {
                 infoItems.push({title: <a href={impression.envelope.url} target="_blank">Link</a>, icon: LinkIcon});
             }
             let stepClassName = active ? "clarity-steptitle active-step" : "clarity-steptitle";
-
-            return (
-                <Step key={impression.envelope.impressionId} active={active}>
-                    <StepButton onClick={() => this.props.selectImpression(impression)} disabled={disabled}>
-                        <div className={stepClassName}>
-                            <span title={url}>{title}</span>
-                            <br/>
-                            <span className={"clarity-steptime"}>
-                                {header}
-                            </span>
-                        </div>
-                    </StepButton>
-                    <StepContent style={contentStyles}>
-                        <List>
-                            {this.getListItems(infoItems)}
-                        </List>
-                    </StepContent>
-                </Step>
-            );
+            count++;
+            if (!(this.props.inactive && disabled)) {
+                sessionMarkup.push(
+                    <Step key={impression.envelope.impressionId} active={active}>
+                        <StepButton onClick={() => this.props.selectImpression(impression)} icon={count} disabled={disabled}>
+                            <div className={stepClassName}>
+                                <span title={url}>{title}</span>
+                                <br/>
+                                <span className={"clarity-steptime"}>
+                                    {header}
+                                </span>
+                            </div>
+                        </StepButton>
+                        <StepContent style={contentStyles}>
+                            <List>
+                                {this.getListItems(infoItems)}
+                            </List>
+                        </StepContent>
+                    </Step>
+                );
+            }
         });
+        return sessionMarkup;
     }
 
     render() {
@@ -77,12 +88,27 @@ class Session extends React.Component<any, any> {
         }
 
         let CustomStepper : any = Stepper;
+        let toggleSwitch = <div/>;
+
+        // Check if there are disabled pages in the session
+        for (let impression of this.props.session) {
+            if (!!impression.envelope.disabled) {
+                toggleSwitch = (
+                    <div className="clarity-toggle">
+                            <Toggle label="Hide Inactive Pages" onToggle={this.toggleInactiveSession.bind(this)}/>
+                    </div>
+                );
+                break;
+            }
+        } 
+
         return (
             <div style={{width: '100%', whiteSpace: 'nowrap', overflow: 'auto'}}>
+                {toggleSwitch}
                 <CustomStepper linear={false} activeStep={0} orientation="vertical">
                     {this.renderSession()}
                     <Step>
-                        <StepButton disabled={true}>
+                        <StepButton icon={this.props.session.length + 1} disabled={true}>
                             End of session
                         </StepButton>
                     </Step>
@@ -99,8 +125,9 @@ export default connect(
     state => {
         return {
             session: state.session,
-            impression: state.impression
+            impression: state.impression,
+            inactive: state.inactive
         }
     },
-    dispatch => { return bindActionCreators({ selectImpression: selectImpression }, dispatch) }
+    dispatch => { return bindActionCreators({ selectImpression: selectImpression, toggleInactiveSession: toggleInactiveSession }, dispatch) }
 )(Session);
