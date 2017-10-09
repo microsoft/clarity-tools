@@ -2,7 +2,6 @@ import * as React from "react";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import { List, ListItem } from 'material-ui/List';
-import Subheader from 'material-ui/Subheader';
 import { Step, Stepper, StepButton, StepContent } from "material-ui/Stepper";
 import { selectImpression, toggleInactiveSession } from "../actions";
 import ImpressionIcon from 'material-ui/svg-icons/action/description';
@@ -95,7 +94,7 @@ class Session extends React.Component<any, any> {
             if (!!impression.envelope.disabled) {
                 toggleSwitch = (
                     <div className="clarity-toggle">
-                            <Toggle label="Hide Inactive Pages" onToggle={this.toggleInactiveSession.bind(this)}/>
+                            <Toggle label="Hide Inactive Pages" defaultToggled={this.props.inactive} onToggle={this.toggleInactiveSession.bind(this)}/>
                     </div>
                 );
                 break;
@@ -103,16 +102,18 @@ class Session extends React.Component<any, any> {
         } 
 
         return (
-            <div style={{width: '100%', whiteSpace: 'nowrap', overflow: 'auto'}}>
-                {toggleSwitch}
-                <CustomStepper linear={false} activeStep={0} orientation="vertical">
-                    {this.renderSession()}
-                    <Step>
-                        <StepButton icon={this.props.session.length + 1} disabled={true}>
-                            End of session
-                        </StepButton>
-                    </Step>
-                </CustomStepper>
+            <div className="clarity-session">
+                <div style={{width: '100%', whiteSpace: 'nowrap', overflow: 'auto'}}>
+                    {toggleSwitch}
+                    <CustomStepper linear={false} activeStep={0} orientation="vertical">
+                        {this.renderSession()}
+                        <Step>
+                            <StepButton icon={this.props.session.length + 1} disabled={true}>
+                                End of session
+                            </StepButton>
+                        </Step>
+                    </CustomStepper>
+                </div>
             </div>
         );
     }

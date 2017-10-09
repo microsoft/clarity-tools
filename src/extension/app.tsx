@@ -45,10 +45,16 @@ chrome.runtime.sendMessage({ fetch: true }, function (response) {
             if (!(id in structured)) {
                 structured[id] = { envelope: json.envelope, events: [] };
                 structured[id]["envelope"].dateTime = entry.dateTime;
+                structured[id]["envelope"].summary = [];
                 if (tabId === activeTabId) {
                     activeId = id;
                 }
             }
+            structured[id].envelope.summary.push({
+                "sequenceNumber": json.envelope.sequenceNumber,
+                "time": json.envelope.time,
+                "events": json.events.length
+            });
             structured[id].events = structured[id].events.concat(json.events);
             count++;
         }
