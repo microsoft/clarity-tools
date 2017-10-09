@@ -1,6 +1,6 @@
 import { Types } from "../actions";
 
-export default function (state = false, action) {
+export default function (state = true, action) {
     switch (action.type) {
         case Types.ToggleInactiveSession:
             return action.payload;

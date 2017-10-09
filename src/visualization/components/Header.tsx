@@ -8,7 +8,9 @@ import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import Player from "./Player";
 import Session from "./Session";
+import Timeline from "./Timeline";
 import { showMenu } from "../actions";
+import { Tabs, Tab } from 'material-ui/Tabs';
 
 class Header extends React.Component<any, any> {
 
@@ -17,7 +19,7 @@ class Header extends React.Component<any, any> {
     }
 
     render() {
-        let ProgressBar = this.props.playlist ? <div /> : (this.props.error ? <div className="error">{this.props.error}</div> : <LinearProgress mode="indeterminate" color="#DF4931" />);
+        let ProgressBar = this.props.playlist || this.props.notfound ? <div /> : (this.props.error ? <div className="error">{this.props.error}</div> : <LinearProgress mode="indeterminate" color="#DF4931" />);
         return (
             <div className="clarity-header">
                 <AppBar
@@ -31,9 +33,14 @@ class Header extends React.Component<any, any> {
                     } />
                 <Drawer className="clarity-drawer" docked={true} open={this.props.menu}>
                     <AppBar showMenuIconButton={false} />
-                    <div className="clarity-session">
-                        <Session />
-                    </div>
+                     <Tabs className="clarity-tabs" tabItemContainerStyle={{backgroundColor: "#666"}}>
+                        <Tab label="Session">
+                            <Session />
+                        </Tab>
+                        <Tab label="Timeline">
+                            <Timeline />
+                        </Tab>
+                    </Tabs>
                 </Drawer>
                 {ProgressBar}
             </div>
