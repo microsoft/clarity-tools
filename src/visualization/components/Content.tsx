@@ -8,7 +8,7 @@ class Content extends React.Component<any, any> {
     render() {
         let path = top.location.pathname;
         let parts = path ? path.split("/") : [];
-        let notfound = parts.length == 5 ? 
+        let notfound = parts.length === 5 || parts.length === 6 ? 
             `No match found for ${parts[3]} (user) or ${parts[4]} (impression) on ${parts[2]}.` : 
             `Invalid url format.`;
 
