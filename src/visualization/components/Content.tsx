@@ -8,8 +8,8 @@ class Content extends React.Component<any, any> {
     render() {
         let path = top.location.pathname;
         let parts = path ? path.split("/") : [];
-        let notfound = parts.length == 5 ? 
-            `No match found for ${parts[3]} (user) or ${parts[4]} (impression) on ${parts[2]}.` : 
+        let notfound = parts.length === 5 || parts.length === 6 ? 
+            `No match found.` : 
             `Invalid url format.`;
 
         let Content = this.props.notfound ? <div className={'clarity-notfound'}>{notfound}</div> : <Replay />;
