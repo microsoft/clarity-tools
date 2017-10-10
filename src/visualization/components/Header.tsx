@@ -49,8 +49,10 @@ class Header extends React.Component<any, any> {
 
     componentDidUpdate() {
         let drawer = document.querySelector(".clarity-drawer > div");
+        let session = document.querySelector(".clarity-session");
+        let tab = session ? session.parentElement : null;
         let active = document.querySelector(".active-step");
-        if (drawer && active && active.parentElement && active.parentElement.parentElement && active.parentElement.parentElement.parentElement) {
+        if (tab && tab.offsetHeight > 0 && drawer && active && active.parentElement && active.parentElement.parentElement && active.parentElement.parentElement.parentElement) {
             drawer.scrollTop = active.parentElement.parentElement.parentElement.offsetTop;    
         }
     }

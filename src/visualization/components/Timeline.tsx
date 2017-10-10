@@ -195,6 +195,7 @@ class Timeline extends React.Component<any, any> {
         window["clarity"] = { "events": json };
         this.props.selectSnapshot(time);
     }
+    
     renderTimeline() {
         let groups = this.grouping();
         let contentStyles = { paddingLeft: 0, paddingRight: 0 };
@@ -216,8 +217,7 @@ class Timeline extends React.Component<any, any> {
         for (let i = 0; i < groups.length; i++) {
             let entry = this.process(groups[i]);
             let code = groups[i].type.substr(0, 1);
-            let active = this.props.snapshot >= groups[i].start && this.props.snapshot <= groups[i].end;
-            stepClassName = active ? "clarity-steptitle active-step" : "clarity-steptitle";
+            stepClassName = "clarity-steptitle";
             let avatar = <Avatar backgroundColor={code in this.color ? this.color[code] : "gray"} size={25}>{code}</Avatar>;
             let key = `${i}`;
 
@@ -259,7 +259,7 @@ class Timeline extends React.Component<any, any> {
 
         let CustomStepper : any = Stepper;
         return (
-            <div className="clarity-session">
+            <div className="clarity-timeline">
                 <div style={{width: '100%', whiteSpace: 'nowrap', overflow: 'hidden'}}>
                     <CustomStepper linear={false} orientation="vertical">
                         {this.renderTimeline()}
@@ -273,6 +273,6 @@ class Timeline extends React.Component<any, any> {
 // Connnecting Slider container with the redux store
 // mapStateToProps and matchDispatchToProps using fat arrow function
 export default connect(
-    state => { return { impression: state.impression, snapshot: state.snapshot } },
+    state => { return { impression: state.impression } },
     dispatch => { return bindActionCreators({ selectSnapshot: selectSnapshot }, dispatch) }
 )(Timeline);
