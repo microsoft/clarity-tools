@@ -8,7 +8,9 @@ import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import Player from "./Player";
 import Session from "./Session";
+import Timeline from "./Timeline";
 import { showMenu } from "../actions";
+import { Tabs, Tab } from 'material-ui/Tabs';
 
 class Header extends React.Component<any, any> {
 
@@ -17,8 +19,7 @@ class Header extends React.Component<any, any> {
     }
 
     render() {
-        let ProgressBar = this.props.playlist ? <div /> : (this.props.notfound ? <div>Not found.</div> : <LinearProgress mode="indeterminate" color="#DF4931" />);
-
+        let ProgressBar = this.props.playlist || this.props.notfound ? <div /> : (this.props.error ? <div className="error">{this.props.error}</div> : <LinearProgress mode="indeterminate" color="#DF4931" />);
         return (
             <div className="clarity-header">
                 <AppBar
@@ -32,9 +33,14 @@ class Header extends React.Component<any, any> {
                     } />
                 <Drawer className="clarity-drawer" docked={true} open={this.props.menu}>
                     <AppBar showMenuIconButton={false} />
-                    <div className="clarity-session">
-                        <Session />
-                    </div>
+                     <Tabs className="clarity-tabs" tabItemContainerStyle={{backgroundColor: "#666"}}>
+                        <Tab label="Session">
+                            <Session />
+                        </Tab>
+                        <Tab label="Timeline">
+                            <Timeline />
+                        </Tab>
+                    </Tabs>
                 </Drawer>
                 {ProgressBar}
             </div>
@@ -43,8 +49,10 @@ class Header extends React.Component<any, any> {
 
     componentDidUpdate() {
         let drawer = document.querySelector(".clarity-drawer > div");
+        let session = document.querySelector(".clarity-session");
+        let tab = session ? session.parentElement : null;
         let active = document.querySelector(".active-step");
-        if (drawer && active && active.parentElement && active.parentElement.parentElement && active.parentElement.parentElement.parentElement) {
+        if (tab && tab.offsetHeight > 0 && drawer && active && active.parentElement && active.parentElement.parentElement && active.parentElement.parentElement.parentElement) {
             drawer.scrollTop = active.parentElement.parentElement.parentElement.offsetTop;    
         }
     }
@@ -53,6 +61,6 @@ class Header extends React.Component<any, any> {
 // Connnecting Header container with the redux store
 // mapStateToProps and matchDispatchToProps using fat arrow function
 export default connect(
-    state => { return { menu: state.menu, playlist: state.playlist, notfound: state.notfound } },
+    state => { return { menu: state.menu, playlist: state.playlist, notfound: state.notfound, error: state.error } },
     dispatch => { return bindActionCreators({ showMenu: showMenu }, dispatch) }
 )(Header);

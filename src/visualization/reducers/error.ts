@@ -1,10 +1,10 @@
 import { Types } from "../actions";
 
-export default function (state = false, action) {
+export default function (state = null, action) {
     switch (action.type) {
         case Types.SelectSession:
-            return false;
-        case Types.NotFound:
+            return null;
+        case Types.Error:
             return action.payload;
     }
     return state;
