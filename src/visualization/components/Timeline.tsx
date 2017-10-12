@@ -104,7 +104,7 @@ class Timeline extends React.Component<any, any> {
 
     grouping() {
         let output: IEventGroup[] = [];
-        let envelope = this.props.impression.envelope;
+        let envelope = this.props.impression.metadata;
         let events = this.props.impression.events;
         let lastSequence = -1;
         let pointer = 0;
@@ -207,7 +207,7 @@ class Timeline extends React.Component<any, any> {
                         <span>Initialized clarity</span>
                         <br/>
                         <span className={"clarity-steptime"}>
-                            {"Version: " + this.props.impression.envelope.version}
+                            {"Version: " + this.props.impression.metadata.version}
                         </span>
                     </div>
                 </StepButton>

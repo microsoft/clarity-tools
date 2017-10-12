@@ -57,7 +57,7 @@ chrome.runtime.sendMessage({ fetch: true }, function (response) {
                     activeId = id;
                 }
             }
-            structured[id].envelope.summary.push({
+            structured[id].metadata.summary.push({
                 "sequenceNumber": json.envelope.sequenceNumber,
                 "time": json.envelope.time,
                 "events": json.events.length
