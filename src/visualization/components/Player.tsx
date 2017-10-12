@@ -19,7 +19,7 @@ class Player extends React.Component<any, any> {
     private keyFrames = [];
 
     extractFrames() {
-        if (this.activeImpressionId != this.props.impression.envelope.impressionId) {
+        if (this.activeImpressionId != this.props.impression.metadata.impressionId) {
             var events = this.props.impression.events;
             var frames = []
             var startTime = 0;
@@ -30,7 +30,7 @@ class Player extends React.Component<any, any> {
                 }
             }
             this.keyFrames = frames.filter(function (x) { return x >= startTime }).sort();
-            this.activeImpressionId = this.props.impression.envelope.impressionId;
+            this.activeImpressionId = this.props.impression.metadata.impressionId;
         }
     }
 

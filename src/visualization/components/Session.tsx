@@ -38,22 +38,20 @@ class Session extends React.Component<any, any> {
         let count = 0;
         let sessionMarkup = [];
         this.props.session.map((impression) => {
-            let active = impression.envelope.impressionId === this.props.impression.envelope.impressionId;
-            let dateTime = new Date(impression.envelope.dateTime);
-            let url = impression.envelope.url;
-            let vertical = impression.envelope.vertical ? impression.envelope.vertical : null;
+            let url = impression.metadata.url;
+            let vertical = impression.metadata.vertical ? impression.metadata.vertical : null;
             let time = dateTime.toLocaleString('en-US', { hour: 'numeric', minute:'numeric', second:'numeric', hour12: false });
-            let title = (impression.envelope.title ? impression.envelope.title : this.getHostname(impression.envelope.url));
+            let title = (impression.metadata.title ? impression.metadata.title : this.getHostname(impression.metadata.url));
             let header = vertical ? `${time} // ${vertical}` : time;
-            let disabled = !!impression.envelope.disabled;
+            let disabled = !!impression.metadata.disabled;
             let stepContent = null;
             let infoItems = [];
             let contentStyles = { paddingLeft: 0, paddingRight: 0 };
             if (active) {
-                if (impression.envelope.date) infoItems.push({title: impression.envelope.date, icon: DateIcon});
-                infoItems.push({title: impression.envelope.impressionGuid || impression.envelope.impressionId.toUpperCase(), icon: ImpressionIcon});
-                infoItems.push({title: impression.envelope.clientId || impression.envelope.clarityId.toUpperCase(), icon: UserIcon});
-                infoItems.push({title: <a href={impression.envelope.url} target="_blank">Link</a>, icon: LinkIcon});
+                if (impression.metadata.date) infoItems.push({title: impression.metadata.date, icon: DateIcon});
+                infoItems.push({title: impression.metadata.impressionGuid || impression.metadata.impressionId.toUpperCase(), icon: ImpressionIcon});
+                infoItems.push({title: impression.metadata.clientId || impression.metadata.clarityId.toUpperCase(), icon: UserIcon});
+                infoItems.push({title: <a href={url} target="_blank">Link</a>, icon: LinkIcon});
             }
             let stepClassName = active ? "clarity-steptitle active-step" : "clarity-steptitle";
             count++;

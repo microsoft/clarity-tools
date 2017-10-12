@@ -30,11 +30,11 @@ class Snapshot extends React.Component<any, any> {
       var end = events[events.length - 1].time;
 
       // Reset all parsers if this is the first time an impression is rendered
-      if (this.activeImpressionId != this.props.impression.envelope.impressionId || this.activeView != this.props.view) {
+      if (this.activeImpressionId != this.props.impression.metadata.impressionId) {
         for (var type in this.parsers) {
           this.parsers[type].setup(this.frame.contentDocument, this.frame, this.props.base);
         }
-        this.activeImpressionId = this.props.impression.envelope.impressionId;
+        this.activeImpressionId = this.props.impression.metadata.impressionId;
         this.activeView = this.props.view;
 
         // Fast forward to the end of the impression to show summary view
@@ -109,6 +109,6 @@ export default connect(
       impression: state.impression,
       view: state.view,
       fullpage: state.fullpage,
-      base: state.impression ? state.impression.envelope.url.match(/^(.*\/)[^\/]*$/)[1] : ""
+      base: state.impression ? state.impression.metadata.url.match(/^(.*\/)[^\/]*$/)[1] : ""
     }
   })(Snapshot);
