@@ -4,6 +4,7 @@ import Theme from "material-ui/styles/MuiThemeProvider";
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import vibrantTheme from '../visualization/themes/vibrant';
 import * as injectTapEventPlugin from 'react-tap-event-plugin';
+import { selectImpression, selectSession } from "../visualization/actions/index";
 import Content from "../visualization/components/Content";
 import { parse } from "query-string";
 import { createStore } from "redux";
@@ -11,6 +12,7 @@ import { Provider } from 'react-redux';
 import ClarityReducer from "../visualization/reducers";
 import { Types } from "../visualization/actions";
 import uncompress from "../visualization/uncompress"
+
 
 injectTapEventPlugin();
 
@@ -43,9 +45,14 @@ chrome.runtime.sendMessage({ fetch: true }, function (response) {
             let tabId = entry.tabId;
             let id = json.envelope.impressionId;
             if (!(id in structured)) {
-                structured[id] = { envelope: json.envelope, events: [] };
-                structured[id]["envelope"].dateTime = entry.dateTime;
-                structured[id]["envelope"].summary = [];
+                let clientInfo = json.events.length > 0 ? json.events[0] : null;
+                if (!(clientInfo && clientInfo.type === "ClientInfo")) {
+                    console.warn("Impression's first payload is missing client info. Impression id: " + id);
+                    continue;
+                }
+                structured[id] = { metadata: clientInfo.state, events: [] };
+                structured[id].metadata.dateTime = entry.dateTime;
+                structured[id].metadata.summary = [];
                 if (tabId === activeTabId) {
                     activeId = id;
                 }
@@ -60,22 +67,13 @@ chrome.runtime.sendMessage({ fetch: true }, function (response) {
         }
 
         for (let id in structured) {
-            if (structured[id].envelope.sequenceNumber === 0) {
-                if (activeId === id) {
-                    activeIndex = session.length;
-                }
-                session.push(structured[id]);
+            if (activeId === id) {
+                activeIndex = session.length;
             }
+            session.push(structured[id]);
         }
             
-        store.dispatch({
-            type: Types.SelectSession,
-            payload: session
-        });
-
-        store.dispatch({
-            type: Types.SelectImpression,
-            payload: session[activeIndex]
-        });
+        store.dispatch(selectSession(session));
+        store.dispatch(selectImpression(session[activeIndex]));
     }
 });
