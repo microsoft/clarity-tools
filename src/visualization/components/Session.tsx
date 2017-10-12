@@ -38,6 +38,8 @@ class Session extends React.Component<any, any> {
         let count = 0;
         let sessionMarkup = [];
         this.props.session.map((impression) => {
+            let active = impression.metadata.impressionId === this.props.impression.metadata.impressionId;
+            let dateTime = new Date(impression.metadata.dateTime);
             let url = impression.metadata.url;
             let vertical = impression.metadata.vertical ? impression.metadata.vertical : null;
             let time = dateTime.toLocaleString('en-US', { hour: 'numeric', minute:'numeric', second:'numeric', hour12: false });
@@ -57,7 +59,7 @@ class Session extends React.Component<any, any> {
             count++;
             if (!(this.props.inactive && disabled)) {
                 sessionMarkup.push(
-                    <Step key={impression.envelope.impressionId} active={active}>
+                    <Step key={impression.metadata.impressionId} active={active}>
                         <StepButton onClick={() => this.props.selectImpression(impression)} icon={count} disabled={disabled}>
                             <div className={stepClassName}>
                                 <span title={url}>{title}</span>
@@ -89,7 +91,7 @@ class Session extends React.Component<any, any> {
 
         // Check if there are disabled pages in the session
         for (let impression of this.props.session) {
-            if (!!impression.envelope.disabled) {
+            if (!!impression.metadata.disabled) {
                 toggleSwitch = (
                     <div className="clarity-toggle">
                             <Toggle label="Hide Inactive Pages" defaultToggled={this.props.inactive} onToggle={this.toggleInactiveSession.bind(this)}/>
