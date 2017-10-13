@@ -10,10 +10,10 @@ export default class Layout implements IParser {
 
     private attributes(node: HTMLElement, attributes: IAttributes) {
         if (attributes) {
-            for (var attribute in attributes) {
-                if (attribute && attributes[attribute]) {
+            for (let attribute in attributes) {
+                if (attribute) {
                     try {
-                        var value = attributes[attribute];
+                        let value = attributes[attribute];
                         node.setAttribute(attribute, value);
                     }
                     catch (ex) {
