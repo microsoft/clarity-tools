@@ -13,7 +13,6 @@ import ClarityReducer from "../visualization/reducers";
 import { Types } from "../visualization/actions";
 import uncompress from "../visualization/uncompress"
 
-
 injectTapEventPlugin();
 
 const store = createStore(ClarityReducer);
@@ -45,12 +44,12 @@ chrome.runtime.sendMessage({ fetch: true }, function (response) {
             let tabId = entry.tabId;
             let id = json.envelope.impressionId;
             if (!(id in structured)) {
-                let clientInfo = json.events.length > 0 ? json.events[0] : null;
-                if (!(clientInfo && clientInfo.type === "ClientInfo")) {
-                    console.warn("Impression's first payload is missing client info. Impression id: " + id);
+                if (json.envelope.sequenceNumber !== 0) {
+                    console.warn(`First payload for impression id ${id} has sequence number ${json.envelope.sequenceNumber}`);
                     continue;
                 }
-                structured[id] = { metadata: clientInfo.state, events: [] };
+                let metadata = json.metadata;
+                structured[id] = { metadata, events: [] };
                 structured[id].metadata.dateTime = entry.dateTime;
                 structured[id].metadata.summary = [];
                 if (tabId === activeTabId) {
