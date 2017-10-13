@@ -101,33 +101,34 @@ class Player extends React.Component<any, any> {
         }
 
         this.extractFrames();
-        var index = this.props.playlist.indexOf(this.props.impression);
-        var Icon = this.props.playback ? <PauseIcon /> : <PlayIcon />;
-        var speedIconColor = this.props.speed ? "white" : "#666";
-        var boxmodelIconColor = this.props.boxmodel ? "white" : "#666";
-        var fullPageIconColor = this.props.fullpage ? "white" : "#666";
-        var prevIconColor = index > 0 ? "white" : "#666";
-        var nextIconColor = index < (this.props.playlist.length - 1) ? "white" : "#666";
+        let index = this.props.playlist.indexOf(this.props.impression);
+        let Icon = this.props.playback ? <PauseIcon /> : <PlayIcon />;
+        let iconTooltip = this.props.playback ? "Pause playback" : "Start playback";
+        let speedIconColor = this.props.speed ? "white" : "#666";
+        let boxmodelIconColor = this.props.boxmodel ? "white" : "#666";
+        let fullPageIconColor = this.props.fullpage ? "white" : "#666";
+        let prevIconColor = index > 0 ? "white" : "#666";
+        let nextIconColor = index < (this.props.playlist.length - 1) ? "white" : "#666";
         
         return (
             <div className="clarity-player">
                 <div className="clarity-controls">
-                    <IconButton iconStyle={{ color: "white" }} onClick={this.togglePlayback.bind(this)} >
+                    <IconButton iconStyle={{ color: "white" }} onClick={this.togglePlayback.bind(this)} tooltip={iconTooltip}>
                         {Icon}
                     </IconButton>
-                    <IconButton iconStyle={{ color: prevIconColor }} onClick={this.playImpression.bind(this, index - 1)} >
+                    <IconButton iconStyle={{ color: prevIconColor }} onClick={this.playImpression.bind(this, index - 1)} tooltip="Go to previous page">
                         <PrevIcon />
                     </IconButton>
-                    <IconButton iconStyle={{ color: nextIconColor }} onClick={this.playImpression.bind(this, index + 1)} >
+                    <IconButton iconStyle={{ color: nextIconColor }} onClick={this.playImpression.bind(this, index + 1)} tooltip="Go to next page">
                         <NextIcon />
                     </IconButton>
-                    <IconButton iconStyle={{ color: speedIconColor }} onClick={this.toggleSpeed.bind(this)} >
+                    <IconButton iconStyle={{ color: speedIconColor }} onClick={this.toggleSpeed.bind(this)} tooltip={"Toggle fast playback mode"}>
                         <TimelapseIcon />
                     </IconButton>
-                    <IconButton iconStyle={{ color: boxmodelIconColor }} onClick={this.toggleBoxModel.bind(this)} >
+                    <IconButton iconStyle={{ color: boxmodelIconColor }} onClick={this.toggleBoxModel.bind(this)} tooltip={"Toggle box model mode"}>
                         <BoxModelIcon />
                     </IconButton>
-                    <IconButton iconStyle={{ color: fullPageIconColor }} onClick={this.showFullPage.bind(this)} >
+                    <IconButton iconStyle={{ color: fullPageIconColor }} onClick={this.showFullPage.bind(this)} tooltip={"Toggle full page mode"}>
                         <FullPageIcon />
                     </IconButton>
                 </div>

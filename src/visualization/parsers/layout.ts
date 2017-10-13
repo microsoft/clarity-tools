@@ -10,10 +10,13 @@ export default class Layout implements IParser {
 
     private attributes(node: HTMLElement, attributes: IAttributes) {
         if (attributes) {
-            for (var attribute in attributes) {
-                if (attribute && attributes[attribute]) {
+            for (let attribute in attributes) {
+                if (attribute) {
                     try {
-                        var value = attributes[attribute];
+                        let value = attributes[attribute];
+                        if (attribute === "value") {
+                            node[attribute] = value;
+                        }
                         node.setAttribute(attribute, value);
                     }
                     catch (ex) {
@@ -138,6 +141,8 @@ export default class Layout implements IParser {
             case "*IGNORE*":
                 state = layoutState as IIgnoreLayoutState;
                 var ignoredNode = document.createElement("div");
+                // Ensure that this ignore node doesn't disrupt the layout of other elements
+                ignoredNode.style.display = "none";
                 ignoredNode.setAttribute("data-index", state.index.toString());
                 ignoredNode.setAttribute("data-nodeType", this.getNodeTypeString(state.nodeType));
                 if (state.nodeType === Node.ELEMENT_NODE) {
