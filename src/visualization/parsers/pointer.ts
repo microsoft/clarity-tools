@@ -31,6 +31,7 @@ export default class Pointer implements IParser {
         var color = event in this.colors ? this.colors[event] : "black";
         var image = event in this.image ? this.image[event] : null;
         var px = "px";
+        var title = `Event: ${event} - (${x}px, ${y}px)`;
         var doc = this.document;
         var pointer = doc.getElementById("clarity-pointer");
         if ((pointer === null || event === "click") && doc.body) {
@@ -57,6 +58,7 @@ export default class Pointer implements IParser {
             pointer.style.borderRadius = 8 + px;
             pointer.style.background = color;
         }
+        pointer.setAttribute("title", title);
         pointer.style.left = x + px;
         pointer.style.top = y + px;
     }

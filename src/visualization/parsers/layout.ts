@@ -14,6 +14,9 @@ export default class Layout implements IParser {
                 if (attribute) {
                     try {
                         let value = attributes[attribute];
+                        if (attribute === "value") {
+                            node[attribute] = value;
+                        }
                         node.setAttribute(attribute, value);
                     }
                     catch (ex) {
