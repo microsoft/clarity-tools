@@ -34,9 +34,9 @@ export default class Pointer implements IParser {
         var title = `Event: ${event} - (${x}px, ${y}px)`;
         var doc = this.document;
         var pointer = doc.getElementById("clarity-pointer");
-        if ((pointer === null || event === "click") && doc.body) {
+        if ((pointer === null) && doc.body) {
             pointer = doc.createElement("div");
-            if (!this.thumbnail || event !== "click") {
+            if (!this.thumbnail) {
                 pointer.id = "clarity-pointer";
             }
             doc.body.appendChild(pointer);
@@ -59,8 +59,9 @@ export default class Pointer implements IParser {
             pointer.style.background = color;
         }
         pointer.setAttribute("title", title);
-        pointer.style.left = x + px;
-        pointer.style.top = y + px;
+        // Making sure the pointer and the center of the circle points to where the event happened
+        pointer.style.left = (x - (event === "click" ? 5 : 8)) + px;
+        pointer.style.top = (y - (event === "click" ? 5 : 8)) + px;
     }
 
     render(state: IPointerState) {
