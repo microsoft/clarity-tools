@@ -11,6 +11,7 @@ import NotFoundReducer from './notfound';
 import FullPageReducer from './fullpage';
 import ErrorReducer from './error';
 import InactiveReducer from './inactive';
+import HeatMapReducer from './heatmap';
 
 const reducers = combineReducers({
     session: SessionReducer,
@@ -24,6 +25,7 @@ const reducers = combineReducers({
     inactive: InactiveReducer,
     error: ErrorReducer,
     fullpage: FullPageReducer,
+    heatmap: HeatMapReducer,
     notfound: NotFoundReducer
 });
 

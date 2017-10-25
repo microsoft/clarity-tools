@@ -9,7 +9,15 @@ export const enum Types {
     ToggleFullPage,
     NotFound,
     ToggleInactiveSession,
+    PlotHeatmap,
     Error
+}
+
+export const plotHeatmap = (pointerevents) => {
+  return {
+      type: Types.PlotHeatmap,
+      payload: pointerevents
+  }
 }
 
 export const selectSession = (session) => {
