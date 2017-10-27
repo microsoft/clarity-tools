@@ -2,22 +2,14 @@ export const enum Types {
     SelectSession,
     SelectImpression,
     SelectSnapshot,
+    SelectView,
     TogglePlayback,
     ToggleSpeed,
-    ToggleBoxModel,
     ShowMenu,
     ToggleFullPage,
     NotFound,
     ToggleInactiveSession,
-    PlotHeatmap,
     Error
-}
-
-export const plotHeatmap = (pointerevents) => {
-  return {
-      type: Types.PlotHeatmap,
-      payload: pointerevents
-  }
 }
 
 export const selectSession = (session) => {
@@ -55,10 +47,10 @@ export const toggleSpeed = (isFast) => {
     }
 };
 
-export const toggleBoxModel = (showBoxModel) => {
+export const selectView = (view) => {
     return {
-        type: Types.ToggleBoxModel,
-        payload: showBoxModel
+        type: Types.SelectView,
+        payload: view
     }
 };
 

@@ -17,6 +17,7 @@ class Snapshot extends React.Component<any, any> {
   private parsers: { [type: string]: IParser } = {};
   private activeImpressionId = "";
   private activeFullPageSetting = false;
+  private activeView = 0;
   private currentTime = 0;
   private currentPointer = -1;
 
@@ -29,11 +30,12 @@ class Snapshot extends React.Component<any, any> {
       var end = events[events.length - 1].time;
 
       // Reset all parsers if this is the first time an impression is rendered
-      if (this.activeImpressionId != this.props.impression.envelope.impressionId) {
+      if (this.activeImpressionId != this.props.impression.envelope.impressionId || this.activeView != this.props.view) {
         for (var type in this.parsers) {
           this.parsers[type].setup(this.frame.contentDocument, this.frame, this.props.base);
         }
         this.activeImpressionId = this.props.impression.envelope.impressionId;
+        this.activeView = this.props.view;
 
         // Fast forward to the end of the impression to show summary view
         time = end;
@@ -49,7 +51,7 @@ class Snapshot extends React.Component<any, any> {
       for (var i = startPointer; i < events.length; i++) {
         var event = events[i];
         if (event.time <= time) {
-          let parser = event.type === "Layout" && this.props.boxmodel ? "BoxModel" : event.type; 
+          let parser = event.type === "Layout" && this.props.view == 1 ? "BoxModel" : event.type; 
           if (parser in this.parsers) {
             this.parsers[parser].render(event.state);
           }
@@ -105,7 +107,7 @@ export default connect(
     return {
       snapshot: state.snapshot,
       impression: state.impression,
-      boxmodel: state.boxmodel,
+      view: state.view,
       fullpage: state.fullpage,
       base: state.impression ? state.impression.envelope.url.match(/^(.*\/)[^\/]*$/)[1] : ""
     }

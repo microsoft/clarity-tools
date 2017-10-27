@@ -1,8 +1,8 @@
 import { Types } from "../actions";
 
-export default function (state = null, action) {
+export default function (state = 0, action) {
     switch (action.type) {
-        case Types.PlotHeatmap:
+        case Types.SelectView:
             return action.payload;
     }
     return state;

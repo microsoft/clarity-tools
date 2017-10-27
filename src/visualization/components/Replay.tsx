@@ -3,7 +3,6 @@ import * as ReactDOM from "react-dom";
 import Snapshot from "./Snapshot";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
-import HeatMap from "./HeatMap";
 
 class Replay extends React.Component<any, any> {
 
@@ -15,7 +14,6 @@ class Replay extends React.Component<any, any> {
         return (
             <div className="clarity-replay">
                 <div className="clarity-snapshot">
-                    <HeatMap />
                     <Snapshot />
                 </div>
             </div >

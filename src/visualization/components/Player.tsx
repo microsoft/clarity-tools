@@ -5,11 +5,10 @@ import IconButton from 'material-ui/IconButton';
 import PlayIcon from 'material-ui/svg-icons/av/play-arrow';
 import PauseIcon from 'material-ui/svg-icons/av/pause';
 import TimelapseIcon from 'material-ui/svg-icons/image/timelapse';
-import BoxModelIcon from 'material-ui/svg-icons/image/view-compact';
 import NextIcon from 'material-ui/svg-icons/av/skip-next';
 import PrevIcon from 'material-ui/svg-icons/av/skip-previous';
 import FullPageIcon from 'material-ui/svg-icons/action/aspect-ratio';
-import { selectSnapshot, togglePlayback, toggleSpeed, selectImpression, toggleBoxModel, toggleFullPage } from "../actions";
+import { selectSnapshot, togglePlayback, toggleSpeed, selectImpression, toggleFullPage } from "../actions";
 import Slider from "./Slider";
 import Timer from "./Timer";
 
@@ -66,10 +65,6 @@ class Player extends React.Component<any, any> {
         this.props.toggleSpeed(!this.props.speed);
     }
 
-    toggleBoxModel() {
-        this.props.toggleBoxModel(!this.props.boxmodel);
-    }
-
     showFullPage() {
         this.props.showFullPage(!this.props.fullpage);
     }
@@ -96,7 +91,7 @@ class Player extends React.Component<any, any> {
     }
 
     render() {
-        if (!this.props.impression) {
+        if (!this.props.impression || this.props.view > 1) {
             return (<div></div>);
         }
 
@@ -105,7 +100,6 @@ class Player extends React.Component<any, any> {
         let Icon = this.props.playback ? <PauseIcon /> : <PlayIcon />;
         let iconTooltip = this.props.playback ? "Pause playback" : "Start playback";
         let speedIconColor = this.props.speed ? "white" : "#666";
-        let boxmodelIconColor = this.props.boxmodel ? "white" : "#666";
         let fullPageIconColor = this.props.fullpage ? "white" : "#666";
         let prevIconColor = index > 0 ? "white" : "#666";
         let nextIconColor = index < (this.props.playlist.length - 1) ? "white" : "#666";
@@ -124,9 +118,6 @@ class Player extends React.Component<any, any> {
                     </IconButton>
                     <IconButton iconStyle={{ color: speedIconColor }} onClick={this.toggleSpeed.bind(this)} tooltip={"Toggle fast playback mode"}>
                         <TimelapseIcon />
-                    </IconButton>
-                    <IconButton iconStyle={{ color: boxmodelIconColor }} onClick={this.toggleBoxModel.bind(this)} tooltip={"Toggle box model mode"}>
-                        <BoxModelIcon />
                     </IconButton>
                     <IconButton iconStyle={{ color: fullPageIconColor }} onClick={this.showFullPage.bind(this)} tooltip={"Toggle full page mode"}>
                         <FullPageIcon />
@@ -164,15 +155,14 @@ export default connect(
             snapshot: state.snapshot,
             playback: state.playback,
             speed: state.speed,
-            fullpage: state.fullpage,
-            boxmodel: state.boxmodel
+            view: state.view,
+            fullpage: state.fullpage            
         }
     },
     dispatch => { return bindActionCreators({ 
         selectSnapshot: selectSnapshot, 
         togglePlayback: togglePlayback, 
         toggleSpeed: toggleSpeed, 
-        toggleBoxModel: toggleBoxModel, 
         showFullPage: toggleFullPage,
         selectImpression: selectImpression 
     }, dispatch) }
