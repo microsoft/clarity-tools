@@ -140,12 +140,13 @@ export default class Layout implements IParser {
                 break;
             case "*IGNORE*":
                 state = layoutState as IIgnoreLayoutState;
-                var ignoredNode = document.createElement("div");
+                var ignoredNode = this.document.createElement("div");
                 // Ensure that this ignore node doesn't disrupt the layout of other elements
                 ignoredNode.style.display = "none";
-                ignoredNode.setAttribute("data-index", state.index.toString());
-                ignoredNode.setAttribute("data-nodeType", this.getNodeTypeString(state.nodeType));
-                if (state.nodeType === Node.ELEMENT_NODE) {
+                ignoredNode.setAttribute("data-index", state.index);
+                ignoredNode.setAttribute("data-nodeType", state.nodeType);
+                /* nodeType --> 1: ELEMENT_NODE | 3: TEXT_NODE | 8: COMMENT_NODE */
+                if (state.nodeType === 1) {
                     ignoredNode.setAttribute("data-tagName", state.elementTag);
                 }
                 this.domInsert(ignoredNode, parent, next);
@@ -216,37 +217,6 @@ export default class Layout implements IParser {
         else {
             console.warn(`Move: ${node} or ${parent} doesn't exist`);
         }
-    }
-
-    private getNodeTypeString(nodeType: number) {
-        var nodeTypeStr = null;
-        switch (nodeType) {
-            case Node.ELEMENT_NODE:
-                nodeTypeStr = "ELEMENT_NODE";
-                break;
-            case Node.TEXT_NODE:
-                nodeTypeStr = "TEXT_NODE";
-                break;
-            case Node.PROCESSING_INSTRUCTION_NODE:
-                nodeTypeStr = "PROCESSING_INSTRUCTION_NODE";
-                break;
-            case Node.COMMENT_NODE:
-                nodeTypeStr = "COMMENT_NODE";
-                break;
-            case Node.DOCUMENT_NODE:
-                nodeTypeStr = "DOCUMENT_NODE";
-                break;
-            case Node.DOCUMENT_TYPE_NODE:
-                nodeTypeStr = "DOCUMENT_TYPE_NODE";
-                break;
-            case Node.DOCUMENT_FRAGMENT_NODE:
-                nodeTypeStr = "DOCUMENT_FRAGMENT_NODE";
-                break;
-            default:
-                nodeTypeStr = `Unknown node type (${nodeType})`;
-                break;
-        }
-        return nodeTypeStr;
     }
 
     reset() {}
