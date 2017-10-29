@@ -5,7 +5,7 @@ import ImpressionReducer from './impression';
 import SnapshotReducer from './snapshot';
 import PlaybackReducer from './playback';
 import SpeedReducer from './speed';
-import BoxModelReducer from './boxmodel';
+import ViewReducer from './view';
 import MenuReducer from './menu';
 import NotFoundReducer from './notfound';
 import FullPageReducer from './fullpage';
@@ -19,7 +19,7 @@ const reducers = combineReducers({
     playlist: PlaylistReducer,
     playback: PlaybackReducer,
     speed: SpeedReducer,
-    boxmodel: BoxModelReducer,
+    view: ViewReducer,
     menu: MenuReducer,
     inactive: InactiveReducer,
     error: ErrorReducer,

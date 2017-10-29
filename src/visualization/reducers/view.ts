@@ -1,8 +1,8 @@
 import { Types } from "../actions";
 
-export default function (state = false, action) {
+export default function (state = 0, action) {
     switch (action.type) {
-        case Types.ToggleBoxModel:
+        case Types.SelectView:
             return action.payload;
     }
     return state;

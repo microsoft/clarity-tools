@@ -2,9 +2,9 @@ export const enum Types {
     SelectSession,
     SelectImpression,
     SelectSnapshot,
+    SelectView,
     TogglePlayback,
     ToggleSpeed,
-    ToggleBoxModel,
     ShowMenu,
     ToggleFullPage,
     NotFound,
@@ -47,10 +47,10 @@ export const toggleSpeed = (isFast) => {
     }
 };
 
-export const toggleBoxModel = (showBoxModel) => {
+export const selectView = (view) => {
     return {
-        type: Types.ToggleBoxModel,
-        payload: showBoxModel
+        type: Types.SelectView,
+        payload: view
     }
 };
 

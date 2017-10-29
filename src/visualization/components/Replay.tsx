@@ -10,8 +10,7 @@ class Replay extends React.Component<any, any> {
         if (!this.props.impression) {
             return (<div />);
         }
-
-
+      
         return (
             <div className="clarity-replay">
                 <div className="clarity-snapshot">
@@ -27,4 +26,3 @@ class Replay extends React.Component<any, any> {
 export default connect(
     state => { return { impression: state.impression } }
 )(Replay);
-

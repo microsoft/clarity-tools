@@ -12,7 +12,6 @@ chrome.runtime.sendMessage({ status: true }, function (response) {
           clarity.start({
             showText: items.clarity.showText,
             showImages: items.clarity.showImages,
-            showLines: items.clarity.showLines,
             uploadHandler: upload,
             fetchColor: true,
             instrument: true
