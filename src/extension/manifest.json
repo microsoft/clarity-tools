@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Clarity",
-  "description": "Replay and share your web sessions.",
+  "description": "Replay and download your web sessions. A demonstration of clarity-js library.",
   "version": "0.1.18",
   "browser_action": {
     "default_icon": "icon.png",
@@ -9,7 +9,7 @@
     "default_popup": "popup.html"
   },
   "icons": {
-    "64": "icon.png"
+    "128": "icon.png"
   },
   "content_scripts": [
     {
