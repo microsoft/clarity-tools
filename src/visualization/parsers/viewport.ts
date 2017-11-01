@@ -5,7 +5,7 @@ import { IViewportState } from "clarity-js/clarity";
 export default class Viewport implements IParser {
     private document: Document;
     private frame: HTMLIFrameElement;
-    private state: IViewportState;
+    private data: IViewportEventData;
     private fullpage: Boolean = false;
 
     setup(document: Document, frame: HTMLIFrameElement, base: string, thumbnail? : boolean) {
@@ -39,7 +39,7 @@ export default class Viewport implements IParser {
     }
 
     resizeFrame() {
-        let state = this.state;
+        let state = this.data;
         if (state) {
             var availableWidth = window.innerWidth;
             var width = this.fullpage ? Math.max(state.viewport.width, state.document.width) : state.viewport.width;
@@ -54,12 +54,12 @@ export default class Viewport implements IParser {
         }
     }
 
-    render(state: IViewportState) {
-        this.state = state;
-        switch (state.event) {
+    render(data: IViewportEventData) {
+        this.data = data;
+        switch (data.type) {
             case "scroll":
                 if (!this.fullpage) {
-                    this.frame.contentWindow.scrollTo(state.viewport.x, state.viewport.y);
+                    this.frame.contentWindow.scrollTo(data.viewport.x, data.viewport.y);
                 }
                 break;
             case "resize":
@@ -69,6 +69,6 @@ export default class Viewport implements IParser {
                 break;
         }
 
-        this.shield(Math.max(state.document.width, state.viewport.width), Math.max(state.document.height, state.viewport.width), state.visibility);
+        this.shield(Math.max(data.document.width, data.viewport.width), Math.max(data.document.height, data.viewport.width), data.visibility);
     }
 }

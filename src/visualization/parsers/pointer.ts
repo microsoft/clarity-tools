@@ -65,7 +65,7 @@ export default class Pointer implements IParser {
         pointer.style.top = (y - (event === "click" ? 5 : 8)) + px;
     }
 
-    render(state: IPointerState) {
-        this.pointer(state.event, state.x, state.y);
+    render(data: IPointerEventData) {
+        this.pointer(data.state.type, data.state.x, data.state.y);
     }
 }

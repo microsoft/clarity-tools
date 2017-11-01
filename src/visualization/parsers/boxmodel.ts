@@ -4,7 +4,7 @@ import { IElementLayoutState, ILayoutRectangle, ILayoutState, IDoctypeLayoutStat
 
 export default class BoxModel implements IParser {
     private layouts: { [index: number]: Node } = {};
-    private states: { [index: number]: IElementLayoutState } = {};
+    private states: { [index: number]: ILayoutState } = {};
     private document: Document;
     private base: string;
    
@@ -50,13 +50,14 @@ export default class BoxModel implements IParser {
 
         // Walk up the parent chain to find nearest element with absolute position
         while (parent && parent in this.states) {
-            if (this.states[parent] && this.states[parent].layout && 
-            (this.states[parent].layout.x || this.states[parent].layout.y)) {
-                parentX = this.states[parent].layout.x;
-                parentY = this.states[parent].layout.y;
+            let parentState = this.states[parent];
+            let parentLayout = parentState ? (parentState as IElementLayoutState).layout : null;
+            if (parentLayout && (parentLayout.x || parentLayout.y)) {
+                parentX = parentLayout.x;
+                parentY = parentLayout.y;
                 break;
             }
-            parent = this.states[parent].parent;
+            parent = parentState.parent;
         }
 
         node.style.position = "absolute";
@@ -78,7 +79,8 @@ export default class BoxModel implements IParser {
         return tag;
     }
 
-    private insert(state: ILayoutState) {
+    private insert(data: IInsert) {
+        var state = data.state;
         var doc = this.document;
         var parent = this.layouts[state.parent];
         var next = state.next in this.layouts ? this.layouts[state.next] : null;
@@ -119,33 +121,33 @@ export default class BoxModel implements IParser {
                 if (elementState.layout) {
                     this.draw(node, elementState.layout, state.tag, state.parent);
                 }
-                this.states[state.index] = elementState;
                 break;
+        }
+        this.states[state.index] = state;
+    }
+
+    private remove(data: IRemove) {
+        this.layouts[data.index] = this.domRemove(this.layouts[data.index]);
+    }
+
+    private move(data: IMove) {
+        var node = this.layouts[data.index];
+        var parent = this.layouts[data.parent];
+        var next = data.next in this.layouts ? this.layouts[data.next] : null;
+        if (node && parent) {
+            this.layouts[data.index] = this.domInsert(node, parent, next);
+        } else {
+            console.warn(`Move: ${node} or ${parent} doesn't exist`);
         }
     }
 
-    private update(state: IElementLayoutState) {
-        var node = <HTMLElement>this.layouts[state.index];
-        if (node && state.layout) {
-            this.draw(node, state.layout, state.tag, state.parent);
-            this.layouts[state.index] = node;
-        }
-        else {
-            console.warn(`Move: ${node} doesn't exist`);
-        }
-    }
-    private remove(state: ILayoutState) {
-        this.layouts[state.index] = this.domRemove(this.layouts[state.index]);
-    }
-    private move(state: ILayoutState) {
-        var node = this.layouts[state.index];
-        var parent = this.layouts[state.parent];
-        var next = state.next in this.layouts ? this.layouts[state.next] : null;
-        if (node && parent) {
-            this.layouts[state.index] = this.domInsert(node, parent, next);
-        }
-        else {
-            console.warn(`Move: ${node} or ${parent} doesn't exist`);
+    private update(data: IAttributeUpdate) {
+        var node = <HTMLElement>this.layouts[data.index];
+        var state = this.states[data.index];
+        if (node && data.layout) {
+            this.draw(node, data.layout, state.tag, state.parent);
+        } else {
+            console.warn(`UpdateAttributes: ${node} doesn't exist`);
         }
     }
 
@@ -153,19 +155,22 @@ export default class BoxModel implements IParser {
 
     }
 
-    render(state: IElementLayoutState) {
-        switch (state.action) {
+    render(data: ILayoutEventData) {
+        switch (data.action) {
+            case Action.Discover:
             case Action.Insert:
-                this.insert(state);
-                break;
-            case Action.Update:
-                this.update(state);
+                this.insert(data as IInsert);
                 break;
             case Action.Remove:
-                this.remove(state);
+                this.remove(data as IRemove);
                 break;
             case Action.Move:
-                this.move(state);
+                this.move(data as IMove);
+                break;
+            case Action.AttributeUpdate:
+                this.update(data as IAttributeUpdate);
+                break;
+            case Action.CharacterDataUpdate:
                 break;
         }
     }

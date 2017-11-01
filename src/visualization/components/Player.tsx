@@ -25,7 +25,7 @@ class Player extends React.Component<any, any> {
             var startTime = 0;
             for (var evt of events) {
                 if (frames.indexOf(evt.time) < 0) {
-                    if (evt.type === "Layout" && evt.state.source === 0) startTime = evt.time;
+                    if (evt.type === "Layout" && evt.data.action === Action.Discover) startTime = evt.time;
                     frames.push(evt.time)
                 }
             }

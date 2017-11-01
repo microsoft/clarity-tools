@@ -83,12 +83,12 @@ class Timeline extends React.Component<any, any> {
     getSubtype(event) {
         switch (event.type) {
             case "Layout":
-                return event.state.source === 0 ? "discover" : "mutation";
+                return event.data.source === 0 ? "discover" : "mutation";
             case "Viewport":
             case "Pointer":
-                return event.state.event;
+                return event.data.event;
             case "Instrumentation":
-                switch (event.state.type) {
+                switch (event.data.type) {
                     case 0: return "asynchronous";
                     case 1: return "largetask";
                     case 2: return "jserror";

@@ -53,7 +53,7 @@ class Snapshot extends React.Component<any, any> {
         if (event.time <= time) {
           let parser = event.type === "Layout" && this.props.view == 1 ? "BoxModel" : event.type; 
           if (parser in this.parsers) {
-            this.parsers[parser].render(event.state);
+            this.parsers[parser].render(event.data);
           }
           this.currentPointer = i;
         }
