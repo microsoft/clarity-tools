@@ -238,6 +238,10 @@ export default class Layout implements IParser {
                 this.updateAttributes(data as IAttributeUpdate);
                 break;
             case Action.CharacterDataUpdate:
+                this.updateCharacterData(data as ICharacterDataUpdate);
+                break;
+            default:
+                console.warn("Unknown Layout Action: " + data.action);
                 break;
         }
     }
