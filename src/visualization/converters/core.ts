@@ -29,7 +29,7 @@ function convertData(type: string, dataArray: any[]): any {
     case "NavigationTiming":
     case "ResourceTiming":
       // Performance
-      PerformanceConverter(dataArray, type);
+      data = PerformanceConverter(dataArray, type);
       break;
     case "Pointer":
       data = PointerConverter(dataArray);
