@@ -13,7 +13,6 @@ import ClarityReducer from "../visualization/reducers";
 import { Types } from "../visualization/actions";
 import uncompress from "../visualization/uncompress";
 import clarity from "clarity-js";
-import DiscoverToEvents from "../visualization/discover";
 
 injectTapEventPlugin();
 
@@ -45,11 +44,11 @@ chrome.runtime.sendMessage({ fetch: true }, function (response) {
             let json = JSON.parse(uncompress(entry.payload));
             
             // Convert events from crunched arrays to verbose JSONs
-            let events = [];
+            let events: IEvent[] = [];
             for (let i = 0; i < json.events.length; i++) {
-                let event = clarity.converter(json.events[i]);
+                let event = clarity.converter.fromarray(json.events[i]);
                 if (event.origin === Origin.Discover && event.type === DiscoverEventType.Discover) {
-                    let discoverEvents = DiscoverToEvents(event);
+                    let discoverEvents = clarity.converter.discoverToEvents(event.id, event.time, event.data);
                     events = events.concat(discoverEvents);
                 } else {
                     events.push(event);
