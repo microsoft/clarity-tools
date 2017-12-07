@@ -1,4 +1,4 @@
-/// <reference path="../../../node_modules/clarity-js/clarity.d.ts" />
+/// <reference path="../../../node_modules/clarity-js/declarations/clarity.d.ts" />
 import { IParser } from "../components/Snapshot";
 import { IAttributes, ILayoutState, IElementLayoutState, IDoctypeLayoutState, ITextLayoutState, IIgnoreLayoutState, Action } from "clarity-js/clarity";
 
@@ -222,8 +222,10 @@ export default class Layout implements IParser {
 
     reset() {}
 
-    render(data: ILayoutEventData) {
-        switch (data.action) {
+    render(event: IEvent) {
+        let action = event.type;
+        let data = event.data as ILayoutEventData;
+        switch (action) {
             case Action.Discover:
             case Action.Insert:
                 this.insert(data as IInsert);

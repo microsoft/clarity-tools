@@ -1,4 +1,4 @@
-/// <reference path="../../../node_modules/clarity-js/clarity.d.ts" />
+/// <reference path="../../../node_modules/clarity-js/declarations/clarity.d.ts" />
 import { IParser } from "../components/Snapshot";
 import { IElementLayoutState, ILayoutRectangle, ILayoutState, IDoctypeLayoutState, ITextLayoutState, Action } from "clarity-js/clarity";
 
@@ -155,8 +155,10 @@ export default class BoxModel implements IParser {
 
     }
 
-    render(data: ILayoutEventData) {
-        switch (data.action) {
+    render(event: IEvent) {
+        let action = event.type;
+        let data = event.data as ILayoutEventData;
+        switch (action) {
             case Action.Discover:
             case Action.Insert:
                 this.insert(data as IInsert);
@@ -171,6 +173,9 @@ export default class BoxModel implements IParser {
                 this.update(data as IAttributeUpdate);
                 break;
             case Action.CharacterDataUpdate:
+                break;
+            default:
+                console.warn("Unknown Layout Action: " + data.action);
                 break;
         }
     }

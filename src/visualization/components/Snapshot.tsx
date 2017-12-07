@@ -8,7 +8,7 @@ import Pointer from "../parsers/pointer";
 
 export interface IParser {
   setup(document, frame, base, thumbnail? : boolean): void;
-  render(state): void;
+  render(event: IEvent): void;
 }
 
 class Snapshot extends React.Component<any, any> {
@@ -51,9 +51,9 @@ class Snapshot extends React.Component<any, any> {
       for (var i = startPointer; i < events.length; i++) {
         var event = events[i];
         if (event.time <= time) {
-          let parser = event.type === "Layout" && this.props.view == 1 ? "BoxModel" : event.type; 
+          let parser = event.origin === Origin.Layout && this.props.view == 1 ? "BoxModel" : this.originToString(event.origin); 
           if (parser in this.parsers) {
-            this.parsers[parser].render(event.data);
+            this.parsers[parser].render(event);
           }
           this.currentPointer = i;
         }
@@ -97,6 +97,17 @@ class Snapshot extends React.Component<any, any> {
     var frame = ReactDOM.findDOMNode(this) as HTMLIFrameElement;
     ReactDOM.unmountComponentAtNode(frame.contentDocument.documentElement);
     this.parsers = {};
+  }
+
+  private originToString(origin: number) {
+    switch (origin) {
+        case Origin.Discover: return "Discover";
+        case Origin.Instrumentation: return "Instrumentation";
+        case Origin.Layout: return "Layout";
+        case Origin.Performance: return "Performance";
+        case Origin.Pointer: return "Pointer";
+        case Origin.Viewport: return "Viewport";
+    }
   }
 }
 

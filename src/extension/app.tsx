@@ -12,8 +12,8 @@ import { Provider } from 'react-redux';
 import ClarityReducer from "../visualization/reducers";
 import { Types } from "../visualization/actions";
 import uncompress from "../visualization/uncompress";
-import convertEvent from "../visualization/converters/core";
-import { discoverToEvents } from "../visualization/converters/discover";
+import clarity from "clarity-js";
+import DiscoverToEvents from "../visualization/discover";
 
 injectTapEventPlugin();
 
@@ -47,9 +47,9 @@ chrome.runtime.sendMessage({ fetch: true }, function (response) {
             // Convert events from crunched arrays to verbose JSONs
             let events = [];
             for (let i = 0; i < json.events.length; i++) {
-                let event = convertEvent(json.events[i]);
-                if (event.type === "Discover") {
-                    let discoverEvents = discoverToEvents(event);
+                let event = clarity.converter(json.events[i]);
+                if (event.origin === Origin.Discover && event.type === DiscoverEventType.Discover) {
+                    let discoverEvents = DiscoverToEvents(event);
                     events = events.concat(discoverEvents);
                 } else {
                     events.push(event);

@@ -1,18 +1,10 @@
-import {layoutStateFromArray} from "./layout";
+import clarity from "clarity-js";
 
 interface IDiscoverInsert extends ILayoutEventData {
   state: ILayoutState;
 }
 
-
-export default function(discover: any[]): IDiscover {
-  let data: IDiscover = {
-    dom:    discover[0]
-  };
-  return data;
-}
-
-export function discoverToEvents(event: IEvent): IEvent[] {
+export default function(event: IEvent): IEvent[] {
   let discoverData = event.data as IDiscover;
   let dom = discoverData.dom;
   let discoverEvents: IEvent[] = [];
@@ -26,8 +18,9 @@ export function discoverToEvents(event: IEvent): IEvent[] {
       state
     };
     let evt: IEvent = {
-      type: "Layout",
       id: event.id,
+      origin: Origin.Layout,
+      type: Action.Discover,
       data: eventData,
       time: event.time
     };
@@ -52,7 +45,7 @@ function discoverToLayoutStates(data: any[], index: number, parent: ILayoutState
   index++;
 
   // Generate layouts in the same order as they were indexed on the client - DFS order
-  let thisLayout = layoutStateFromArray(fullData);
+  let thisLayout = clarity.layoutStateFromArray(fullData);
   let layouts = [ thisLayout ];
   let previousChild = null;
   for (let i = 0; i < children.length; i++) {

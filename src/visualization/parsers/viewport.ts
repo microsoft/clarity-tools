@@ -1,4 +1,4 @@
-/// <reference path="../../../node_modules/clarity-js/clarity.d.ts" />
+/// <reference path="../../../node_modules/clarity-js/declarations/clarity.d.ts" />
 import { IParser } from "../components/Snapshot";
 import { IViewportState } from "clarity-js/clarity";
 
@@ -54,7 +54,8 @@ export default class Viewport implements IParser {
         }
     }
 
-    render(data: IViewportEventData) {
+    render(event: IEvent) {
+        let data = event.data as IViewportEventData;
         this.data = data;
         switch (data.type) {
             case "scroll":
