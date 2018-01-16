@@ -1,6 +1,6 @@
 {
   "name": "clarity-tools",
-  "version": "0.0.15",
+  "version": "0.0.19",
   "description": "A collection of tools to help visualize the data collected from clarity-js package",
   "author": "Microsoft Corp.",
   "license": "MIT",
@@ -24,15 +24,15 @@
     "url": "https://github.com/Microsoft/clarity-tools/issues"
   },
   "dependencies": {
-    "clarity-js": "^0.1.18",
+    "clarity-js": "^0.1.21",
     "material-ui": "0.17.4",
-    "react": "^15.4.2",
-    "react-dom": "^15.4.2",
-    "react-redux": "^5.0.3",
-    "react-router": "^3.0.2",
+    "react": "^15.6.2",
+    "react-dom": "^15.6.2",
+    "react-redux": "^5.0.6",
+    "react-router": "^3.2.0",
     "react-swipeable-views": "^0.11.2",
     "react-tap-event-plugin": "^2.0.1",
-    "redux": "^3.6.0"
+    "redux": "^3.7.2"
   },
   "devDependencies": {
     "@types/chrome": "0.0.35",

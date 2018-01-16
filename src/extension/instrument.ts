@@ -1,5 +1,5 @@
 
-import * as clarity from "clarity-js";
+import { start } from "clarity-js";
 let payloads = [];
 
 chrome.runtime.sendMessage({ status: true }, function (response) {
@@ -9,7 +9,7 @@ chrome.runtime.sendMessage({ status: true }, function (response) {
       clarity: {showText: false, showImages: true, showLines: true, enabled: true}
     }, function(items : any) {
         if (items.clarity.enabled) {
-          clarity.start({
+          start({
             showText: items.clarity.showText,
             showImages: items.clarity.showImages,
             uploadHandler: upload,
