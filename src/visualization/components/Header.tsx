@@ -48,7 +48,6 @@ class Header extends React.Component<any, any> {
                     let content = e.target.result;
                     if (content && content.length > 0) {
                         let json = JSON.parse(content);
-                        window["DJSON"] = json;
                         that.props.selectSession(json);
                     }
                 }
