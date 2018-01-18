@@ -4,6 +4,7 @@ import Drawer from 'material-ui/Drawer';
 import TextField from 'material-ui/TextField';
 import FlatButton from 'material-ui/FlatButton';
 import DownloadIcon from 'material-ui/svg-icons/file/file-download';
+import UploadIcon from 'material-ui/svg-icons/file/file-upload';
 import IconButton from 'material-ui/IconButton';
 import LinearProgress from 'material-ui/LinearProgress';
 import { bindActionCreators } from "redux";
@@ -11,7 +12,7 @@ import { connect } from "react-redux";
 import Player from "./Player";
 import Session from "./Session";
 import Timeline from "./Timeline";
-import { showMenu } from "../actions";
+import { showMenu, selectSession } from "../actions";
 import { Tabs, Tab } from 'material-ui/Tabs';
 
 class Header extends React.Component<any, any> {
@@ -26,9 +27,34 @@ class Header extends React.Component<any, any> {
         let url  = URL.createObjectURL(blob);
 
         let a = document.createElement('a');
-        a.setAttribute("download", `clarity-${this.props.impression.envelope.impressionId}.json`);
+        a.setAttribute("download", `clarity-${this.props.impression.envelope.impressionId.toUpperCase()}.json`);
         a.href = url;
         a.click();
+    }
+
+    uploadJson() {
+        let that = this;
+        let input = document.createElement("input");
+        input.id = "clarityJson";
+        input.type = "file";
+        input.style.display = "none";
+        document.body.appendChild(input);
+        input.onchange = function() {
+            let element = this as HTMLInputElement;
+            let files = element.files;
+            if (files && files[0]) {
+                let reader = new FileReader();
+                reader.onload = function (e: Event & { target: { result: string } }) {
+                    let content = e.target.result;
+                    if (content && content.length > 0) {
+                        let json = JSON.parse(content);
+                        that.props.selectSession(json);
+                    }
+                }
+                reader.readAsText(files[0]);
+            }
+        }
+        input.click();
     }
 
     render() {
@@ -46,7 +72,12 @@ class Header extends React.Component<any, any> {
                             <Player />
                         </div>
                     } 
-                    iconElementRight={<IconButton disabled={disabled} onClick={this.saveJson.bind(this)}><DownloadIcon/></IconButton>}
+                    iconElementRight={
+                        <div>
+                            <IconButton iconStyle={{ color: "#666" }} onClick={this.uploadJson.bind(this)} tooltip="Upload Clarity Json"><UploadIcon/></IconButton>
+                            <IconButton iconStyle={{ color: "#666" }} disabled={disabled} onClick={this.saveJson.bind(this)} tooltip="Download Clarity Json"><DownloadIcon/></IconButton>
+                        </div>
+                    }
                 />
                 <Drawer className="clarity-drawer" docked={true} open={this.props.menu}>
                     <AppBar showMenuIconButton={false} />
@@ -79,5 +110,5 @@ class Header extends React.Component<any, any> {
 // mapStateToProps and matchDispatchToProps using fat arrow function
 export default connect(
     state => { return { menu: state.menu, impression: state.impression, playlist: state.playlist, notfound: state.notfound, error: state.error } },
-    dispatch => { return bindActionCreators({ showMenu: showMenu }, dispatch) }
+    dispatch => { return bindActionCreators({ showMenu: showMenu, selectSession: selectSession }, dispatch) }
 )(Header);
