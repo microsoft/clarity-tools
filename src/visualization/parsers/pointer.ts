@@ -1,6 +1,5 @@
-/// <reference path="../../../node_modules/clarity-js/clarity.d.ts" />
 import { IParser } from "../components/Snapshot";
-import { IPointerState } from "clarity-js/clarity";
+import { IPointerEventData, IEvent } from "clarity-js/declarations/clarity";
 
 export default class Pointer implements IParser {
     private document: Document;
@@ -65,7 +64,8 @@ export default class Pointer implements IParser {
         pointer.style.top = (y - (event === "click" ? 5 : 8)) + px;
     }
 
-    render(state: IPointerState) {
-        this.pointer(state.event, state.x, state.y);
+    render(event: IEvent) {
+        let data = event.data as IPointerEventData;
+        this.pointer(data.type, data.x, data.y);
     }
 }

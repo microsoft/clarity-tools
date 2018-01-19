@@ -11,7 +11,9 @@ import { createStore } from "redux";
 import { Provider } from 'react-redux';
 import ClarityReducer from "../visualization/reducers";
 import { Types } from "../visualization/actions";
-import uncompress from "../visualization/uncompress"
+import uncompress from "../visualization/uncompress";
+import clarity from "clarity-js";
+import { IEvent, Origin, DiscoverEventType } from "clarity-js/declarations/clarity";
 
 injectTapEventPlugin();
 
@@ -41,6 +43,19 @@ chrome.runtime.sendMessage({ fetch: true }, function (response) {
         for (let entry of payloads) {
             size += entry.length;
             let json = JSON.parse(uncompress(entry.payload));
+            
+            // Convert events from crunched arrays to verbose JSONs
+            let events: IEvent[] = [];
+            for (let i = 0; i < json.events.length; i++) {
+                let event = clarity.converter.fromarray(json.events[i]);
+                if (event.origin === Origin.Discover && event.type === DiscoverEventType.Discover) {
+                    let discoverEvents = clarity.converter.eventsFromDiscoverArray(event.id, event.time, event.data.dom, 0);
+                    events = events.concat(discoverEvents);
+                } else {
+                    events.push(event);
+                }
+            }
+
             let tabId = entry.tabId;
             let id = json.envelope.impressionId;
             if (!(id in structured)) {
@@ -59,9 +74,9 @@ chrome.runtime.sendMessage({ fetch: true }, function (response) {
             structured[id].metadata.summary.push({
                 "sequenceNumber": json.envelope.sequenceNumber,
                 "time": json.envelope.time,
-                "events": json.events.length
+                "events": events.length
             });
-            structured[id].events = structured[id].events.concat(json.events);
+            structured[id].events = structured[id].events.concat(events);
             count++;
         }
 

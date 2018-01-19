@@ -1,6 +1,6 @@
-/// <reference path="../../../node_modules/clarity-js/clarity.d.ts" />
 import { IParser } from "../components/Snapshot";
-import { IAttributes, ILayoutState, IElementLayoutState, IDoctypeLayoutState, ITextLayoutState, IIgnoreLayoutState, Action } from "clarity-js/clarity";
+import { IAttributes, ILayoutState, IElementLayoutState, IEvent, IInput, ILayoutEventData, IInsert, IAttributeUpdate, IMove, IRemove,
+    IDoctypeLayoutState, ICharacterDataUpdate, IScroll, ITextLayoutState, IIgnoreLayoutState, Action } from "clarity-js/declarations/clarity";
 
 export default class Layout implements IParser {
     private layouts: { [index: number]: Node } = {};
@@ -19,8 +19,7 @@ export default class Layout implements IParser {
                             node[attribute] = value;
                         }
                         node.setAttribute(attribute, value);
-                    }
-                    catch (ex) {
+                    } catch (ex) {
                         console.warn("Setting attributes on a node: " + ex);
                     }
                 }
@@ -78,14 +77,14 @@ export default class Layout implements IParser {
         return this.document.createElement(state.tag);
     }
 
-    private insert(layoutState: ILayoutState) {
+    private insert(data: IInsert) {
         var doc = this.document;
-        var state: any = layoutState as IElementLayoutState;
+        var state: any = data.state as IElementLayoutState;
         var parent = this.layouts[state.parent];
         var next = state.next in this.layouts ? this.layouts[state.next] : null;
         switch (state.tag) {
             case "*DOC*":
-                state = layoutState as IDoctypeLayoutState;
+                state = data.state as IDoctypeLayoutState;
                 if (typeof XMLSerializer !== "undefined") {
                     this.layouts = {};
                     doc.open();
@@ -120,7 +119,7 @@ export default class Layout implements IParser {
                 this.layouts[state.index] = headNode;
                 break;
             case "*TXT*":
-                state = layoutState as ITextLayoutState;
+                state = data.state as ITextLayoutState;
                 var txt = this.document.createTextNode(state.content);
                 this.layouts[state.index] = this.domInsert(txt, parent, next);
                 break;
@@ -140,7 +139,7 @@ export default class Layout implements IParser {
                 this.layouts[state.index] = this.domInsert(img, parent, next);
                 break;
             case "*IGNORE*":
-                state = layoutState as IIgnoreLayoutState;
+                state = data.state as IIgnoreLayoutState;
                 var ignoredNode = this.document.createElement("div");
                 // Ensure that this ignore node doesn't disrupt the layout of other elements
                 ignoredNode.style.display = "none";
@@ -165,76 +164,86 @@ export default class Layout implements IParser {
         }
     }
 
-    private update(state: IElementLayoutState) {
-        var node = <HTMLElement>this.layouts[state.index];
-        if (node) {
-            // First remove all its existing attributes
-            if (node.attributes) { 
-                var attributes = node.attributes.length;
-                while (node.attributes && attributes > 0) {
-                    node.removeAttribute(node.attributes[0].name);
-                    attributes--;
-                } 
-            }       
-            // Then, update attributes from the new received event state
-            this.attributes(node, state.attributes);
-            // Special handling for image nodes
-            if (node.tagName === "IMG") {
-                let img = <HTMLImageElement> node;
-                if (!img.src)
-                {
-                    img.src = this.placeholderImage;
-                    img.style.width = state.layout.width + "px";
-                    img.style.height = state.layout.height + "px";
-                }
-            }
-            // If we have content for this node
-            if (state.tag === "*TXT*" && (<ITextLayoutState>(state as ILayoutState)).content) {
-                node.nodeValue = (<ITextLayoutState>(state as ILayoutState)).content;
-            }
-            // Check if this element can be scrolled
-            if (state.layout && (state.layout.scrollX || state.layout.scrollY)) {
-                node.scrollLeft = state.layout.scrollX;
-                node.scrollTop = state.layout.scrollY;
-            }
-            this.layouts[state.index] = node;
-        }
-        else {
-            console.warn(`Move: ${node} doesn't exist`);
-        }
+    private remove(data: IRemove) {
+        this.layouts[data.index] = this.domRemove(this.layouts[data.index]);
     }
 
-    private remove(state: ILayoutState) {
-        this.layouts[state.index] = this.domRemove(this.layouts[state.index]);
-    }
-
-    private move(state: ILayoutState) {
-        var node = this.layouts[state.index];
-        var parent = this.layouts[state.parent];
-        var next = state.next in this.layouts ? this.layouts[state.next] : null;
+    private move(data: IMove) {
+        var node = this.layouts[data.index];
+        var parent = this.layouts[data.parent];
+        var next = data.next in this.layouts ? this.layouts[data.next] : null;
         if (node && parent) {
-            this.layouts[state.index] = this.domInsert(node, parent, next);
-        }
-        else {
+            this.layouts[data.index] = this.domInsert(node, parent, next);
+        } else {
             console.warn(`Move: ${node} or ${parent} doesn't exist`);
         }
     }
 
+    private updateAttributes(data: IAttributeUpdate) {
+        var node = <HTMLElement>this.layouts[data.index];
+        if (node) {     
+            for (var name in data.new) {
+                node.setAttribute(name, data.new[name]);
+            }
+
+            for (var name in data.removed) {
+                node.removeAttribute(name);
+            }
+
+            // Special handling for image nodes
+            if (node.tagName === "IMG") {
+                let img = <HTMLImageElement> node;
+                if (!img.src && data.layout)
+                {
+                    img.src = this.placeholderImage;
+                    img.style.width = data.layout.width + "px";
+                    img.style.height = data.layout.height + "px";
+                }
+            }
+        } else {
+            console.warn(`Update: ${node} doesn't exist`);
+        }
+    }
+
+    private updateCharacterData(data: ICharacterDataUpdate) {
+        var node = <HTMLElement>this.layouts[data.index];
+        node.nodeValue = data.content;
+    }
+
+    private scroll(data: IScroll) {
+        var node = <HTMLElement>this.layouts[data.index];
+        node.scrollLeft = data.scrollX;
+        node.scrollTop = data.scrollY;
+    }
+
+    private input(data: IInput) {
+
+    }
+
     reset() {}
 
-    render(state: IElementLayoutState) {
-        switch (state.action) {
+    render(event: IEvent) {
+        let action = event.type;
+        let data = event.data as ILayoutEventData;
+        switch (action) {
+            case Action.Discover:
             case Action.Insert:
-                this.insert(state);
-                break;
-            case Action.Update:
-                this.update(state);
+                this.insert(data as IInsert);
                 break;
             case Action.Remove:
-                this.remove(state);
+                this.remove(data as IRemove);
                 break;
             case Action.Move:
-                this.move(state);
+                this.move(data as IMove);
+                break;
+            case Action.AttributeUpdate:
+                this.updateAttributes(data as IAttributeUpdate);
+                break;
+            case Action.CharacterDataUpdate:
+                this.updateCharacterData(data as ICharacterDataUpdate);
+                break;
+            default:
+                console.warn("Unknown Layout Action: " + data.action);
                 break;
         }
     }
