@@ -48,7 +48,7 @@ chrome.runtime.sendMessage({ fetch: true }, function (response) {
             for (let i = 0; i < json.events.length; i++) {
                 let event = clarity.converter.fromarray(json.events[i]);
                 if (event.origin === Origin.Discover && event.type === DiscoverEventType.Discover) {
-                    let discoverEvents = clarity.converter.discoverToEvents(event.id, event.time, event.data);
+                    let discoverEvents = clarity.converter.eventsFromDiscoverArray(event.id, event.time, event.data.dom, 0);
                     events = events.concat(discoverEvents);
                 } else {
                     events.push(event);
