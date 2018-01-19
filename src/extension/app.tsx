@@ -13,6 +13,7 @@ import ClarityReducer from "../visualization/reducers";
 import { Types } from "../visualization/actions";
 import uncompress from "../visualization/uncompress";
 import clarity from "clarity-js";
+import { IEvent, Origin, DiscoverEventType } from "clarity-js/declarations/clarity";
 
 injectTapEventPlugin();
 

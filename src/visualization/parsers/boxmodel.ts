@@ -1,6 +1,6 @@
-/// <reference path="../../../node_modules/clarity-js/declarations/clarity.d.ts" />
 import { IParser } from "../components/Snapshot";
-import { IElementLayoutState, ILayoutRectangle, ILayoutState, IDoctypeLayoutState, ITextLayoutState, Action } from "clarity-js/clarity";
+import { IElementLayoutState, ILayoutRectangle, ILayoutState, IDoctypeLayoutState, ITextLayoutState, Action, IInsert, IRemove, IMove,
+    IAttributeUpdate, ILayoutEventData, IEvent } from "clarity-js/declarations/clarity";
 
 export default class BoxModel implements IParser {
     private layouts: { [index: number]: Node } = {};

@@ -5,6 +5,7 @@ import Layout from "../parsers/layout";
 import BoxModel from "../parsers/boxmodel";
 import Viewport from "../parsers/viewport";
 import Pointer from "../parsers/pointer";
+import { IEvent, Origin } from "clarity-js/declarations/clarity";
 
 export interface IParser {
   setup(document, frame, base, thumbnail? : boolean): void;

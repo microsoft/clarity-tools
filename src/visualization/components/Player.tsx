@@ -11,6 +11,7 @@ import FullPageIcon from 'material-ui/svg-icons/action/aspect-ratio';
 import { selectSnapshot, togglePlayback, toggleSpeed, selectImpression, toggleFullPage } from "../actions";
 import Slider from "./Slider";
 import Timer from "./Timer";
+import { Origin, Action } from "clarity-js/declarations/clarity";
 
 class Player extends React.Component<any, any> {
     private interval = 33;

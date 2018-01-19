@@ -8,6 +8,7 @@ import { Step, Stepper, StepButton, StepContent } from "material-ui/Stepper";
 import { deepOrange300, purple500, red500, yellow300 } from 'material-ui/styles/colors';
 import { bindActionCreators } from "redux";
 import { selectSnapshot } from "../actions";
+import { IEvent, Origin, Instrumentation, PerformanceEventType } from "clarity-js/declarations/clarity";
 
 interface IEventGroup {
     sequence: number;

@@ -1,6 +1,6 @@
-/// <reference path="../../../node_modules/clarity-js/declarations/clarity.d.ts" />
 import { IParser } from "../components/Snapshot";
-import { IAttributes, ILayoutState, IElementLayoutState, IDoctypeLayoutState, ITextLayoutState, IIgnoreLayoutState, Action } from "clarity-js/clarity";
+import { IAttributes, ILayoutState, IElementLayoutState, IEvent, IInput, ILayoutEventData, IInsert, IAttributeUpdate, IMove, IRemove,
+    IDoctypeLayoutState, ICharacterDataUpdate, IScroll, ITextLayoutState, IIgnoreLayoutState, Action } from "clarity-js/declarations/clarity";
 
 export default class Layout implements IParser {
     private layouts: { [index: number]: Node } = {};
