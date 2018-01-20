@@ -160,6 +160,12 @@ export default class Layout implements IParser {
                     node.scrollLeft = state.layout.scrollX;
                     node.scrollTop = state.layout.scrollY;
                 }
+                if (node.tagName === "STYLE" && state.cssRules) {
+                    for (let i = 0; i < state.cssRules.length; i++) {
+                        let textNode = document.createTextNode(state.cssRules[i]);
+                        node.appendChild(textNode);
+                    }
+                }
                 this.layouts[state.index] = this.domInsert(node, parent, next);
                 break;
         }
