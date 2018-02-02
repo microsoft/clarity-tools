@@ -25,6 +25,7 @@
   },
   "dependencies": {
     "clarity-js": "^0.1.24",
+    "compare-versions": "^3.1.0",
     "material-ui": "0.17.4",
     "react": "^15.6.2",
     "react-dom": "^15.6.2",

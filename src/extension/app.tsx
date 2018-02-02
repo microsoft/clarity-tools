@@ -14,6 +14,8 @@ import uncompress from "../visualization/uncompress";
 import clarity from "clarity-js";
 import { IEvent } from "clarity-js/clarity";
 
+let compareVersions = require("compare-versions");
+
 injectTapEventPlugin();
 
 const MinClarityJsVersionWithConverters = "0.1.27";
@@ -95,54 +97,3 @@ chrome.runtime.sendMessage({ fetch: true }, function (response) {
         });
     }
 });
-
-function compareVersions(v1: string, v2: string): number | null {
-    if (!isValidVersion(v1)) {
-        console.warn("Invalid version format: " + v1);
-        return;
-    }
-    if (!isValidVersion(v2)) {
-        console.warn("Invalid version format: " + v2);
-        return;
-    }
-    if (v1 === v2) {
-        return 0;
-    }
-    let v1Parts = v1.split(".");
-    let v2Parts = v2.split(".");
-    let minLength = Math.min(v1Parts.length, v2Parts.length);
-    for (let i = 0; i < minLength; i++) {
-        let v1Part = parseInt(v1Parts[i]);
-        let v2Part = parseInt(v2Parts[i]);
-        if (v1Part !== v2Part) {
-            return v1Part > v2Part ? 1 : -1;
-        }
-    }
-    return v2Parts.length === minLength ? 1 : -1;
-}
-
-function isValidVersion(version: string) {
-    let parts = version.split(".");
-    for (let i = 0; i < parts.length; i++) {
-        let part = parts[i];
-
-        // Checks that the part is not empty
-        if (part.length === 0) {
-            return false;
-        }
-
-        // Checks that every symbol in each part is numeric
-        // This will filter out non-numbers and valid numbers that are not version identifiers such as '-1' and '1e1000'
-        for (let j = 0; j < part.length; j++) {
-            if (isNaN(parseInt(part[j]))) {
-                return false;
-            }
-        }
-
-        // Checks that the part which starts with a "0", doesn't have any other symbols after that
-        if (part.length > 1 && part[0] === "0") {
-            return false;
-        }
-    }
-    return true;
-}

@@ -1,5 +1,4 @@
 
-import { start } from "clarity-js";
 import * as clarity from "clarity-js/build/clarity";
 let payloads = [];
 
