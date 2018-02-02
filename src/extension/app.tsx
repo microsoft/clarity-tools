@@ -139,7 +139,7 @@ function isValidVersion(version: string) {
             }
         }
 
-        // Checks part that starts with a 0, doesn't have any other symbols
+        // Checks that the part which starts with a "0", doesn't have any other symbols after that
         if (part.length > 1 && part[0] === "0") {
             return false;
         }
