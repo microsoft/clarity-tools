@@ -20,10 +20,13 @@ chrome.runtime.sendMessage({ status: true }, function (response) {
   }
 });
 
-function upload(payload) {
+function upload(payload, onSuccess, onFailure) {
   chrome.runtime.sendMessage({ payload: payload }, function (response) {
-    if (!response.success) {
+    if (response.success) {
+      onSuccess();
+    } else {
       console.warn("Clarity failed to receive the payload.");
+      onFailure();
     }
   });
 }
