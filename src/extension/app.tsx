@@ -78,36 +78,10 @@ chrome.runtime.sendMessage({ fetch: true }, function (response) {
 
         // Sort payloads within impressions by envelope sequence number
         for (let i = 0; i < session.length; i++) {
-            let impression = session[i];
-            impression.payloads.sort(comparePayloadsBySequenceNumber);
-
-            // Convert event arrays to events and concatenate in a single event array
-            impression.events = [];
-            for (let j = 0; j < impression.payloads.length; j++) {
-                let events: IEvent[] = [];
-                let payload = impression.payloads[j];
-                let clarityJsVersion = payload.envelope.version;
-                let schemas = impressionSchemas[payload.envelope.impressionId];
-                if (compareVersions(clarityJsVersion, MinClarityJsVersionWithConverters) < 0) {
-                    events = payload.events;
-                } else {
-                    for (let k = 0; k < payload.events.length; k++) {
-                        let event = clarity.converter.fromarray(payload.events[k], schemas);
-                        events.push(event);    
-                    }
-                }
-                impression.events = impression.events.concat(events);
-
-
-                impression.envelope.summary.push({
-                    "sequenceNumber": payload.envelope.sequenceNumber,
-                    "time": payload.envelope.time,
-                    "events": events.length
-                });
-            }
-            delete impression.payloads;
+            let envelope = session[i].envelope;
+            let payloads = session[i].payloads;
+            session[i] = clarityPayloadsToImpression(envelope, payloads);            
         }
-
         activeIndex = session.length > 0 ? session.length - 1 : 0;
 
         Store.dispatch({
@@ -121,6 +95,34 @@ chrome.runtime.sendMessage({ fetch: true }, function (response) {
         });
     }
 });
+
+function clarityPayloadsToImpression(envelope, payloads: IPayload[]) {
+    let impression = { envelope, events: [] };
+    let schemas = new clarity.converter.SchemaManager();
+    payloads.sort(comparePayloadsBySequenceNumber);
+
+    // Convert event arrays to events and concatenate in a single event array within impression object
+    for (let i = 0; i < payloads.length; i++) {
+        let payload = payloads[i];
+        let events: IEvent[] = [];
+        let clarityJsVersion = payload.envelope.version;
+        if (compareVersions(clarityJsVersion, MinClarityJsVersionWithConverters) < 0) {
+            events = payload.events as any as IEvent[];
+        } else {
+            for (let j = 0; j < payload.events.length; j++) {
+                let event = clarity.converter.fromarray(payload.events[j], schemas);
+                events.push(event);    
+            }
+        }
+        impression.events = impression.events.concat(events);
+        impression.envelope.summary.push({
+            "sequenceNumber": payload.envelope.sequenceNumber,
+            "time": payload.envelope.time,
+            "events": events.length
+        });
+    }
+    return impression;
+}
 
 function compareExtensionPayloadsByTime(p1, p2) {
     return p1.dateTime - p2.dateTime;
