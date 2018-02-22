@@ -11,7 +11,7 @@ import ClarityReducer from "../visualization/reducers";
 import { Types } from "../visualization/actions";
 import uncompress from "../visualization/uncompress";
 import clarity from "clarity-js";
-import { IEvent } from "clarity-js/clarity";
+import { IEvent, IPayload } from "clarity-js/clarity";
 
 let compareVersions = require("compare-versions");
 
@@ -32,62 +32,84 @@ ReactDOM.render(
 let activeTabId = parseInt(location.href.match(/\?tab=([0-9]*$)/)[1]);
 chrome.runtime.sendMessage({ fetch: true }, function (response) {
     if (response.payloads) {
-        let payloads = response.payloads;
-        let size = 0;
-        let count = 0;
-        let structuredEvents = {};
-        let structuredSchemas = {};
-        let session = [];
-        let activeId;
+        let extensionPayloads = response.payloads;
+        let impressionSchemas = {};
         let activeIndex = 0;
+        let tabPayloads = {};
 
-        // Reconstruct uncompressed clarity payload
-        for (let entry of payloads) {
-            size += entry.length;
-            let json = JSON.parse(uncompress(entry.payload));
-            let tabId = entry.tabId;
-            let id = json.envelope.impressionId;
-            if (!(id in structuredEvents)) {
-                structuredEvents[id] = { envelope: json.envelope, events: [] };
-                structuredEvents[id]["envelope"].dateTime = entry.dateTime;
-                structuredEvents[id]["envelope"].summary = [];
-                structuredSchemas[id] = new clarity.converter.SchemaManager();
-                if (tabId === activeTabId) {
-                    activeId = id;
-                }
-            }
+        extensionPayloads.sort(compareExtensionPayloadsByTime);
 
-            // Convert events from crunched arrays to verbose JSONs
-            let events: IEvent[] = [];
-            let clarityJsVersion = json.envelope.version;
-            let schemas = structuredSchemas[id];
-            if (compareVersions(clarityJsVersion, MinClarityJsVersionWithConverters) < 0) {
-                events = json.events;
+        // Bucket extension payloads by tabId
+        for (let payload of extensionPayloads) {
+            let tabId = payload.tabId;
+            if (tabId in tabPayloads) {
+                tabPayloads[tabId].push(payload);
             } else {
-                for (let i = 0; i < json.events.length; i++) {
-                    let event = clarity.converter.fromarray(json.events[i], schemas);
-                    events.push(event);    
-                }
-            }
-
-            structuredEvents[id].envelope.summary.push({
-                "sequenceNumber": json.envelope.sequenceNumber,
-                "time": json.envelope.time,
-                "events": events.length
-            });
-            structuredEvents[id].events = structuredEvents[id].events.concat(events);
-            count++;
-        }
-
-        for (let id in structuredEvents) {
-            if (structuredEvents[id].envelope.sequenceNumber === 0) {
-                if (activeId === id) {
-                    activeIndex = session.length;
-                }
-                session.push(structuredEvents[id]);
+                tabPayloads[tabId] = [payload];
             }
         }
+
+        let activeTabPayloads = tabPayloads[activeTabId];
+        let activeTabImpressions = {};
+        for (let i = 0; i < activeTabPayloads.length; i++) {
+            let extensionPayload = activeTabPayloads[i];
+            let clarityPayload = JSON.parse(uncompress(extensionPayload.payload));
+            let impressionId = clarityPayload.envelope.impressionId;
+
+            if (!(impressionId in activeTabImpressions)) {
+                activeTabImpressions[impressionId] = { envelope: clarityPayload.envelope, payloads: [] };
+                activeTabImpressions[impressionId].envelope.dateTime = extensionPayload.dateTime;
+                activeTabImpressions[impressionId].envelope.summary = [];
+                impressionSchemas[impressionId] = new clarity.converter.SchemaManager();
+            }
             
+            activeTabImpressions[impressionId].payloads.push(clarityPayload);
+        }
+
+        // Sort impressions by dateTime
+        let session = [];
+
+        let impressionIds = Object.keys(activeTabImpressions);
+        for (let impressionId of impressionIds) {
+            session.push(activeTabImpressions[impressionId]);
+        }
+
+        session.sort(compareImpressionsByDateTime);
+
+        // Sort payloads within impressions by envelope sequence number
+        for (let i = 0; i < session.length; i++) {
+            let impression = session[i];
+            impression.payloads.sort(comparePayloadsBySequenceNumber);
+
+            // Convert event arrays to events and concatenate in a single event array
+            impression.events = [];
+            for (let j = 0; j < impression.payloads.length; j++) {
+                let events: IEvent[] = [];
+                let payload = impression.payloads[j];
+                let clarityJsVersion = payload.envelope.version;
+                let schemas = impressionSchemas[payload.envelope.impressionId];
+                if (compareVersions(clarityJsVersion, MinClarityJsVersionWithConverters) < 0) {
+                    events = payload.events;
+                } else {
+                    for (let k = 0; k < payload.events.length; k++) {
+                        let event = clarity.converter.fromarray(payload.events[k], schemas);
+                        events.push(event);    
+                    }
+                }
+                impression.events = impression.events.concat(events);
+
+
+                impression.envelope.summary.push({
+                    "sequenceNumber": payload.envelope.sequenceNumber,
+                    "time": payload.envelope.time,
+                    "events": events.length
+                });
+            }
+            delete impression.payloads;
+        }
+
+        activeIndex = session.length > 0 ? session.length - 1 : 0;
+
         Store.dispatch({
             type: Types.SelectSession,
             payload: session
@@ -99,3 +121,15 @@ chrome.runtime.sendMessage({ fetch: true }, function (response) {
         });
     }
 });
+
+function compareExtensionPayloadsByTime(p1, p2) {
+    return p1.dateTime - p2.dateTime;
+}
+
+function comparePayloadsBySequenceNumber(p1: IPayload, p2: IPayload) {
+    return p1.envelope.sequenceNumber - p2.envelope.sequenceNumber;
+}
+
+function compareImpressionsByDateTime(i1, i2) {
+    return i1.envelope.dateTime - i2.envelope.dateTime;
+}
