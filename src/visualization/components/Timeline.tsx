@@ -38,10 +38,10 @@ class Timeline extends React.Component<any, any> {
         "N": "orange"
     }
     formatTime(time: number) {
-        var milliseconds = Math.round((time % 1000) / 10);
-        var seconds = Math.round((time / 1000) % 60);
-        var minutes = Math.round((time / (1000 * 60)) % 60);
-        var hours = Math.round((time / (1000 * 60 * 60)) % 24);
+        var milliseconds = Math.floor((time % 1000) / 10);
+        var seconds = Math.floor((time / 1000) % 60);
+        var minutes = Math.floor((time / (1000 * 60)) % 60);
+        var hours = Math.floor((time / (1000 * 60 * 60)) % 24);
 
         var millisecondsText = (milliseconds < 10) ? "0" + milliseconds + "0" : milliseconds + "0";
         var hoursText = (hours < 10) ? "0" + hours : hours;
