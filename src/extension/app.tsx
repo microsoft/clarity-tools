@@ -32,7 +32,7 @@ ReactDOM.render(
 
 let activeTabId = parseInt(location.href.match(/\?tab=([0-9]*$)/)[1]);
 chrome.runtime.sendMessage({ fetch: true }, function (response) {
-    if (response.payloads) {
+    if (response && response.payloads) {
         let payloads = response.payloads;
         let size = 0;
         let count = 0;
