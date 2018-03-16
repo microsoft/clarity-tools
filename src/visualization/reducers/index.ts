@@ -12,6 +12,7 @@ import FullPageReducer from './fullpage';
 import ErrorReducer from './error';
 import InactiveReducer from './inactive';
 
+
 const reducers = combineReducers({
     session: SessionReducer,
     impression: ImpressionReducer,
@@ -24,7 +25,8 @@ const reducers = combineReducers({
     inactive: InactiveReducer,
     error: ErrorReducer,
     fullpage: FullPageReducer,
-    notfound: NotFoundReducer
+    notfound: NotFoundReducer,
+    
 });
 
 export default reducers;

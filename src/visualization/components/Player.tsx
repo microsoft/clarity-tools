@@ -17,8 +17,11 @@ class Player extends React.Component<any, any> {
     private setTimeoutId = -1;
     private activeImpressionId = "";
     private keyFrames = [];
+    private redEvents = [];
+    
 
     extractFrames() {
+        
         if (this.activeImpressionId != this.props.impression.envelope.impressionId) {
             var events = this.props.impression.events;
             var frames = []
@@ -66,7 +69,9 @@ class Player extends React.Component<any, any> {
     }
 
     showFullPage() {
+        console.log(this.props.fullpage);
         this.props.showFullPage(!this.props.fullpage);
+        
     }
 
     playback() {
@@ -90,8 +95,10 @@ class Player extends React.Component<any, any> {
         this.props.selectImpression(this.props.playlist[index]);
     }
 
+    
+
     render() {
-        if (!this.props.impression || this.props.view > 1) {
+        if (!this.props.impression || this.props.view > 2) {
             return (<div></div>);
         }
 
@@ -101,8 +108,11 @@ class Player extends React.Component<any, any> {
         let iconTooltip = this.props.playback ? "Pause playback" : "Start playback";
         let speedIconColor = this.props.speed ? "white" : "#666";
         let fullPageIconColor = this.props.fullpage ? "white" : "#666";
+        let showSettle = this.props.settleTime ? "red" : "#666"; 
+        
         let prevIconColor = index > 0 ? "white" : "#666";
         let nextIconColor = index < (this.props.playlist.length - 1) ? "white" : "#666";
+        
         
         return (
             <div className="clarity-player">
@@ -120,6 +130,9 @@ class Player extends React.Component<any, any> {
                         <TimelapseIcon />
                     </IconButton>
                     <IconButton iconStyle={{ color: fullPageIconColor }} onClick={this.showFullPage.bind(this)} tooltip={"Toggle full page mode"}>
+                        <FullPageIcon />
+                    </IconButton>
+                    <IconButton iconStyle={{ color: showSettle }}  tooltip={"Show SettleTime events"}>
                         <FullPageIcon />
                     </IconButton>
                 </div>
@@ -156,7 +169,8 @@ export default connect(
             playback: state.playback,
             speed: state.speed,
             view: state.view,
-            fullpage: state.fullpage            
+            fullpage: state.fullpage,
+           
         }
     },
     dispatch => { return bindActionCreators({ 
@@ -164,6 +178,7 @@ export default connect(
         togglePlayback: togglePlayback, 
         toggleSpeed: toggleSpeed, 
         showFullPage: toggleFullPage,
-        selectImpression: selectImpression 
+        selectImpression: selectImpression ,
+        
     }, dispatch) }
 )(Player);

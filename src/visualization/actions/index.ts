@@ -9,7 +9,9 @@ export const enum Types {
     ToggleFullPage,
     NotFound,
     ToggleInactiveSession,
-    Error
+    Error,
+    ShowSettleEvents,
+    
 }
 
 export const selectSession = (session) => {
@@ -88,3 +90,12 @@ export const toggleInactiveSession = (flag) => {
         payload: flag
     }
 };
+
+export const showSettleEvents = (settleEvents) => {
+    return {
+        type: Types.ShowSettleEvents,
+        payload: settleEvents
+    }
+};
+
+

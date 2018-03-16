@@ -51,6 +51,7 @@ chrome.runtime.sendMessage({ fetch: true }, function (response) {
             if (!(id in structuredEvents)) {
                 structuredEvents[id] = { envelope: json.envelope, events: [] };
                 structuredEvents[id]["envelope"].dateTime = entry.dateTime;
+                //structuredEvents[id]["envelope"].PLTV2 = 123; // LOGIC ;
                 structuredEvents[id]["envelope"].summary = [];
                 structuredSchemas[id] = new clarity.converter.SchemaManager();
                 if (tabId === activeTabId) {

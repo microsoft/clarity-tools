@@ -131,9 +131,14 @@ export default class Layout implements IParser {
             case "IMG":
                 var img = <HTMLImageElement>this.createElement(state, parent);
                 this.attributes(img, state.attributes);
+                if(state.isSettleEvent === true ){
+                    console.log("Inside SETTLELAYOUT.ts 2");
+                    img.style.color = "red";
+                    img.style.opacity = "0.1";
+                }
                 if (!img.src)
                 {
-                    console.log("Inside LAYOUT.ts 1");
+                    console.log("Inside SETTLELAYOUT.ts 1");
                     img.src = this.placeholderImage;
                     img.style.width = state.layout.width + "px";
                     img.style.height = state.layout.height + "px";
@@ -188,6 +193,7 @@ export default class Layout implements IParser {
             this.attributes(node, state.attributes);
             // Special handling for image nodes
             if (node.tagName === "IMG") {
+                console.log("it is an image");
                 let img = <HTMLImageElement> node;
                 if (!img.src)
                 {
@@ -196,6 +202,16 @@ export default class Layout implements IParser {
                     img.style.height = state.layout.height + "px";
                 }
                 
+                if(state.isSettleEvent === true ){
+                    console.log("Inside SETTLE LAYOUT.ts 2");
+                    img.style.color = "red";
+                    img.style.opacity = "0.1";
+
+                }else{
+                    console.log("Inside SETTLE LAYOUT.ts 3");
+                    img.style.color = "red";
+                    img.style.opacity = "1";
+                }
                 
             }
             // If we have content for this node
