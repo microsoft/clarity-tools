@@ -1,7 +1,7 @@
 /// <reference path="../../../node_modules/clarity-js/clarity.d.ts" />
 import { IParser } from "../components/Snapshot";
 import { IAttributes, ILayoutState, IElementLayoutState, IDoctypeLayoutState, ITextLayoutState, IIgnoreLayoutState, Action } from "clarity-js/clarity";
-
+import {ISettleElementLayoutState} from "./ISettleElementLayoutState";
 export default class Layout implements IParser {
     private layouts: { [index: number]: Node } = {};
     private base: string;
@@ -80,7 +80,7 @@ export default class Layout implements IParser {
 
     private insert(layoutState: ILayoutState) {
         var doc = this.document;
-        var state: any = layoutState as IElementLayoutState;
+        var state: any = layoutState as ISettleElementLayoutState;
         var parent = this.layouts[state.parent];
         var next = state.next in this.layouts ? this.layouts[state.next] : null;
         switch (state.tag) {
@@ -132,13 +132,13 @@ export default class Layout implements IParser {
                 var img = <HTMLImageElement>this.createElement(state, parent);
                 this.attributes(img, state.attributes);
                 if(state.isSettleEvent === true ){
-                    console.log("Inside SETTLELAYOUT.ts 2");
+                    
                     img.style.color = "red";
                     img.style.opacity = "0.1";
                 }
                 if (!img.src)
                 {
-                    console.log("Inside SETTLELAYOUT.ts 1");
+                   
                     img.src = this.placeholderImage;
                     img.style.width = state.layout.width + "px";
                     img.style.height = state.layout.height + "px";
@@ -178,7 +178,7 @@ export default class Layout implements IParser {
         }
     }
 
-    private update(state: IElementLayoutState) {
+    private update(state: ISettleElementLayoutState) {
         var node = <HTMLElement>this.layouts[state.index];
         if (node) {
             // First remove all its existing attributes
@@ -193,7 +193,7 @@ export default class Layout implements IParser {
             this.attributes(node, state.attributes);
             // Special handling for image nodes
             if (node.tagName === "IMG") {
-                console.log("it is an image");
+                
                 let img = <HTMLImageElement> node;
                 if (!img.src)
                 {
@@ -203,12 +203,12 @@ export default class Layout implements IParser {
                 }
                 
                 if(state.isSettleEvent === true ){
-                    console.log("Inside SETTLE LAYOUT.ts 2");
+                    
                     img.style.color = "red";
                     img.style.opacity = "0.1";
 
                 }else{
-                    console.log("Inside SETTLE LAYOUT.ts 3");
+                    
                     img.style.color = "red";
                     img.style.opacity = "1";
                 }
@@ -248,7 +248,7 @@ export default class Layout implements IParser {
 
     reset() {}
 
-    render(state: IElementLayoutState) {
+    render(state: ISettleElementLayoutState) {
         switch (state.action) {
             case Action.Insert:
                 this.insert(state);

@@ -69,7 +69,7 @@ class Player extends React.Component<any, any> {
     }
 
     showFullPage() {
-        console.log(this.props.fullpage);
+        //console.log(this.props.fullpage);
         this.props.showFullPage(!this.props.fullpage);
         
     }
@@ -108,7 +108,6 @@ class Player extends React.Component<any, any> {
         let iconTooltip = this.props.playback ? "Pause playback" : "Start playback";
         let speedIconColor = this.props.speed ? "white" : "#666";
         let fullPageIconColor = this.props.fullpage ? "white" : "#666";
-        let showSettle = this.props.settleTime ? "red" : "#666"; 
         
         let prevIconColor = index > 0 ? "white" : "#666";
         let nextIconColor = index < (this.props.playlist.length - 1) ? "white" : "#666";
@@ -130,9 +129,6 @@ class Player extends React.Component<any, any> {
                         <TimelapseIcon />
                     </IconButton>
                     <IconButton iconStyle={{ color: fullPageIconColor }} onClick={this.showFullPage.bind(this)} tooltip={"Toggle full page mode"}>
-                        <FullPageIcon />
-                    </IconButton>
-                    <IconButton iconStyle={{ color: showSettle }}  tooltip={"Show SettleTime events"}>
                         <FullPageIcon />
                     </IconButton>
                 </div>

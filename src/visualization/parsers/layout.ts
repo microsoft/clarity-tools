@@ -133,7 +133,7 @@ export default class Layout implements IParser {
                 this.attributes(img, state.attributes);
                 if (!img.src)
                 {
-                    console.log("Inside LAYOUT.ts 1");
+                    
                     img.src = this.placeholderImage;
                     img.style.width = state.layout.width + "px";
                     img.style.height = state.layout.height + "px";

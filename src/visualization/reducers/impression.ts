@@ -10,12 +10,12 @@ export default function (state = null, action) {
             }
             return sort(action.payload[0]);
         case Types.SelectImpression:
-            return dosomething(action.payload);
+            return getSettleEvents(action.payload);
     }
     return state;
 }
 
-function dosomething(impression) {
+function getSettleEvents(impression) {
 
     return settleTime(sort(impression));
 
@@ -33,7 +33,7 @@ function sort(impression) {
 function settleTime(impression){
     
         var startTime = 0;
-        var settleTime = 1000;
+        var settleTime = 1500;
         var mindWidth = 50;
         var minHeight = 50;
        
@@ -45,10 +45,16 @@ function settleTime(impression){
         
         
         for(var evt of impression.events) {
-            if((evt.time - lastTime) > settleTime){
-                break;
+            if(evt.type === "Layout" && evt.state.tag === "IMG" && 
+            evt.state.layout.width >= mindWidth && evt.state.layout.height >= minHeight){
+                if((evt.time - lastTime) > settleTime){
+                    break;
+                }
+                lastTime = evt.time;
+            }else{
+                continue;
             }
-            lastTime = evt.time;
+ 
         }
 
         console.log("LAST TIME", lastTime);
@@ -57,14 +63,9 @@ function settleTime(impression){
             
             if(evt.type === "Layout" && evt.state.tag === "IMG" && 
                 evt.state.layout.width >= mindWidth && evt.state.layout.height >= minHeight && evt.time <= lastTime ){
-                    console.log("-->> HERE")
-                    
-                    console.log("Event TIME", evt.time);
+                   
                     evt["state"]["isSettleEvent"] = true;
-                    
-                    console.log("SETTLE TIME FOUND", settleTimeFound);
-                    console.log("------");
-                //console.log(evt);
+                
             } else{
                 evt["state"]["isSettleEvent"] = false;
             }
