@@ -1,12 +1,12 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 import { connect } from "react-redux";
-import Layout from "../parsers/layout";
+import { Layout } from "../parsers/layout";
 import BoxModel from "../parsers/boxmodel";
 import Viewport from "../parsers/viewport";
 import Pointer from "../parsers/pointer";
-import SettleLayout from  "../parsers/settleLayout";
-import {showSettleEvents} from "../actions";
+import PerceivedLoadTimeLayout from  "../parsers/perceivedLoadTimeLayout";
+
 
 
 export interface IParser {
@@ -23,7 +23,7 @@ class Snapshot extends React.Component<any, any> {
   private activeView = 0;
   private currentTime = 0;
   private currentPointer = -1;
-  private redEvents = this.props.impression;
+
 
   visualize() {
     if (this.props.snapshot) {
@@ -68,33 +68,16 @@ class Snapshot extends React.Component<any, any> {
             if(this.props.view == 1){
               parser = "BoxModel";
             }else if(this.props.view == 2){
-              parser = "SettleEvents";
-            }else{
-              parser = event.type;
+              parser = "PerceivedLoadTimeLayout";
             }
           }
-         //console.log("Called Parser", parser);
           if (parser in this.parsers) {
             this.parsers[parser].render(event.state);
-            //console.log("Event STATE", event.state);
-            //console.log("Parser", parser);
- 
           }
-          
-
           this.currentPointer = i;
         }
         else break;
       }
-      //console.log("here inside snapshot", this.redEvents);
-      
-      for (var evt of this.redEvents.events){
-        if(evt.state.isSettleEvent === true && this.props.settleTime){
-          console.log("hellowwww");          
-          //console.log(evt);
-        }
-      }
-
       this.currentTime = time;
     }
   }
@@ -105,7 +88,7 @@ class Snapshot extends React.Component<any, any> {
       BoxModel: new BoxModel(),
       Viewport: new Viewport(),
       Pointer: new Pointer(),
-      SettleEvents: new SettleLayout()
+      PerceivedLoadTimeLayout: new PerceivedLoadTimeLayout()
     }
   }
 
@@ -145,7 +128,6 @@ export default connect(
       impression: state.impression,
       view: state.view,
       fullpage: state.fullpage,
-      
       base: state.impression ? state.impression.envelope.url.match(/^(.*\/)[^\/]*$/)[1] : ""
     }
   })(Snapshot);

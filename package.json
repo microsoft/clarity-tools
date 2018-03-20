@@ -24,14 +24,13 @@
     "url": "https://github.com/Microsoft/clarity-tools/issues"
   },
   "dependencies": {
-    "clarity": "^1.0.2",
     "clarity-js": "^0.1.29",
     "compare-versions": "^3.1.0",
     "material-ui": "0.17.4",
     "query-string": "^6.0.0",
     "react": "^15.6.2",
     "react-dom": "^15.6.2",
-    "react-redux": "^5.0.7",
+    "react-redux": "^5.0.6",
     "react-router": "^3.2.0",
     "react-swipeable-views": "^0.11.2",
     "react-tap-event-plugin": "^2.0.1",
@@ -53,10 +52,10 @@
     "typescript": "2.3.2"
   },
   "scripts": {
-    "compile": "tsc -p ./",
-    "bundle:content": "browserify ./extension/instrument.js > ./extension/content.js",
-    "bundle:visualization": "browserify ./extension/app.js > ./extension/clarity.js",
-    "binplace:extension": "copyfiles -f ./src/extension/*.html ./src/extension/manifest.json ./src/extension/*.png ./extension/",
+    "compile": "node_modules/.bin/tsc -p ./",
+    "bundle:content": "node_modules/.bin/browserify ./extension/instrument.js > ./extension/content.js",
+    "bundle:visualization": "node_modules/.bin/browserify ./extension/app.js > ./extension/clarity.js",
+    "binplace:extension": "node_modules/.bin/copyfiles -f ./src/extension/*.html ./src/extension/manifest.json ./src/extension/*.png ./extension/",
     "build": "npm run compile && npm run bundle:content && npm run binplace:extension && npm run bundle:visualization"
   },
   "homepage": "https://github.com/Microsoft/clarity-tools#readme"

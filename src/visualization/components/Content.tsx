@@ -3,10 +3,9 @@ import Replay from "./Replay";
 import { connect } from "react-redux";
 import { Tabs, Tab } from 'material-ui/Tabs';
 import SwipeableViews from 'react-swipeable-views';
-import { selectView , showSettleEvents} from "../actions";
+import { selectView } from "../actions";
 import { bindActionCreators } from "redux";
 import Header from "./Header";
-import Snapshot from "./Snapshot";
 
 class Content extends React.Component<any, any> {
     
@@ -22,7 +21,6 @@ class Content extends React.Component<any, any> {
         let Content = this.props.notfound ? <div className={'clarity-notfound'}>{notfound}</div> : <Replay />;
 
         if (this.props.impression != null) {
-            var newImpression = { envelope: {...this.props.impression.envelope}, events: this.props.impression.events.slice()};
             return (
             <div className={'clarity-app'}>
                 <div>
@@ -61,7 +59,6 @@ export default connect(
     state => { return { impression: state.impression, notfound: state.notfound, menu: state.menu, view: state.view } },
     dispatch => { return bindActionCreators({ 
         selectView: selectView, 
-        showSettleEvents: showSettleEvents
         
     }, dispatch) }
 )(Content);

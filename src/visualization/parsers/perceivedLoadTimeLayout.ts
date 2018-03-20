@@ -1,86 +1,20 @@
 /// <reference path="../../../node_modules/clarity-js/clarity.d.ts" />
 import { IParser } from "../components/Snapshot";
 import { IAttributes, ILayoutState, IElementLayoutState, IDoctypeLayoutState, ITextLayoutState, IIgnoreLayoutState, Action } from "clarity-js/clarity";
-import {ISettleElementLayoutState} from "./ISettleElementLayoutState";
-export default class Layout implements IParser {
-    private layouts: { [index: number]: Node } = {};
-    private base: string;
-    private document: Document;
-    private svgns: string = "http://www.w3.org/2000/svg";
-    private placeholderImage = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAMSURBVBhXY2BgYAAAAAQAAVzN/2kAAAAASUVORK5CYII=";
+import { IPerceivedElementLayoutState } from "./IPerceivedElementLayoutState";
+import { Layout } from  "../parsers/layout";
 
-    private attributes(node: HTMLElement, attributes: IAttributes) {
-        if (attributes) {
-            for (let attribute in attributes) {
-                if (attribute) {
-                    try {
-                        let value = attributes[attribute];
-                        if (attribute === "value") {
-                            node[attribute] = value;
-                        }
-                        node.setAttribute(attribute, value);
-                    }
-                    catch (ex) {
-                        console.warn("Setting attributes on a node: " + ex);
-                    }
-                }
-            }
-        }
-    }
-
+export default class PerceivedLoadTimeLayout extends Layout {    
+    
     setup(document: Document, frame: HTMLIFrameElement, base: string, thumbnail? : boolean) {
         this.layouts = {};
         this.document = document;
         this.base = base;
     }
 
-    private domInsert(node: Node, parent?: Node, nextSibling?: Node) {
-        if (parent) {
-            if (nextSibling && nextSibling.parentNode === parent) {
-                nextSibling.parentNode.insertBefore(node, nextSibling);
-            }
-            else {
-                try {
-                    parent.appendChild(node);
-                }
-                catch (ex) {
-                    console.warn("Error while inserting a node: " + ex);
-                }
-            }
-            return node;
-        }
-        return null;
-    }
-
-    private domRemove(node: Node) {
-        if (node && node.parentNode) {
-            node.parentNode.removeChild(node);
-        }
-        else {
-            console.warn(`Remove: Cannot remove ${node}`);
-        }
-        return null;
-    }
-
-    private createElement(state: ILayoutState, parent): HTMLElement {
-        if (state.tag === "svg") {
-            return <HTMLElement>this.document.createElementNS(this.svgns, state.tag);
-        }
-        else {
-            while (parent && parent.tagName !== "BODY") {
-                if (parent.tagName === "svg") {
-                    return <HTMLElement>this.document.createElementNS(this.svgns, state.tag);
-                }
-                parent = parent.parentNode;
-            }
-        }
-
-        return this.document.createElement(state.tag);
-    }
-
-    private insert(layoutState: ILayoutState) {
+    private insertPerceivedLayout (layoutState: ILayoutState) {
         var doc = this.document;
-        var state: any = layoutState as ISettleElementLayoutState;
+        var state: any = layoutState as IPerceivedElementLayoutState;
         var parent = this.layouts[state.parent];
         var next = state.next in this.layouts ? this.layouts[state.next] : null;
         switch (state.tag) {
@@ -131,7 +65,7 @@ export default class Layout implements IParser {
             case "IMG":
                 var img = <HTMLImageElement>this.createElement(state, parent);
                 this.attributes(img, state.attributes);
-                if(state.isSettleEvent === true ){
+                if(state.isPerceivedEvent === true ){
                     
                     img.style.color = "red";
                     img.style.opacity = "0.1";
@@ -178,7 +112,7 @@ export default class Layout implements IParser {
         }
     }
 
-    private update(state: ISettleElementLayoutState) {
+    private updatePerceivedLayout(state: IPerceivedElementLayoutState) {
         var node = <HTMLElement>this.layouts[state.index];
         if (node) {
             // First remove all its existing attributes
@@ -202,7 +136,7 @@ export default class Layout implements IParser {
                     img.style.height = state.layout.height + "px";
                 }
                 
-                if(state.isSettleEvent === true ){
+                if(state.isPerceivedEvent === true ){
                     
                     img.style.color = "red";
                     img.style.opacity = "0.1";
@@ -230,31 +164,15 @@ export default class Layout implements IParser {
         }
     }
 
-    private remove(state: ILayoutState) {
-        this.layouts[state.index] = this.domRemove(this.layouts[state.index]);
-    }
+    
 
-    private move(state: ILayoutState) {
-        var node = this.layouts[state.index];
-        var parent = this.layouts[state.parent];
-        var next = state.next in this.layouts ? this.layouts[state.next] : null;
-        if (node && parent) {
-            this.layouts[state.index] = this.domInsert(node, parent, next);
-        }
-        else {
-            console.warn(`Move: ${node} or ${parent} doesn't exist`);
-        }
-    }
-
-    reset() {}
-
-    render(state: ISettleElementLayoutState) {
+    render(state: IPerceivedElementLayoutState) {
         switch (state.action) {
             case Action.Insert:
-                this.insert(state);
+                this.insertPerceivedLayout(state);
                 break;
             case Action.Update:
-                this.update(state);
+                this.updatePerceivedLayout(state);
                 break;
             case Action.Remove:
                 this.remove(state);

@@ -17,9 +17,7 @@ class Player extends React.Component<any, any> {
     private setTimeoutId = -1;
     private activeImpressionId = "";
     private keyFrames = [];
-    private redEvents = [];
     
-
     extractFrames() {
         
         if (this.activeImpressionId != this.props.impression.envelope.impressionId) {
@@ -69,9 +67,7 @@ class Player extends React.Component<any, any> {
     }
 
     showFullPage() {
-        //console.log(this.props.fullpage);
         this.props.showFullPage(!this.props.fullpage);
-        
     }
 
     playback() {
