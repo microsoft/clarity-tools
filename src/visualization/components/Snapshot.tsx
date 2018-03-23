@@ -7,8 +7,6 @@ import Viewport from "../parsers/viewport";
 import Pointer from "../parsers/pointer";
 import PerceivedLoadTimeLayout from  "../parsers/perceivedLoadTimeLayout";
 
-
-
 export interface IParser {
   setup(document, frame, base, thumbnail? : boolean): void;
   render(state): void;
@@ -24,7 +22,6 @@ class Snapshot extends React.Component<any, any> {
   private currentTime = 0;
   private currentPointer = -1;
 
-
   visualize() {
     if (this.props.snapshot) {
       this.frame = ReactDOM.findDOMNode(this) as HTMLIFrameElement;
@@ -32,12 +29,8 @@ class Snapshot extends React.Component<any, any> {
       var events = this.props.impression.events;
       var start = events[0].time;
       var end = events[events.length - 1].time;
-      
-      
 
       // Reset all parsers if this is the first time an impression is rendered
-      
-     
       if (this.activeImpressionId != this.props.impression.envelope.impressionId || this.activeView != this.props.view  ) {
         
         for (var type in this.parsers) {
@@ -55,7 +48,6 @@ class Snapshot extends React.Component<any, any> {
         // Even if it's not a different impression, refresh the viewport regardless
         this.parsers["Viewport"].setup(this.frame.contentDocument, this.frame, this.props.base);
       }
-    
 
       var startPointer = time < this.currentTime ? 0 : this.currentPointer + 1;
       for (var i = startPointer; i < events.length; i++) {

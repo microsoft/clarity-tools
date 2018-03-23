@@ -91,8 +91,6 @@ class Player extends React.Component<any, any> {
         this.props.selectImpression(this.props.playlist[index]);
     }
 
-    
-
     render() {
         if (!this.props.impression || this.props.view > 2) {
             return (<div></div>);
@@ -104,10 +102,8 @@ class Player extends React.Component<any, any> {
         let iconTooltip = this.props.playback ? "Pause playback" : "Start playback";
         let speedIconColor = this.props.speed ? "white" : "#666";
         let fullPageIconColor = this.props.fullpage ? "white" : "#666";
-        
         let prevIconColor = index > 0 ? "white" : "#666";
         let nextIconColor = index < (this.props.playlist.length - 1) ? "white" : "#666";
-        
         
         return (
             <div className="clarity-player">
@@ -162,7 +158,6 @@ export default connect(
             speed: state.speed,
             view: state.view,
             fullpage: state.fullpage,
-           
         }
     },
     dispatch => { return bindActionCreators({ 
@@ -171,6 +166,5 @@ export default connect(
         toggleSpeed: toggleSpeed, 
         showFullPage: toggleFullPage,
         selectImpression: selectImpression ,
-        
     }, dispatch) }
 )(Player);

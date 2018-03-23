@@ -10,7 +10,6 @@ export const enum Types {
     NotFound,
     ToggleInactiveSession,
     Error,
-    ShowSettleEvents,
     
 }
 
@@ -91,11 +90,5 @@ export const toggleInactiveSession = (flag) => {
     }
 };
 
-export const showSettleEvents = (settleEvents) => {
-    return {
-        type: Types.ShowSettleEvents,
-        payload: settleEvents
-    }
-};
 
 

@@ -5,7 +5,6 @@ import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import vibrantTheme from '../visualization/themes/vibrant';
 import * as injectTapEventPlugin from 'react-tap-event-plugin';
 import Content from "../visualization/components/Content";
-import { parse } from "query-string";
 import { createStore } from "redux";
 import { Provider } from 'react-redux';
 import ClarityReducer from "../visualization/reducers";
@@ -51,7 +50,6 @@ chrome.runtime.sendMessage({ fetch: true }, function (response) {
             if (!(id in structuredEvents)) {
                 structuredEvents[id] = { envelope: json.envelope, events: [] };
                 structuredEvents[id]["envelope"].dateTime = entry.dateTime;
-                //structuredEvents[id]["envelope"].PLTV2 = 123; // LOGIC ;
                 structuredEvents[id]["envelope"].summary = [];
                 structuredSchemas[id] = new clarity.converter.SchemaManager();
                 if (tabId === activeTabId) {

@@ -78,7 +78,7 @@ export class Layout implements IParser {
         return this.document.createElement(state.tag);
     }
 
-    private insert(layoutState: ILayoutState) {
+    protected insert(layoutState: ILayoutState) {
         var doc = this.document;
         var state: any = layoutState as IElementLayoutState;
         var parent = this.layouts[state.parent];
@@ -133,12 +133,11 @@ export class Layout implements IParser {
                 this.attributes(img, state.attributes);
                 if (!img.src)
                 {
-                    
                     img.src = this.placeholderImage;
                     img.style.width = state.layout.width + "px";
-                    img.style.height = state.layout.height + "px";
+                    img.style.height = state.layout.height + "px"; 
                 }
-                
+                this.insertHelper(state, img);
                 this.layouts[state.index] = this.domInsert(img, parent, next);
                 break;
             case "*IGNORE*":
@@ -173,7 +172,7 @@ export class Layout implements IParser {
         }
     }
 
-    private update(state: IElementLayoutState) {
+    protected update(state: IElementLayoutState) {
         var node = <HTMLElement>this.layouts[state.index];
         if (node) {
             // First remove all its existing attributes
@@ -195,8 +194,7 @@ export class Layout implements IParser {
                     img.style.width = state.layout.width + "px";
                     img.style.height = state.layout.height + "px";
                 }
-                
-                
+                this.insertHelper(state, img);
             }
             // If we have content for this node
             if (state.tag === "*TXT*" && (<ITextLayoutState>(state as ILayoutState)).content) {
@@ -228,6 +226,10 @@ export class Layout implements IParser {
         else {
             console.warn(`Move: ${node} or ${parent} doesn't exist`);
         }
+    }
+
+    protected insertHelper(state: IElementLayoutState, img: HTMLImageElement){
+        return;
     }
 
     reset() {}
