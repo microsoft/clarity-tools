@@ -9,8 +9,7 @@ export const enum Types {
     ToggleFullPage,
     NotFound,
     ToggleInactiveSession,
-    Error,
-    
+    Error
 }
 
 export const selectSession = (session) => {
@@ -89,6 +88,3 @@ export const toggleInactiveSession = (flag) => {
         payload: flag
     }
 };
-
-
-

@@ -9,7 +9,6 @@ import Header from "./Header";
 
 class Content extends React.Component<any, any> {
     
-
     render() {
         
         let path = top.location.pathname;
@@ -29,7 +28,7 @@ class Content extends React.Component<any, any> {
                         <Tabs className="clarity-tabs" onChange={this.props.selectView} value={this.props.view} tabItemContainerStyle={{backgroundColor: "#666"}}>
                             <Tab label="Replay" value={0} />
                             <Tab label="Box Model" value={1} />
-                            <Tab label="Settle Images" value={2} />
+                            <Tab label="Page Performance" value={2} />
                         </Tabs>
                         <SwipeableViews index={this.props.view} onChangeIndex={this.props.selectView}>
                             {Content}
@@ -58,7 +57,6 @@ class Content extends React.Component<any, any> {
 export default connect(
     state => { return { impression: state.impression, notfound: state.notfound, menu: state.menu, view: state.view } },
     dispatch => { return bindActionCreators({ 
-        selectView: selectView, 
-        
+        selectView: selectView
     }, dispatch) }
 )(Content);

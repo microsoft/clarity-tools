@@ -14,16 +14,12 @@ export default class PerceivedLoadTimeLayout extends Layout {
 
     protected insertHelper(state: IPerceivedElementLayoutState, img : HTMLImageElement ){
         if(state.isPerceivedEvent === false ){
-            img.style.color = "red";
             img.style.opacity = "0.1";
 
         }else{
             console.log(state.isPerceivedEvent)
-            img.style.color = "red";
             img.style.opacity = "1";
         }
-        console.log("inside the child");
-        
     }
 
     render(state: IPerceivedElementLayoutState) {
