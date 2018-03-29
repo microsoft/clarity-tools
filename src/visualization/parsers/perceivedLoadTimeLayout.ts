@@ -13,12 +13,10 @@ export default class PerceivedLoadTimeLayout extends Layout {
     }
 
     protected insertHelper(state: IPerceivedElementLayoutState, img : HTMLImageElement ){
-        if(state.isPerceivedEvent === false ){
-            img.style.opacity = "0.1";
-
-        }else{
-            console.log(state.isPerceivedEvent)
+        if(!!state.isPerceivedEvent){
             img.style.opacity = "1";
+        }else{
+            img.style.opacity = "0.1";
         }
     }
 

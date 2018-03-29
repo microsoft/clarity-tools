@@ -49,11 +49,8 @@ function perceivedTime(impression){
         for (var evt of impression.events) {
             if(evt.type === "Layout" && evt.state.tag === "IMG" && 
                 evt.state.layout.width >= mindWidth && evt.state.layout.height >= minHeight && evt.time <= lastTime ){
-                   
                     evt["state"]["isPerceivedEvent"] = true;
-            } else{
-                evt["state"]["isPerceivedEvent"] = false;
-            }
+            } 
         }
     return(impression);
 }
