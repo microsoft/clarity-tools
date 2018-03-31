@@ -10,7 +10,7 @@ export default function (state = null, action) {
             }
             return sort(action.payload[0]);
         case Types.SelectImpression:
-            return sort(action.payload);
+            return perceivedTime(sort(action.payload));
     }
     return state;
 }
@@ -22,4 +22,35 @@ function sort(impression) {
         });
     }
     return impression;
+}
+
+function perceivedTime(impression){
+    
+        var startTime = 0;
+        var settleTime = 3000;
+        var mindWidth = 50;
+        var minHeight = 50;  
+        var index = 0;
+        var lastTime = startTime;
+        var settleTimeFound = "0";
+          
+        for(var evt of impression.events) {
+            if(evt.type === "Layout" && evt.state.tag === "IMG" && 
+            evt.state.layout.width >= mindWidth && evt.state.layout.height >= minHeight){
+                if((evt.time - lastTime) > settleTime){
+                    break;
+                }
+                lastTime = evt.time;
+            }else{
+                continue;
+            }
+        }
+
+        for (var evt of impression.events) {
+            if(evt.type === "Layout" && evt.state.tag === "IMG" && 
+                evt.state.layout.width >= mindWidth && evt.state.layout.height >= minHeight && evt.time <= lastTime ){
+                    evt["state"]["isPerceivedEvent"] = true;
+            } 
+        }
+    return(impression);
 }

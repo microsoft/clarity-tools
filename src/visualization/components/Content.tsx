@@ -8,8 +8,9 @@ import { bindActionCreators } from "redux";
 import Header from "./Header";
 
 class Content extends React.Component<any, any> {
-
+    
     render() {
+        
         let path = top.location.pathname;
         let parts = path ? path.split("/") : [];
         let notfound = parts.length === 5 || parts.length === 6 ?
@@ -27,8 +28,10 @@ class Content extends React.Component<any, any> {
                         <Tabs className="clarity-tabs" onChange={this.props.selectView} value={this.props.view} tabItemContainerStyle={{backgroundColor: "#666"}}>
                             <Tab label="Replay" value={0} />
                             <Tab label="Box Model" value={1} />
+                            <Tab label="Page Performance" value={2} />
                         </Tabs>
                         <SwipeableViews index={this.props.view} onChangeIndex={this.props.selectView}>
+                            {Content}
                             {Content}
                             {Content}
                         </SwipeableViews>
@@ -53,5 +56,7 @@ class Content extends React.Component<any, any> {
 // mapStateToProps and matchDispatchToProps using fat arrow function
 export default connect(
     state => { return { impression: state.impression, notfound: state.notfound, menu: state.menu, view: state.view } },
-    dispatch => { return bindActionCreators({ selectView: selectView }, dispatch) }
+    dispatch => { return bindActionCreators({ 
+        selectView: selectView
+    }, dispatch) }
 )(Content);

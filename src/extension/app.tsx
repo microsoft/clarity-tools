@@ -5,7 +5,6 @@ import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import vibrantTheme from '../visualization/themes/vibrant';
 import * as injectTapEventPlugin from 'react-tap-event-plugin';
 import Content from "../visualization/components/Content";
-import { parse } from "query-string";
 import { createStore } from "redux";
 import { Provider } from 'react-redux';
 import ClarityReducer from "../visualization/reducers";

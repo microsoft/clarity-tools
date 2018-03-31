@@ -17,8 +17,9 @@ class Player extends React.Component<any, any> {
     private setTimeoutId = -1;
     private activeImpressionId = "";
     private keyFrames = [];
-
+    
     extractFrames() {
+        
         if (this.activeImpressionId != this.props.impression.envelope.impressionId) {
             var events = this.props.impression.events;
             var frames = []
@@ -91,7 +92,7 @@ class Player extends React.Component<any, any> {
     }
 
     render() {
-        if (!this.props.impression || this.props.view > 1) {
+        if (!this.props.impression || this.props.view > 2) {
             return (<div></div>);
         }
 
@@ -156,7 +157,7 @@ export default connect(
             playback: state.playback,
             speed: state.speed,
             view: state.view,
-            fullpage: state.fullpage            
+            fullpage: state.fullpage,
         }
     },
     dispatch => { return bindActionCreators({ 
@@ -164,6 +165,6 @@ export default connect(
         togglePlayback: togglePlayback, 
         toggleSpeed: toggleSpeed, 
         showFullPage: toggleFullPage,
-        selectImpression: selectImpression 
+        selectImpression: selectImpression ,
     }, dispatch) }
 )(Player);

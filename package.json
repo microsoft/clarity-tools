@@ -18,7 +18,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/Microsoft/clarity-tools.git"
+    "url": "git+https://github.com/Microsoft/clarity-tools.git"
   },
   "bugs": {
     "url": "https://github.com/Microsoft/clarity-tools/issues"
@@ -56,5 +56,6 @@
     "bundle:visualization": "node_modules/.bin/browserify ./extension/app.js > ./extension/clarity.js",
     "binplace:extension": "node_modules/.bin/copyfiles -f ./src/extension/*.html ./src/extension/manifest.json ./src/extension/*.png ./extension/",
     "build": "npm run compile && npm run bundle:content && npm run binplace:extension && npm run bundle:visualization"
-  }
+  },
+  "homepage": "https://github.com/Microsoft/clarity-tools#readme"
 }

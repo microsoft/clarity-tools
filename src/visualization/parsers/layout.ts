@@ -2,14 +2,14 @@
 import { IParser } from "../components/Snapshot";
 import { IAttributes, ILayoutState, IElementLayoutState, IDoctypeLayoutState, ITextLayoutState, IIgnoreLayoutState, Action } from "clarity-js/clarity";
 
-export default class Layout implements IParser {
-    private layouts: { [index: number]: Node } = {};
-    private base: string;
-    private document: Document;
-    private svgns: string = "http://www.w3.org/2000/svg";
-    private placeholderImage = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAMSURBVBhXY2BgYAAAAAQAAVzN/2kAAAAASUVORK5CYII=";
+export class Layout implements IParser {
+    protected layouts: { [index: number]: Node } = {};
+    protected base: string;
+    protected document: Document;
+    protected svgns: string = "http://www.w3.org/2000/svg";
+    protected placeholderImage = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAMSURBVBhXY2BgYAAAAAQAAVzN/2kAAAAASUVORK5CYII=";
 
-    private attributes(node: HTMLElement, attributes: IAttributes) {
+    protected attributes(node: HTMLElement, attributes: IAttributes) {
         if (attributes) {
             for (let attribute in attributes) {
                 if (attribute) {
@@ -34,7 +34,7 @@ export default class Layout implements IParser {
         this.base = base;
     }
 
-    private domInsert(node: Node, parent?: Node, nextSibling?: Node) {
+    protected domInsert(node: Node, parent?: Node, nextSibling?: Node) {
         if (parent) {
             if (nextSibling && nextSibling.parentNode === parent) {
                 nextSibling.parentNode.insertBefore(node, nextSibling);
@@ -52,7 +52,7 @@ export default class Layout implements IParser {
         return null;
     }
 
-    private domRemove(node: Node) {
+    protected domRemove(node: Node) {
         if (node && node.parentNode) {
             node.parentNode.removeChild(node);
         }
@@ -62,7 +62,7 @@ export default class Layout implements IParser {
         return null;
     }
 
-    private createElement(state: ILayoutState, parent): HTMLElement {
+    protected createElement(state: ILayoutState, parent): HTMLElement {
         if (state.tag === "svg") {
             return <HTMLElement>this.document.createElementNS(this.svgns, state.tag);
         }
@@ -78,7 +78,7 @@ export default class Layout implements IParser {
         return this.document.createElement(state.tag);
     }
 
-    private insert(layoutState: ILayoutState) {
+    protected insert(layoutState: ILayoutState) {
         var doc = this.document;
         var state: any = layoutState as IElementLayoutState;
         var parent = this.layouts[state.parent];
@@ -135,8 +135,9 @@ export default class Layout implements IParser {
                 {
                     img.src = this.placeholderImage;
                     img.style.width = state.layout.width + "px";
-                    img.style.height = state.layout.height + "px";
+                    img.style.height = state.layout.height + "px"; 
                 }
+                this.insertHelper(state, img);
                 this.layouts[state.index] = this.domInsert(img, parent, next);
                 break;
             case "*IGNORE*":
@@ -171,7 +172,7 @@ export default class Layout implements IParser {
         }
     }
 
-    private update(state: IElementLayoutState) {
+    protected update(state: IElementLayoutState) {
         var node = <HTMLElement>this.layouts[state.index];
         if (node) {
             // First remove all its existing attributes
@@ -193,6 +194,7 @@ export default class Layout implements IParser {
                     img.style.width = state.layout.width + "px";
                     img.style.height = state.layout.height + "px";
                 }
+                this.insertHelper(state, img);
             }
             // If we have content for this node
             if (state.tag === "*TXT*" && (<ITextLayoutState>(state as ILayoutState)).content) {
@@ -210,11 +212,11 @@ export default class Layout implements IParser {
         }
     }
 
-    private remove(state: ILayoutState) {
+    protected remove(state: ILayoutState) {
         this.layouts[state.index] = this.domRemove(this.layouts[state.index]);
     }
 
-    private move(state: ILayoutState) {
+    protected move(state: ILayoutState) {
         var node = this.layouts[state.index];
         var parent = this.layouts[state.parent];
         var next = state.next in this.layouts ? this.layouts[state.next] : null;
@@ -224,6 +226,10 @@ export default class Layout implements IParser {
         else {
             console.warn(`Move: ${node} or ${parent} doesn't exist`);
         }
+    }
+
+    protected insertHelper(state: IElementLayoutState, img: HTMLImageElement){
+        return;
     }
 
     reset() {}
