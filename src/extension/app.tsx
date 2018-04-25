@@ -104,8 +104,13 @@ export function createImpression(payloads: IPayload[]) {
             events = payload.events as any as IEvent[];
         } else {
             for (let j = 0; j < payload.events.length; j++) {
-                let event = clarity.converter.fromarray(payload.events[j], schemas);
-                events.push(event);    
+                let event = clarity.converter.fromarray(payload.events[j], schemas) as IEvent;
+                if (event.type === clarity.converter.DiscoverEventName) {
+                    let discoverEvents = clarity.converter.eventsFromDiscoverArray(event.id, event.time, event.state, 0, schemas);
+                    events = events.concat(discoverEvents);
+                } else {
+                    events.push(event);
+                }
             }
         }
         impression.events = impression.events.concat(events);
