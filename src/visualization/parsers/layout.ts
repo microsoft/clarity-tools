@@ -151,7 +151,7 @@ export class Layout implements IParser {
                 if (state.nodeType === 1) {
                     ignoredNode.setAttribute("data-tagName", state.elementTag);
                 }
-                this.domInsert(ignoredNode, parent, next);
+                this.layouts[state.index] = this.domInsert(ignoredNode, parent, next);
                 break;
             default:
                 let node = this.createElement(state, parent);
