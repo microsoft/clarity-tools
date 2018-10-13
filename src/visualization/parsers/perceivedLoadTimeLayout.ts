@@ -1,6 +1,5 @@
-/// <reference path="../../../node_modules/clarity-js/clarity.d.ts" />
 import { IParser } from "../components/Snapshot";
-import { IAttributes, ILayoutState, IElementLayoutState, IDoctypeLayoutState, ITextLayoutState, IIgnoreLayoutState, Action } from "clarity-js/clarity";
+import { IAttributes, ILayoutState, IElementLayoutState, IDoctypeLayoutState, ITextLayoutState, IIgnoreLayoutState, Action } from "clarity-js";
 import { IPerceivedElementLayoutState } from "./IPerceivedElementLayoutState";
 import { Layout } from  "../parsers/layout";
 

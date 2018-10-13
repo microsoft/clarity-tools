@@ -11,6 +11,7 @@ chrome.runtime.sendMessage({ status: true }, function (response) {
         if (items.clarity.enabled) {
           clarity.start({
             showText: items.clarity.showText,
+            showLinks: items.clarity.showLinks,
             showImages: items.clarity.showImages,
             uploadHandler: upload,
             instrument: true

@@ -1,6 +1,6 @@
 {
   "name": "clarity-tools",
-  "version": "0.1.26",
+  "version": "0.2.1",
   "description": "A collection of tools to help visualize the data collected from clarity-js package",
   "author": "Microsoft Corp.",
   "license": "MIT",
@@ -24,7 +24,7 @@
     "url": "https://github.com/Microsoft/clarity-tools/issues"
   },
   "dependencies": {
-    "clarity-js": "^0.1.40",
+    "clarity-js": "^0.2.1",
     "compare-versions": "^3.1.0",
     "material-ui": "0.17.4",
     "react": "^15.6.2",
