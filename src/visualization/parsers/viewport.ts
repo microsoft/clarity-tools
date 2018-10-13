@@ -1,6 +1,5 @@
-/// <reference path="../../../node_modules/clarity-js/clarity.d.ts" />
 import { IParser } from "../components/Snapshot";
-import { IViewportState } from "clarity-js/clarity";
+import { IViewportState } from "clarity-js";
 
 export default class Viewport implements IParser {
     private document: Document;

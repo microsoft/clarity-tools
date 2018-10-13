@@ -1,6 +1,5 @@
-/// <reference path="../../../node_modules/clarity-js/clarity.d.ts" />
 import { IParser } from "../components/Snapshot";
-import { IPointerState } from "clarity-js/clarity";
+import { IPointerState } from "clarity-js";
 
 export default class Pointer implements IParser {
     private document: Document;

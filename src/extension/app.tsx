@@ -10,8 +10,7 @@ import { Provider } from 'react-redux';
 import ClarityReducer from "../visualization/reducers";
 import { Types } from "../visualization/actions";
 import uncompress from "../visualization/uncompress";
-import clarity from "clarity-js";
-import { IEvent, IPayload } from "clarity-js/clarity";
+import { IEvent, IPayload, PayloadEncoder } from "clarity-js";
 
 let compareVersions = require("compare-versions");
 
@@ -88,7 +87,7 @@ chrome.runtime.sendMessage({ fetch: true }, function (response) {
 });
 
 export function createImpression(payloads: IPayload[]) {
-    let schemas = new clarity.converter.SchemaManager();
+    let schemas = new PayloadEncoder.SchemaManager();
     payloads.sort(comparePayloadsBySequenceNumber);
 
     let envelope = payloads[0].envelope as any;
@@ -104,7 +103,7 @@ export function createImpression(payloads: IPayload[]) {
             events = payload.events as any as IEvent[];
         } else {
             for (let j = 0; j < payload.events.length; j++) {
-                let event = clarity.converter.fromarray(payload.events[j], schemas);
+                let event = PayloadEncoder.decode(payload.events[j], schemas);
                 events.push(event);    
             }
         }
