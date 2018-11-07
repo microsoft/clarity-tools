@@ -14,3 +14,8 @@ extension
 
 # npm logs
 npm-debug.log*
+
+# Visual Studio Code temporary files
+.vscode/
+
+
