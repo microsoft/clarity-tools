@@ -1,6 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Clarity",
+  "short_name": "Clarity",
   "description": "Get insights about how customers use your website.",
   "version": "0.2.6",
   "browser_action": {
