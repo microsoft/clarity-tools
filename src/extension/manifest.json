@@ -19,9 +19,19 @@
         "https://*/*"
       ],
       "js": [
-        "content.js"
+        "instrument_browserified.js"
       ],
       "run_at": "document_start"
+    },
+    {
+      "matches": [
+        "http://*/*",
+        "https://*/*"
+      ],
+      "js": [
+        "insertRule.js"
+      ],
+      "run_at": "document_end"
     }
   ],
   "background": {

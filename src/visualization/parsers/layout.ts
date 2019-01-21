@@ -1,5 +1,5 @@
 import { IParser } from "../components/Snapshot";
-import { IAttributes, ILayoutState, IElementLayoutState, IDoctypeLayoutState, ITextLayoutState, IIgnoreLayoutState, Action } from "clarity-js";
+import { IAttributes, ILayoutState, IElementLayoutState, IDoctypeLayoutState, ITextLayoutState, IIgnoreLayoutState, Action, IStyleLayoutState } from "clarity-js";
 
 export class Layout implements IParser {
     protected layouts: { [index: number]: Node } = {};
@@ -194,6 +194,20 @@ export class Layout implements IParser {
                     img.style.height = state.layout.height + "px";
                 }
                 this.insertHelper(state, img);
+            }
+            // If node is a style node, insert its CSSRules as text children
+            if (state.tag === "STYLE" && node.tagName === "STYLE") {
+                const styleState = <IStyleLayoutState>state;
+                if (styleState.cssRules) {
+                    // Clear existing children
+                    while (node.firstChild) {
+                        node.removeChild(node.firstChild);
+                    }
+                    for (const cssRule of styleState.cssRules) {
+                        const textNode = this.document.createTextNode(cssRule);
+                        node.appendChild(textNode);
+                    }
+                }
             }
             // If we have content for this node
             if (state.tag === "*TXT*" && (<ITextLayoutState>(state as ILayoutState)).content) {
