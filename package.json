@@ -46,7 +46,7 @@
     "@types/react-swipeable-views": "0.0.27",
     "@types/react-tap-event-plugin": "0.0.30",
     "@types/redux": "3.6.0",
-    "browserify": "^13.0.1",
+    "browserify": "^16.2.3",
     "copyfiles": "^1.0.0",
     "typescript": "2.3.2"
   },
