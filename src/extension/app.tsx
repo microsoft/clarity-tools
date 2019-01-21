@@ -1,15 +1,17 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
+import * as injectTapEventPlugin from 'react-tap-event-plugin';
+
 import Theme from "material-ui/styles/MuiThemeProvider";
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import vibrantTheme from '../visualization/themes/vibrant';
-import * as injectTapEventPlugin from 'react-tap-event-plugin';
 import Content from "../visualization/components/Content";
+import ClarityReducer from "../visualization/reducers";
+import uncompress from "../visualization/uncompress";
+
 import { createStore } from "redux";
 import { Provider } from 'react-redux';
-import ClarityReducer from "../visualization/reducers";
 import { Types } from "../visualization/actions";
-import uncompress from "../visualization/uncompress";
 import { IEvent, IPayload, PayloadEncoder } from "clarity-js";
 
 let compareVersions = require("compare-versions");
