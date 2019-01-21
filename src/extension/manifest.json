@@ -19,9 +19,8 @@
         "https://*/*"
       ],
       "js": [
-        "content.js"
-      ],
-      "run_at": "document_start"
+        "instrument_browserified.js"
+      ]
     }
   ],
   "background": {
