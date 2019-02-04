@@ -1,19 +1,17 @@
 
-import * as clarity from "clarity-js/build/clarity";
-let payloads = [];
+import { ClarityJs } from "clarity-js";
 
 const CLARITY_JS_EVENT_TYPE = "CLARITY_JS";
 const INSERT_RULE_EVENT_NAME = "INSERT_RULE";
 
 chrome.runtime.sendMessage({ status: true }, function (response) {
   if (response.active) {
-    payloads = [];
     chrome.storage.sync.get({
       clarity: { showText: false, showImages: true, showLinks: true, enabled: true }
     }, function (items: any) {
       if (items.clarity.enabled) {
         prepareEnvironment();
-        clarity.start({
+        ClarityJs.start({
           showText: items.clarity.showText,
           showLinks: items.clarity.showLinks,
           showImages: items.clarity.showImages,
