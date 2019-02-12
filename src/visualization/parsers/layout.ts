@@ -1,5 +1,5 @@
 import { IParser } from "../components/Snapshot";
-import { IAttributes, ILayoutState, IElementLayoutState, IDoctypeLayoutState, ITextLayoutState, IIgnoreLayoutState, Action, IStyleLayoutState } from "clarity-js";
+import { IAttributes, ILayoutState, IElementLayoutState, IDoctypeLayoutState, ITextLayoutState, IIgnoreLayoutState, Action, ICssRuleState, Source } from "clarity-js";
 
 export class Layout implements IParser {
     protected layouts: { [index: number]: Node } = {};
@@ -149,9 +149,25 @@ export class Layout implements IParser {
                 /* nodeType --> 1: ELEMENT_NODE | 3: TEXT_NODE | 8: COMMENT_NODE */
                 if (state.nodeType === 1) {
                     ignoredNode.setAttribute("data-tagName", state.elementTag);
+                    if (state.source !== Source.Discover) {
+                        console.log("inserting ignored " + state.elementTag);
+                    }
                 }
                 this.layouts[state.index] = this.domInsert(ignoredNode, parent, next);
                 break;
+
+            case "*CSS*":
+                const cssRuleState = layoutState as ICssRuleState;
+                const ownerSheetNode = this.layouts[cssRuleState.sheetOwnerIndex];
+                if (ownerSheetNode) {
+                    const ownerSheet = (ownerSheetNode as any as LinkStyle).sheet as CSSStyleSheet;
+                    ownerSheet.insertRule(cssRuleState.css, cssRuleState.insertIndex);
+                    ownerSheet.cssRules[0]["css-rule-id"] = cssRuleState.ruleId;
+                } else {
+                    console.warn("No owner sheet found for CSS Rule");
+                }
+                break;
+
             default:
                 let node = this.createElement(state, parent);
                 this.attributes(node, state.attributes);
@@ -160,12 +176,16 @@ export class Layout implements IParser {
                     node.scrollLeft = state.layout.scrollX;
                     node.scrollTop = state.layout.scrollY;
                 }
-                if (node.tagName === "STYLE" && state.cssRules) {
-                    for (let i = 0; i < state.cssRules.length; i++) {
-                        let textNode = document.createTextNode(state.cssRules[i]);
-                        node.appendChild(textNode);
-                    }
+
+                // Mimic style
+                if (node.tagName === "LINK" && (node as HTMLLinkElement).rel === "stylesheet") {
+                    state.tag = "STYLE";
+                    state.attributes = {
+                        type: "text/css"
+                    };
+                    node = this.createElement(state, parent);
                 }
+
                 this.layouts[state.index] = this.domInsert(node, parent, next);
                 break;
         }
@@ -196,19 +216,19 @@ export class Layout implements IParser {
                 this.insertHelper(state, img);
             }
             // If node is a style node, insert its CSSRules as text children
-            if (state.tag === "STYLE" && node.tagName === "STYLE") {
-                const styleState = <IStyleLayoutState>state;
-                if (styleState.cssRules) {
-                    // Clear existing children
-                    while (node.firstChild) {
-                        node.removeChild(node.firstChild);
-                    }
-                    for (const cssRule of styleState.cssRules) {
-                        const textNode = this.document.createTextNode(cssRule);
-                        node.appendChild(textNode);
-                    }
-                }
-            }
+            // if (state.tag === "STYLE" && node.tagName === "STYLE") {
+            //     const styleState = <IStyleLayoutState>state;
+            //     if (styleState.cssRules) {
+            //         // Clear existing children
+            //         while (node.firstChild) {
+            //             node.removeChild(node.firstChild);
+            //         }
+            //         for (const cssRule of styleState.cssRules) {
+            //             const textNode = this.document.createTextNode(cssRule);
+            //             node.appendChild(textNode);
+            //         }
+            //     }
+            // }
             // If we have content for this node
             if (state.tag === "*TXT*" && (<ITextLayoutState>(state as ILayoutState)).content) {
                 node.nodeValue = (<ITextLayoutState>(state as ILayoutState)).content;
