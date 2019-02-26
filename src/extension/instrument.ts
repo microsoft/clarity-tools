@@ -11,6 +11,9 @@ chrome.runtime.sendMessage({ status: true }, function (response) {
     }, function (items: any) {
       if (items.clarity.enabled) {
         prepareEnvironment();
+        if (items.clarity.showText) {
+          unmaskBody();
+        }
         ClarityJs.start({
           uploadHandler: upload,
           instrument: true
@@ -39,6 +42,13 @@ function prepareEnvironment() {
   });
   let script = document.createElement("script");
   let scriptCode = getPageScriptCode();
+  script.innerHTML = scriptCode;
+  document.body.appendChild(script);
+}
+
+function unmaskBody() {
+  let script = document.createElement("script");
+  let scriptCode = getPageUnmaskBodyCode();
   script.innerHTML = scriptCode;
   document.body.appendChild(script);
 }
@@ -81,6 +91,13 @@ function getPageScriptCode() {
           }
           return -1;
       }
+  };
+  return `(${closureFn.toString()})();`;
+}
+
+function getPageUnmaskBodyCode() {
+  let closureFn = function () {
+      document.body.setAttribute("data-clarity-unmask", "true");
   };
   return `(${closureFn.toString()})();`;
 }
