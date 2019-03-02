@@ -78,7 +78,7 @@ function freeUpMemory(activeSession?: string) {
 
 function updateIcon(tabId) {
   chrome.storage.sync.get({
-    clarity: {showText: false, showImages: false, enabled: true}
+    clarity: { showText: false, cssRules: false, enabled: true }
   }, function(items : any) {
     var icon = items.clarity.enabled ? "icon.png" : "icon-disabled.png";
     var title = items.clarity.enabled ? "Clarity" : "Clarity: Disabled";

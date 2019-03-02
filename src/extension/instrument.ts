@@ -7,7 +7,7 @@ const INSERT_RULE_EVENT_NAME = "INSERT_RULE";
 chrome.runtime.sendMessage({ status: true }, function (response) {
   if (response.active) {
     chrome.storage.sync.get({
-      clarity: { showText: false, showImages: true, showLinks: true, enabled: true }
+      clarity: { showText: false, cssRules: false, enabled: true }
     }, function (items: any) {
       if (items.clarity.enabled) {
         prepareEnvironment();
@@ -16,7 +16,8 @@ chrome.runtime.sendMessage({ status: true }, function (response) {
         }
         ClarityJs.start({
           uploadHandler: upload,
-          instrument: true
+          instrument: true,
+          cssRules: items.clarity.cssRules
         });
       }
     });
