@@ -7,16 +7,17 @@ const INSERT_RULE_EVENT_NAME = "INSERT_RULE";
 chrome.runtime.sendMessage({ status: true }, function (response) {
   if (response.active) {
     chrome.storage.sync.get({
-      clarity: { showText: false, showImages: true, showLinks: true, enabled: true }
+      clarity: { showText: false, cssRules: false, enabled: true }
     }, function (items: any) {
       if (items.clarity.enabled) {
         prepareEnvironment();
+        if (items.clarity.showText) {
+          unmaskBody();
+        }
         ClarityJs.start({
-          showText: items.clarity.showText,
-          showLinks: items.clarity.showLinks,
-          showImages: items.clarity.showImages,
           uploadHandler: upload,
-          instrument: true
+          instrument: true,
+          cssRules: items.clarity.cssRules
         });
       }
     });
@@ -42,6 +43,13 @@ function prepareEnvironment() {
   });
   let script = document.createElement("script");
   let scriptCode = getPageScriptCode();
+  script.innerHTML = scriptCode;
+  document.body.appendChild(script);
+}
+
+function unmaskBody() {
+  let script = document.createElement("script");
+  let scriptCode = getPageUnmaskBodyCode();
   script.innerHTML = scriptCode;
   document.body.appendChild(script);
 }
@@ -84,6 +92,13 @@ function getPageScriptCode() {
           }
           return -1;
       }
+  };
+  return `(${closureFn.toString()})();`;
+}
+
+function getPageUnmaskBodyCode() {
+  let closureFn = function () {
+      document.body.setAttribute("data-clarity-unmask", "true");
   };
   return `(${closureFn.toString()})();`;
 }

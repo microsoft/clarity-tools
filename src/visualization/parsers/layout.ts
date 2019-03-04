@@ -166,6 +166,10 @@ export class Layout implements IParser {
                         node.appendChild(textNode);
                     }
                 }
+                // If we have value for this node
+                if ("value" in state) {
+                    (node as any).value = state.value;
+                }
                 this.layouts[state.index] = this.domInsert(node, parent, next);
                 break;
         }
@@ -212,6 +216,10 @@ export class Layout implements IParser {
             // If we have content for this node
             if (state.tag === "*TXT*" && (<ITextLayoutState>(state as ILayoutState)).content) {
                 node.nodeValue = (<ITextLayoutState>(state as ILayoutState)).content;
+            }
+            // If we have value for this node
+            if ("value" in state) {
+                (node as any).value = state.value;
             }
             // Check if this element can be scrolled
             if (state.layout && (state.layout.scrollX || state.layout.scrollY)) {
